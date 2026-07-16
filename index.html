@@ -478,14 +478,6 @@
 
 <main id="main"></main>
 
-<footer>
-  <p><strong>🎯 A terv logikája:</strong> négy minőségi súlyzós nap felsőtest–alsótest felosztásban. Hétfő és csütörtök között a felsőtest, kedd és péntek között az alsótest 72 óra regenerációt kap. Szerda, szombat és vasárnap pihenőnap.</p>
-  <p><strong>🔥 Bemelegítés:</strong> az aznapi dinamikus mobilitási blokk előtt 5–8 perc könnyű séta vagy helyben járás, majd az első nagy erőgyakorlat előtt 2–3 fokozatos bemelegítő sorozat. Ezek nem számítanak munkasorozatnak.</p>
-  <p><strong>🧘 Nyújtás:</strong> az edzés utáni statikus helyzetekben határozott, de nyugodtan tartható, körülbelül 5–6/10 erősségű feszülést keress. Ne rugózz, és ne a derék túlzott görbítésével vagy homorításával növeld a mozgástartományt.</p>
-  <p><strong>📈 Dupla progresszió:</strong> minden erősítő gyakorlat 3 munkasorozat. A stabil, nagy összetett gyakorlatok 5–9 ismétléses tartományban futnak; az izolációk és a nagyobb technikai kontrollt igénylő gyakorlatok 8–12-ben maradnak. Jegyezd fel külön az egyes szettek ismétléseit. Ha mindhárom sorozatban eléred a felső ismétléshatárt szabályos technikával, a következő edzésen emelj a legkisebb elérhető súlylépéssel.</p>
-  <p style="margin-top:6px;">💪 Szerda és a hétvége teljes pihenő lehet. A nyújtást ezeken a napokon csak akkor ismételd meg otthon, ha jólesik és nem rontja a regenerációdat.</p>
-</footer>
-
 <script>
 const IMG_BASE = "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/";
 const MUSCLE_IMG_BASE = "https://commons.wikimedia.org/wiki/Special:FilePath/";
@@ -1199,21 +1191,7 @@ function renderMobilityBlock(container, items, dayKey, phase){
     if(container) container.style.display = 'none';
     return;
   }
-  const isWarmup = phase === 'warmup';
-  const title = isWarmup ? 'Dinamikus mobilitás – edzés előtt' : 'Levezető nyújtás – edzés után';
-  const icon = isWarmup ? '⚡' : '🧘';
-  const time = isWarmup ? '4–7 perc' : '6–12 perc';
-  const intro = isWarmup
-    ? 'A mozdulatokat kontrolláltan végezd; itt nem cél a maximális nyújtás vagy a kifáradás.'
-    : 'Tarts nyugodt légzést és közepes feszülést. A statikus nyújtások nem helyettesítik az erőgyakorlatok bemelegítő sorozatait.';
-
-  container.innerHTML = `
-    <div class="mobility-block-head">
-      <div class="mobility-block-title">${icon} ${title}</div>
-      <div class="mobility-block-time">${time}</div>
-    </div>
-    <div class="mobility-intro">${intro}</div>
-  `;
+  container.innerHTML = '';
 
   items.forEach((item, idx) => {
     const card = document.createElement('div');
