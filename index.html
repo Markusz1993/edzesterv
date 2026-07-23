@@ -200,16 +200,9 @@
   .tip-note b{ color:var(--accent); font-weight:600; }
 
   .performance-log{
-    margin:14px 0 12px; padding:12px;
+    margin:10px 0 12px; padding:12px;
     background:rgba(255,255,255,0.035); border:1px solid var(--line);
     border-radius:var(--radius-sm);
-  }
-  .performance-title{
-    display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;
-  }
-  .performance-title strong{ font-family:'Space Grotesk',sans-serif; font-size:13.5px; color:var(--ink); }
-  .performance-title span{
-    font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-faint); text-align:right;
   }
   .performance-grid{
     display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px;
@@ -222,13 +215,13 @@
   }
   .performance-set-title{
     margin:0 0 8px; text-align:center; color:var(--accent);
-    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700;
+    font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700;
     letter-spacing:.035em; text-transform:uppercase;
   }
   .performance-field{ min-width:0; }
   .performance-field + .performance-field{ margin-top:8px; }
   .performance-field label{
-    display:block; margin:0 0 4px; color:var(--ink-muted); font-size:10px;
+    display:block; margin:0 0 5px; color:var(--ink-muted); font-size:12px; font-weight:600;
     line-height:1.25; text-align:center;
   }
   .performance-field input{
@@ -1383,9 +1376,7 @@ DATA.forEach((day, dIdx) => {
       </div>`).join('');
     const weightHtml = `
       <div class="performance-log">
-        <div class="performance-title"><strong>📊 Edzésnapló</strong><span>SZETTENKÉNTI ISMÉTLÉS + SÚLY</span></div>
         <div class="performance-grid">${setInputs}</div>
-        <div class="performance-note">Mindhárom sorozat súlyát külön rögzítheted. Az értékek megmaradnak a böngészőben, és a következő edzésen felülírhatod őket.</div>
       </div>
     `;
 
