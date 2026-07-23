@@ -1457,20 +1457,27 @@ DATA.forEach((day, dIdx) => {
         }
         body.style.maxHeight = '1800px';
 
-        // Telefonon a lenyitás után automatikusan az Edzésnapló kerüljön középre.
-        if(window.matchMedia('(max-width: 700px)').matches){
-          const performanceLog = card.querySelector('.performance-log');
-          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          window.setTimeout(() => {
-            performanceLog?.scrollIntoView({
-              behavior: reduceMotion ? 'auto' : 'smooth',
-              block: 'center',
-              inline: 'nearest'
-            });
-          }, 320);
-        }
+        // Minden képernyőméreten az Edzésnapló kerüljön a nézet közepére.
+        const performanceLog = card.querySelector('.performance-log');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.setTimeout(() => {
+          performanceLog?.scrollIntoView({
+            behavior: reduceMotion ? 'auto' : 'smooth',
+            block: 'center',
+            inline: 'nearest'
+          });
+        }, 320);
       } else {
-        body.style.maxHeight = 0;
+        body.style.maxHeight = '0';
+
+        // A kézzel összecsukott gyakorlat után gördüljön vissza a lap tetejére.
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.setTimeout(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: reduceMotion ? 'auto' : 'smooth'
+          });
+        }, 60);
       }
     });
 
