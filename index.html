@@ -203,6 +203,7 @@
   .guide-box strong{ color:var(--ink); font-weight:600; }
   .guide-box .step{ display:block; margin-top:4px; padding-left:12px; position:relative; }
   .guide-box .step::before{ content:"•"; position:absolute; left:0; color:var(--accent); }
+  .guide-box .step b{ color:var(--ink); font-weight:600; }
 
   .tip-note{
     font-size:12px; color:var(--ink-muted); line-height:1.5;
@@ -1386,11 +1387,15 @@ DATA.forEach((day, dIdx) => {
       </div>
     `;
 
-    // Részletes útmutató html
-    const guideHtml = ex.guide ? `
+    // A végrehajtás, a pihenő és a progresszió egyetlen útmutatóblokkban jelenik meg.
+    const guideParts = [];
+    if(ex.guide) guideParts.push(`<span class="step">${ex.guide.replace(/\n/g, '<br>')}</span>`);
+    if(ex.rest) guideParts.push(`<span class="step"><b>Pihenő:</b> ${ex.rest}.</span>`);
+    if(ex.tip) guideParts.push(`<span class="step"><b>Progresszió:</b> ${ex.tip}</span>`);
+    const guideHtml = guideParts.length ? `
       <div class="guide-box">
         <strong>🧠 Hogyan végezd biztonságosan és hatékonyan:</strong>
-        <span class="step">${ex.guide.replace(/\n/g, '<br>')}</span>
+        ${guideParts.join('')}
       </div>
     ` : '';
 
@@ -1398,8 +1403,6 @@ DATA.forEach((day, dIdx) => {
     for(let i=0;i<nSets;i++){
       circles += `<button class="set-circle" data-day="${day.key}" data-ex="${eIdx}" data-set="${i}">${i+1}</button>`;
     }
-
-    const restHtml = ex.rest ? `<div class="tip-note"><b>⏱ Pihenő:</b> ${ex.rest}.</div>` : '';
     const rangeLabel = repRangeLabel(ex.s);
     const setInputs = Array.from({length:nSets}, (_, setIdx) => `
       <div class="performance-set">
@@ -1444,8 +1447,6 @@ DATA.forEach((day, dIdx) => {
           ${ex.creditHtml ? `<div class="image-credit">${ex.creditHtml}</div>` : ''}
           ${muscleNoteHtml}
           ${guideHtml}
-          ${restHtml}
-          ${ex.tip ? `<div class="tip-note"><b>📈 Progresszió:</b> ${ex.tip}</div>` : ''}
           ${weightHtml}
           <div class="sets-row">${circles}<span class="sets-hint">szett</span></div>
           ${progressTip}
