@@ -1458,6 +1458,19 @@ DATA.forEach((day, dIdx) => {
           loaded = true;
         }
         body.style.maxHeight = '1800px';
+
+        // Telefonon a lenyitás után automatikusan az Edzésnapló kerüljön középre.
+        if(window.matchMedia('(max-width: 700px)').matches){
+          const performanceLog = card.querySelector('.performance-log');
+          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          window.setTimeout(() => {
+            performanceLog?.scrollIntoView({
+              behavior: reduceMotion ? 'auto' : 'smooth',
+              block: 'center',
+              inline: 'nearest'
+            });
+          }, 320);
+        }
       } else {
         body.style.maxHeight = 0;
       }
