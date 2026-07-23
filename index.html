@@ -1416,7 +1416,18 @@ DATA.forEach((day, dIdx) => {
     let loaded = false;
 
     head.addEventListener('click', () => {
-      const isOpen = card.classList.toggle('open');
+      const wasOpen = card.classList.contains('open');
+
+      // Egyszerre csak egy erősítő gyakorlat lehet nyitva.
+      document.querySelectorAll('.exercise.open').forEach(otherCard => {
+        if(otherCard === card) return;
+        otherCard.classList.remove('open');
+        const otherBody = otherCard.querySelector('.ex-body');
+        if(otherBody) otherBody.style.maxHeight = '0';
+      });
+
+      const isOpen = !wasOpen;
+      card.classList.toggle('open', isOpen);
       if(isOpen){
         if(!loaded){
           body.querySelectorAll('img[data-src]').forEach(img => {
@@ -1508,22 +1519,17 @@ stretchSection.id = 'day-stretch';
 stretchSection.style.setProperty('--accent', 'var(--upper)');
 stretchSection.style.display = 'none';
 stretchSection.innerHTML = `
-  <div class="day-head">
-    <h1 class="display">NYÚJTÁS<span class="tag">edzés után</span></h1>
-  </div>
   <div class="stretch-switch" role="tablist" aria-label="Nyújtás típusa">
     <button class="stretch-switch-btn active" type="button" data-stretch-target="upper">FELSŐTEST</button>
     <button class="stretch-switch-btn" type="button" data-stretch-target="lower">ALSÓTEST + HAS</button>
   </div>
   <div class="stretch-pane active" data-stretch-pane="upper">
     <div class="stretch-panel">
-      <h2 class="stretch-title">Felsőtestes nyújtás</h2>
       <div class="mobility-list stretch-upper-list"></div>
     </div>
   </div>
   <div class="stretch-pane" data-stretch-pane="lower">
     <div class="stretch-panel">
-      <h2 class="stretch-title">Alsótestes és hasizom-nyújtás</h2>
       <div class="mobility-list stretch-lower-list"></div>
     </div>
   </div>
