@@ -97,19 +97,6 @@
   }
   .reset-btn:active{ border-color:var(--accent); color:var(--accent); }
 
-  .progress-wrap{ padding:0 4px 16px; }
-  .progress-track{
-    height:6px; border-radius:99px; background:var(--card);
-    border:1px solid var(--line); overflow:hidden;
-  }
-  .progress-fill{
-    height:100%; width:0%; background:var(--accent);
-    border-radius:99px; transition:width .25s ease;
-  }
-  .progress-label{
-    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-muted);
-    margin-top:6px; letter-spacing:.02em;
-  }
 
   /* ---------- Exercise card ---------- */
   .exercise{
@@ -344,22 +331,12 @@
   }
   .training-block-head h2{
     margin:0;
-    font-family:'Space Grotesk',sans-serif;
-    font-size:19px;
-    line-height:1.15;
-    color:var(--ink);
-  }
-  .training-count{
-    flex-shrink:0;
-    padding:5px 8px;
-    border-radius:9px;
-    border:1px solid color-mix(in srgb,var(--accent) 28%,var(--line));
-    background:color-mix(in srgb,var(--accent) 9%,transparent);
-    color:var(--accent);
     font-family:'JetBrains Mono',monospace;
-    font-size:10px;
+    font-size:15px;
+    line-height:1.15;
+    color:var(--accent);
     font-weight:700;
-    white-space:nowrap;
+    letter-spacing:.02em;
   }
   .training-intro{
     margin:0 2px 14px;
@@ -1337,18 +1314,10 @@ DATA.forEach((day, dIdx) => {
   const totalSets = day.exercises.reduce((sum,ex)=> sum + countSets(ex.s), 0);
 
   section.innerHTML = `
-    <div class="day-head">
-      <h1 class="display">${day.label}<span class="tag">${day.sub}</span></h1>
-      <button class="reset-btn" data-reset="${day.key}">NULLÁZÁS</button>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-track"><div class="progress-fill" id="fill-${day.key}"></div></div>
-      <div class="progress-label" id="label-${day.key}">0 / ${totalSets} szett</div>
-    </div>
     <div class="phase-panel workout-panel">
       <div class="training-block-head">
-        <h2>Erősítő gyakorlatok</h2>
-        <div class="training-count">${day.exercises.length} GYAKORLAT</div>
+        <h2 class="set-progress-title" id="label-${day.key}">0 / ${totalSets} szett</h2>
+        <button class="reset-btn" data-reset="${day.key}">NULLÁZÁS</button>
       </div>
       <div class="ex-list"></div>
     </div>
@@ -1642,9 +1611,8 @@ function refreshProgress(dayKey){
       if(localStorage.getItem(storeKey(dayKey, eIdx, i)) === '1') done++;
     }
   });
-  const pct = total ? Math.round((done/total)*100) : 0;
-  document.getElementById(`fill-${dayKey}`).style.width = pct + '%';
-  document.getElementById(`label-${dayKey}`).textContent = `${done} / ${total} szett`;
+  const label = document.getElementById(`label-${dayKey}`);
+  if(label) label.textContent = `${done} / ${total} szett`;
 }
 
 function applyStoredChecks(dayKey){
