@@ -1312,6 +1312,19 @@ function renderMobilityBlock(container, items, dayKey, phase){
         imagesLoaded = true;
       }
       body.style.maxHeight = open ? '2400px' : '0';
+
+      if(open){
+        // A lenyitott nyújtás tartalma minden képernyőméreten kerüljön középre.
+        const stretchContent = card.querySelector('.mobility-body-inner');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.setTimeout(() => {
+          stretchContent?.scrollIntoView({
+            behavior: reduceMotion ? 'auto' : 'smooth',
+            block: 'center',
+            inline: 'nearest'
+          });
+        }, reduceMotion ? 0 : 290);
+      }
     });
     container.appendChild(card);
   });
