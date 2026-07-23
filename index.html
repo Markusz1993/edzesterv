@@ -262,7 +262,7 @@
     .performance-field input{ padding-left:2px; padding-right:2px; }
   }
 
-  .sets-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .sets-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
   .set-circle{
     width:40px; height:40px; border-radius:50%; border:1.5px solid var(--line);
     background:transparent; color:var(--ink-muted); font-family:'JetBrains Mono',monospace;
@@ -274,13 +274,6 @@
   }
   .sets-hint{ font-size:11px; color:var(--ink-faint); margin-left:2px; }
 
-  .progress-tip{
-    font-size:11.5px; color:var(--ink-muted); margin-top:6px; padding:6px 10px;
-    background:rgba(74,222,128,0.08); border-radius:var(--radius-sm);
-    border:1px solid rgba(74,222,128,0.2);
-    display:none;
-  }
-  .progress-tip.visible{ display:block; }
 
 
   /* ---------- Edzésfázisok: jól elkülönített blokkok ---------- */
@@ -1428,9 +1421,6 @@ DATA.forEach((day, dIdx) => {
       </div>
     `;
 
-    const progressTipId = `tip-${day.key}-${eIdx}`;
-    const progressTip = `<div id="${progressTipId}" class="progress-tip">✅ Edzés kész.</div>`;
-
     card.innerHTML = `
       <button class="ex-head">
         <span class="ex-name">${ex.n}</span>
@@ -1441,7 +1431,6 @@ DATA.forEach((day, dIdx) => {
         <div class="ex-body-inner">
           ${weightHtml}
           <div class="sets-row">${circles}<span class="sets-hint">szett</span></div>
-          ${progressTip}
           <div class="frames">
             ${exerciseFramesHtml}
             <div class="frame muscle-frame"><img data-src="${muscleImg}" alt="${primaryM.hu} célizom" loading="lazy"><span>Célizom</span></div>
@@ -1588,7 +1577,6 @@ document.addEventListener('change', (e) => {
   const val = input.value.trim();
   const key = setWeightKey(day, exIdx, setIdx);
   if (val === '') localStorage.removeItem(key); else localStorage.setItem(key, val);
-  updateProgressTip(day, exIdx);
 });
 
 function loadSetWeights(dayKey){
@@ -1622,7 +1610,6 @@ document.addEventListener('change', (e) => {
   const val = input.value.trim();
   const key = setRepsKey(day, exIdx, setIdx);
   if (val === '') localStorage.removeItem(key); else localStorage.setItem(key, val);
-  updateProgressTip(day, exIdx);
 });
 
 function loadSetReps(dayKey){
@@ -1630,40 +1617,6 @@ function loadSetReps(dayKey){
     const stored = localStorage.getItem(setRepsKey(input.dataset.day, input.dataset.exIdx, input.dataset.setIdx));
     input.value = stored !== null ? stored : '';
   });
-}
-
-// -------------------- PROGRESSZIÓS TIPP --------------------
-function updateProgressTip(dayKey, exIdx){
-  const tipEl = document.getElementById(`tip-${dayKey}-${exIdx}`);
-  if (!tipEl) return;
-  const day = DATA.find(d => d.key === dayKey);
-  if (!day) return;
-  const ex = day.exercises[exIdx];
-  if (!ex) return;
-  const nSets = countSets(ex.s);
-  let allDone = true;
-  for(let i=0;i<nSets;i++){
-    if(localStorage.getItem(storeKey(dayKey, exIdx, i)) !== '1'){ allDone = false; break; }
-  }
-  if(allDone && nSets > 0){
-    const top = upperReps(ex.s);
-    const setValues = Array.from({length:nSets}, (_, setIdx) => {
-      const input = document.getElementById(`set-reps-${dayKey}-${exIdx}-${setIdx}`);
-      return input && input.value !== '' ? parseInt(input.value, 10) : NaN;
-    });
-    const allRecorded = setValues.every(Number.isFinite);
-    const allAtTop = top > 0 && allRecorded && setValues.every(value => value >= top);
-    tipEl.classList.add('visible');
-    if(allAtTop){
-      tipEl.textContent = '✅ Mindhárom szettben elérted a felső ismétléshatárt: a következő alkalommal emelhetsz a legkisebb súlylépéssel.';
-    } else if(!allRecorded){
-      tipEl.textContent = '✅ Edzés kész. Írd be mindhárom szett ismétlésszámát, hogy követhető legyen a fejlődésed.';
-    } else {
-      tipEl.textContent = '✅ Edzés kész. A következő alkalommal próbálj legalább egy sorozatban több ismétlést elérni, miközben a technika szabályos marad.';
-    }
-  } else {
-    tipEl.classList.remove('visible');
-  }
 }
 
 // -------------------- PIPÁK KEZELÉSE --------------------
@@ -1680,8 +1633,6 @@ function refreshProgress(dayKey){
   const pct = total ? Math.round((done/total)*100) : 0;
   document.getElementById(`fill-${dayKey}`).style.width = pct + '%';
   document.getElementById(`label-${dayKey}`).textContent = `${done} / ${total} szett`;
-
-  day.exercises.forEach((_, idx) => updateProgressTip(dayKey, idx));
 }
 
 function applyStoredChecks(dayKey){
@@ -1712,7 +1663,6 @@ document.addEventListener('click', (e) => {
   btn.classList.toggle('done', nowDone);
   if(nowDone) localStorage.setItem(key, '1'); else localStorage.removeItem(key);
   refreshProgress(dayKey);
-  updateProgressTip(dayKey, exIdx);
 });
 
 
