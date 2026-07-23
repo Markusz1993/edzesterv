@@ -1244,6 +1244,21 @@ function mobilityKey(dayKey, phase, idx){
   return `mobility_v2_${WK}_${dayKey}_${phase}_${idx}`;
 }
 
+function scrollBlockBelowHeader(block, delay = 0){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.setTimeout(() => {
+    if(!block) return;
+    const header = document.querySelector('header.top');
+    const headerHeight = header ? header.getBoundingClientRect().height : 0;
+    const gap = 8;
+    const targetTop = window.scrollY + block.getBoundingClientRect().top - headerHeight - gap;
+    window.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: reduceMotion ? 'auto' : 'smooth'
+    });
+  }, reduceMotion ? 0 : delay);
+}
+
 // -------------------- UI ÉPÍTÉS --------------------
 const tabsEl = document.getElementById('tabs');
 const mainEl = document.getElementById('main');
@@ -1314,16 +1329,8 @@ function renderMobilityBlock(container, items, dayKey, phase){
       body.style.maxHeight = open ? '2400px' : '0';
 
       if(open){
-        // A lenyitott nyújtás tartalma minden képernyőméreten kerüljön középre.
-        const stretchContent = card.querySelector('.mobility-body-inner');
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        window.setTimeout(() => {
-          stretchContent?.scrollIntoView({
-            behavior: reduceMotion ? 'auto' : 'smooth',
-            block: 'center',
-            inline: 'nearest'
-          });
-        }, reduceMotion ? 0 : 290);
+        // A nyitott nyújtásblokk teteje kerüljön közvetlenül a felső gombsor alá.
+        scrollBlockBelowHeader(card, 290);
       } else {
         // Csak a nyújtásblokk összecsukási animációjának befejezése után gördüljünk fel.
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1500,16 +1507,8 @@ DATA.forEach((day, dIdx) => {
         }
         body.style.maxHeight = '1800px';
 
-        // Minden képernyőméreten az Edzésnapló kerüljön a nézet közepére.
-        const performanceLog = card.querySelector('.performance-log');
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        window.setTimeout(() => {
-          performanceLog?.scrollIntoView({
-            behavior: reduceMotion ? 'auto' : 'smooth',
-            block: 'center',
-            inline: 'nearest'
-          });
-        }, 320);
+        // A nyitott edzésblokk teteje kerüljön közvetlenül a felső gombsor alá.
+        scrollBlockBelowHeader(card, 320);
       } else {
         body.style.maxHeight = '0';
 
