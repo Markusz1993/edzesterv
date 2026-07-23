@@ -1439,6 +1439,9 @@ DATA.forEach((day, dIdx) => {
       </button>
       <div class="ex-body">
         <div class="ex-body-inner">
+          ${weightHtml}
+          <div class="sets-row">${circles}<span class="sets-hint">szett</span></div>
+          ${progressTip}
           <div class="frames">
             ${exerciseFramesHtml}
             <div class="frame muscle-frame"><img data-src="${muscleImg}" alt="${primaryM.hu} célizom" loading="lazy"><span>Célizom</span></div>
@@ -1447,9 +1450,6 @@ DATA.forEach((day, dIdx) => {
           ${ex.creditHtml ? `<div class="image-credit">${ex.creditHtml}</div>` : ''}
           ${muscleNoteHtml}
           ${guideHtml}
-          ${weightHtml}
-          <div class="sets-row">${circles}<span class="sets-hint">szett</span></div>
-          ${progressTip}
         </div>
       </div>
     `;
