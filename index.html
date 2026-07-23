@@ -1470,14 +1470,14 @@ DATA.forEach((day, dIdx) => {
       } else {
         body.style.maxHeight = '0';
 
-        // A kézzel összecsukott gyakorlat után gördüljön vissza a lap tetejére.
+        // Várjuk meg az összecsukási animáció végét, és csak utána gördüljünk fel.
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         window.setTimeout(() => {
           window.scrollTo({
             top: 0,
             behavior: reduceMotion ? 'auto' : 'smooth'
           });
-        }, 60);
+        }, reduceMotion ? 0 : 330);
       }
     });
 
