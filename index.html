@@ -1816,8 +1816,29 @@ async function importWorkoutData(file){
     Object.entries(payload.data).forEach(([key, value]) => {
       if(value !== null) localStorage.setItem(key, value);
     });
-    setBackupStatus('Adatok visszaállítva.');
-    window.setTimeout(() => window.location.reload(), 350);
+    // Az importált adatokat azonnal visszatöltjük a már megjelenített mezőkbe,
+    // így nincs szükség kézi oldalfrissítésre.
+    DATA.forEach(day => applyStoredChecks(day.key));
+
+    document.querySelectorAll('.mobility-done').forEach(btn => {
+      const done = localStorage.getItem(
+        mobilityKey(btn.dataset.day, btn.dataset.phase, btn.dataset.idx)
+      ) === '1';
+      btn.classList.toggle('done', done);
+      btn.textContent = done ? '✓ KÉSZ' : '○ JELÖLÉS';
+      const card = btn.closest('.mobility-card');
+      if(card) card.classList.toggle('complete', done);
+    });
+
+    const importedStretchPane = localStorage.getItem('selectedStretchPane');
+    showStretchPane(importedStretchPane === 'lower' ? 'lower' : 'upper');
+
+    const importedDay = localStorage.getItem('selectedDay');
+    const targetDay = importedDay && (importedDay === 'stretch' || DATA.some(day => day.key === importedDay))
+      ? importedDay
+      : 'monday';
+    showDay(targetDay);
+    setBackupStatus('Adatok visszaállítva és azonnal megjelenítve.');
   } catch(error){
     setBackupStatus(error.message || 'Az importálás nem sikerült.', true);
   }
