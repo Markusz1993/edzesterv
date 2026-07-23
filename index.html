@@ -1324,6 +1324,36 @@ function renderMobilityBlock(container, items, dayKey, phase){
             inline: 'nearest'
           });
         }, reduceMotion ? 0 : 290);
+      } else {
+        // Csak a nyújtásblokk összecsukási animációjának befejezése után gördüljünk fel.
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const scrollToTop = () => {
+          window.scrollTo({
+            top: 0,
+            behavior: reduceMotion ? 'auto' : 'smooth'
+          });
+        };
+
+        if(reduceMotion){
+          scrollToTop();
+        } else {
+          let handled = false;
+          const afterCollapse = (event) => {
+            if(event.target !== body || event.propertyName !== 'max-height' || handled) return;
+            handled = true;
+            body.removeEventListener('transitionend', afterCollapse);
+            window.setTimeout(scrollToTop, 40);
+          };
+          body.addEventListener('transitionend', afterCollapse);
+
+          // Biztonsági tartalék arra az esetre, ha a transitionend esemény nem futna le.
+          window.setTimeout(() => {
+            if(handled) return;
+            handled = true;
+            body.removeEventListener('transitionend', afterCollapse);
+            scrollToTop();
+          }, 380);
+        }
       }
     });
     container.appendChild(card);
