@@ -488,6 +488,51 @@
   }
 
 
+
+
+  /* ---------- Külön nyújtás fül ---------- */
+  .stretch-switch{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin:0 2px 16px;
+    padding:5px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+  }
+  .stretch-switch-btn{
+    min-height:44px;
+    border:1px solid transparent;
+    border-radius:10px;
+    background:transparent;
+    color:var(--ink-muted);
+    font-family:'Space Grotesk',sans-serif;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .stretch-switch-btn.active{
+    color:var(--ink);
+    background:color-mix(in srgb,var(--accent) 18%,var(--card-hover));
+    border-color:color-mix(in srgb,var(--accent) 48%,var(--line));
+    box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 12%,transparent) inset;
+  }
+  .stretch-pane{ display:none; }
+  .stretch-pane.active{ display:block; }
+  .stretch-panel{
+    background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 8%,transparent),rgba(255,255,255,.018));
+    border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));
+    border-radius:18px;
+    padding:14px 12px 6px;
+  }
+  .stretch-title{
+    margin:0 2px 12px;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:18px;
+    color:var(--ink);
+  }
+
   @media (prefers-reduced-motion: reduce){
     *{ transition:none !important; }
   }
@@ -496,7 +541,7 @@
 <body>
 
 <header class="top">
-  <div class="eyebrow">Heti edzésterv – 4 nap · 5–9 fókusz · 3 szett</div>
+  <div class="eyebrow">Heti edzésterv – 4 nap · edzésnapló · külön nyújtás</div>
   <div class="tabs" id="tabs"></div>
 </header>
 
@@ -1251,7 +1296,7 @@ function renderMobilityBlock(container, items, dayKey, phase){
           ${mediaHtml}
           <div class="mobility-meta">
             <div><b>🎯 Mit fejleszt:</b> ${item.target}</div>
-            <div><b>🏋️ Teremi eszköz:</b> ${item.equipment}</div>
+            <div><b>Eszköz:</b> ${item.equipment}</div>
           </div>
           <div class="mobility-guide"><b>Végrehajtás:</b> ${item.guide}</div>
           <div class="mobility-guide"><b>Intenzitás:</b> ${item.intensity}</div>
@@ -1307,30 +1352,17 @@ DATA.forEach((day, dIdx) => {
       <div class="progress-track"><div class="progress-fill" id="fill-${day.key}"></div></div>
       <div class="progress-label" id="label-${day.key}">0 / ${totalSets} szett</div>
     </div>
-    <div class="phase-panel warmup-panel">
-      <div class="phase-ribbon"><span>01</span><strong>BEMELEGÍTÉS ÉS MOBILITÁS</strong></div>
-      <div class="mobility-list warmup-list"></div>
-    </div>
-
     <div class="phase-panel workout-panel">
-      <div class="phase-ribbon"><span>02</span><strong>FŐ EDZÉS</strong></div>
+      <div class="phase-ribbon"><strong>FŐ EDZÉS</strong></div>
       <div class="training-block-head">
         <h2>Erősítő gyakorlatok</h2>
         <div class="training-count">${day.exercises.length} GYAKORLAT</div>
       </div>
-      <p class="training-intro"></p>
       <div class="ex-list"></div>
-    </div>
-
-    <div class="phase-panel cooldown-panel">
-      <div class="phase-ribbon"><span>03</span><strong>LEVEZETÉS ÉS NYÚJTÁS</strong></div>
-      <div class="mobility-list cooldown-list"></div>
     </div>
   `;
 
   const list = section.querySelector('.ex-list');
-  renderMobilityBlock(section.querySelector('.warmup-list'), day.warmup, day.key, 'warmup');
-  renderMobilityBlock(section.querySelector('.cooldown-list'), day.cooldown, day.key, 'cooldown');
 
   day.exercises.forEach((ex, eIdx) => {
     const nSets = countSets(ex.s);
@@ -1450,6 +1482,102 @@ DATA.forEach((day, dIdx) => {
   section.querySelector('[data-reset]').addEventListener('click', () => resetDay(day.key));
 });
 
+
+// -------------------- KÜLÖN NYÚJTÁS FÜL --------------------
+function cooldownByName(name){
+  for(const day of DATA){
+    const found = (day.cooldown || []).find(item => item.n === name);
+    if(found) return {...found};
+  }
+  return null;
+}
+
+const UPPER_STRETCH = [
+  cooldownByName('Mellkasnyitás könyökök hátrahúzásával'),
+  cooldownByName('Oldalfekvő széleshátizom-nyújtás'),
+  cooldownByName('Keresztbe húzott hátsóváll-nyújtás'),
+  cooldownByName('Tricepsznyújtás fej fölött'),
+  cooldownByName('Felsőháti nyújtás összekulcsolt kézzel')
+].filter(Boolean);
+
+const LOWER_STRETCH = [
+  cooldownByName('90/90 combhajlító-nyújtás hanyatt fekve'),
+  cooldownByName('Féltérdelő csípőhajlító-nyújtás'),
+  cooldownByName('Oldalt fekvő combfeszítő-nyújtás'),
+  cooldownByName('Hanyatt fekvő négyes alakú csípőnyújtás'),
+  cooldownByName('Békapóz matracon'),
+  {
+    n:'Álló vádlinyújtás',
+    dose:'2×30–45 mp/oldal',
+    target:'vádli és boka',
+    equipment:'fal vagy stabil gép',
+    guide:'Támaszkodj meg, az egyik lábad lépjen hátra. A hátsó térd maradjon nyújtva, a sarok lent, a lábfej előre nézzen. Finoman told előre a testsúlyodat addig, amíg a hátsó láb vádlijában nyújtást érzel.',
+    intensity:'Statikus; ne rugózz, a sarok maradjon lent.'
+  },
+  {
+    n:'Sphinx hasizomnyújtás',
+    dose:'2×20–30 mp',
+    target:'egyenes hasizom és a törzs elülső része',
+    equipment:'szőnyeg',
+    guide:'Feküdj hasra, az alkarodat helyezd a vállad alá, majd finoman emeld meg a mellkasodat. A medencéd maradjon a szőnyegen, a vállad legyen távol a füledtől. Csak addig emelkedj, amíg kellemes nyújtást érzel a hasfalban.',
+    intensity:'Statikus; deréktáji nyomás vagy fájdalom esetén csökkentsd a magasságot vagy hagyd ki.'
+  }
+].filter(Boolean);
+
+const stretchTab = document.createElement('button');
+stretchTab.className = 'tab';
+stretchTab.style.setProperty('--accent', 'var(--upper)');
+stretchTab.innerHTML = '<span class="dot"></span>NYÚJTÁS';
+stretchTab.dataset.key = 'stretch';
+stretchTab.addEventListener('click', () => showDay('stretch'));
+tabsEl.appendChild(stretchTab);
+
+const stretchSection = document.createElement('section');
+stretchSection.className = 'day-section';
+stretchSection.id = 'day-stretch';
+stretchSection.style.setProperty('--accent', 'var(--upper)');
+stretchSection.style.display = 'none';
+stretchSection.innerHTML = `
+  <div class="day-head">
+    <h1 class="display">NYÚJTÁS<span class="tag">edzés után</span></h1>
+  </div>
+  <div class="stretch-switch" role="tablist" aria-label="Nyújtás típusa">
+    <button class="stretch-switch-btn active" type="button" data-stretch-target="upper">FELSŐTEST</button>
+    <button class="stretch-switch-btn" type="button" data-stretch-target="lower">ALSÓTEST + HAS</button>
+  </div>
+  <div class="stretch-pane active" data-stretch-pane="upper">
+    <div class="stretch-panel">
+      <h2 class="stretch-title">Felsőtestes nyújtás</h2>
+      <div class="mobility-list stretch-upper-list"></div>
+    </div>
+  </div>
+  <div class="stretch-pane" data-stretch-pane="lower">
+    <div class="stretch-panel">
+      <h2 class="stretch-title">Alsótestes és hasizom-nyújtás</h2>
+      <div class="mobility-list stretch-lower-list"></div>
+    </div>
+  </div>
+`;
+mainEl.appendChild(stretchSection);
+renderMobilityBlock(stretchSection.querySelector('.stretch-upper-list'), UPPER_STRETCH, 'stretch-upper', 'cooldown');
+renderMobilityBlock(stretchSection.querySelector('.stretch-lower-list'), LOWER_STRETCH, 'stretch-lower', 'cooldown');
+
+function showStretchPane(target){
+  localStorage.setItem('selectedStretchPane', target);
+  stretchSection.querySelectorAll('.stretch-switch-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.stretchTarget === target);
+  });
+  stretchSection.querySelectorAll('.stretch-pane').forEach(pane => {
+    pane.classList.toggle('active', pane.dataset.stretchPane === target);
+  });
+}
+
+stretchSection.querySelectorAll('.stretch-switch-btn').forEach(btn => {
+  btn.addEventListener('click', () => showStretchPane(btn.dataset.stretchTarget));
+});
+const savedStretchPane = localStorage.getItem('selectedStretchPane');
+showStretchPane(savedStretchPane === 'lower' ? 'lower' : 'upper');
+
 // -------------------- SZETTENKÉNTI SÚLYOK BETÖLTÉSE --------------------
 document.addEventListener('change', (e) => {
   const input = e.target.closest('.set-weight-input');
@@ -1564,13 +1692,13 @@ function applyStoredChecks(dayKey){
   loadSetWeights(dayKey);
   loadSetReps(dayKey);
   document.querySelectorAll(`#day-${dayKey} .mobility-done`).forEach(btn => {
-    const done = localStorage.getItem(mobilityKey(dayKey, btn.dataset.phase, btn.dataset.idx)) === '1';
+    const done = localStorage.getItem(mobilityKey(btn.dataset.day, btn.dataset.phase, btn.dataset.idx)) === '1';
     btn.classList.toggle('done', done);
     btn.textContent = done ? '✓ KÉSZ' : '○ JELÖLÉS';
     const card = btn.closest('.mobility-card');
     if(card) card.classList.toggle('complete', done);
   });
-  refreshProgress(dayKey);
+  if(DATA.some(day => day.key === dayKey)) refreshProgress(dayKey);
 }
 
 document.addEventListener('click', (e) => {
@@ -1618,8 +1746,8 @@ function resetDay(dayKey){
 // -------------------- NAPVÁLTÁS --------------------
 function showDay(dayKey){
   localStorage.setItem('selectedDay', dayKey);
-  DATA.forEach(day => {
-    document.getElementById('day-' + day.key).style.display = (day.key === dayKey) ? 'block' : 'none';
+  document.querySelectorAll('.day-section').forEach(section => {
+    section.style.display = section.id === 'day-' + dayKey ? 'block' : 'none';
   });
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.key === dayKey));
   applyStoredChecks(dayKey);
@@ -1630,7 +1758,7 @@ function showDay(dayKey){
 const jsWeekday = new Date().getDay();
 const dayMap = {0:'monday', 1:'monday', 2:'tuesday', 3:'thursday', 4:'thursday', 5:'friday', 6:'monday'};
 const savedDay = localStorage.getItem('selectedDay');
-const initialDay = savedDay && DATA.some(d => d.key === savedDay) ? savedDay : (dayMap[jsWeekday] || 'monday');
+const initialDay = savedDay && (savedDay === 'stretch' || DATA.some(d => d.key === savedDay)) ? savedDay : (dayMap[jsWeekday] || 'monday');
 showDay(initialDay);
 </script>
 </body>
