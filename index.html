@@ -444,6 +444,25 @@
     font-size:11.5px; color:var(--ink-faint); line-height:1.6; border-top:1px solid var(--line);
   }
   footer a{ color:var(--ink-muted); }
+  .backup-actions{
+    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  }
+  .backup-btn{
+    min-height:46px; border-radius:12px;
+    border:1px solid color-mix(in srgb,var(--upper) 48%,var(--line));
+    background:color-mix(in srgb,var(--upper) 12%,var(--card));
+    color:var(--ink); font-family:'Space Grotesk',sans-serif;
+    font-size:14px; font-weight:700; cursor:pointer;
+  }
+  .backup-btn:active{
+    background:color-mix(in srgb,var(--upper) 25%,var(--card-hover));
+    transform:translateY(1px);
+  }
+  .backup-file-input{ display:none; }
+  .backup-status{
+    min-height:18px; margin-top:8px; text-align:center;
+    font-size:11px; color:var(--ink-muted);
+  }
 
 
   /* iOS Safari: 16 px alatti beviteli mező fókusznál automatikusan nagyít. */
@@ -509,6 +528,15 @@
 </header>
 
 <main id="main"></main>
+
+<footer class="backup-footer">
+  <div class="backup-actions">
+    <button type="button" class="backup-btn" id="export-data-btn">EXPORT</button>
+    <button type="button" class="backup-btn" id="import-data-btn">IMPORT</button>
+  </div>
+  <input class="backup-file-input" type="file" id="import-data-input" accept=".json,application/json">
+  <div class="backup-status" id="backup-status" role="status" aria-live="polite"></div>
+</footer>
 
 <script>
 const IMG_BASE = "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/";
@@ -1680,6 +1708,112 @@ function showDay(dayKey){
   applyStoredChecks(dayKey);
   window.scrollTo({top:0});
 }
+
+// -------------------- EXPORT / IMPORT --------------------
+const BACKUP_APP_ID = 'mark-edzesterv';
+const BACKUP_VERSION = 1;
+const BACKUP_PREFIXES = [
+  'edzes_v9_',
+  'weight_v9_',
+  'set_weight_v11_',
+  'set_reps_v10_',
+  'mobility_v2_'
+];
+const BACKUP_EXACT_KEYS = new Set(['selectedDay', 'selectedStretchPane']);
+
+function isWorkoutStorageKey(key){
+  return BACKUP_EXACT_KEYS.has(key) || BACKUP_PREFIXES.some(prefix => key.startsWith(prefix));
+}
+
+function getWorkoutStorageData(){
+  const data = {};
+  for(let i = 0; i < localStorage.length; i++){
+    const key = localStorage.key(i);
+    if(key && isWorkoutStorageKey(key)) data[key] = localStorage.getItem(key);
+  }
+  return data;
+}
+
+function setBackupStatus(message, isError = false){
+  const status = document.getElementById('backup-status');
+  if(!status) return;
+  status.textContent = message;
+  status.style.color = isError ? '#ff8b73' : 'var(--ink-muted)';
+}
+
+function exportWorkoutData(){
+  const now = new Date();
+  const datePart = now.toISOString().slice(0, 10);
+  const payload = {
+    app: BACKUP_APP_ID,
+    version: BACKUP_VERSION,
+    exportedAt: now.toISOString(),
+    data: getWorkoutStorageData()
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `edzesterv-mentes-${datePart}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  setBackupStatus('Mentés elkészült.');
+}
+
+function validateBackup(payload){
+  if(!payload || typeof payload !== 'object') return false;
+  if(payload.app !== BACKUP_APP_ID || payload.version !== BACKUP_VERSION) return false;
+  if(!payload.data || typeof payload.data !== 'object' || Array.isArray(payload.data)) return false;
+  return Object.entries(payload.data).every(([key, value]) =>
+    isWorkoutStorageKey(key) && (typeof value === 'string' || value === null)
+  );
+}
+
+function clearWorkoutStorageData(){
+  const keys = [];
+  for(let i = 0; i < localStorage.length; i++){
+    const key = localStorage.key(i);
+    if(key && isWorkoutStorageKey(key)) keys.push(key);
+  }
+  keys.forEach(key => localStorage.removeItem(key));
+}
+
+async function importWorkoutData(file){
+  try{
+    const text = await file.text();
+    const payload = JSON.parse(text);
+    if(!validateBackup(payload)){
+      throw new Error('A fájl nem ehhez az edzéstervhez tartozó, érvényes mentés.');
+    }
+    const count = Object.keys(payload.data).length;
+    if(!confirm(`A mentés ${count} adatot tartalmaz. Lecseréled a jelenlegi edzésnapló adatait?`)){
+      setBackupStatus('Importálás megszakítva.');
+      return;
+    }
+    clearWorkoutStorageData();
+    Object.entries(payload.data).forEach(([key, value]) => {
+      if(value !== null) localStorage.setItem(key, value);
+    });
+    setBackupStatus('Adatok visszaállítva.');
+    window.setTimeout(() => window.location.reload(), 350);
+  } catch(error){
+    setBackupStatus(error.message || 'Az importálás nem sikerült.', true);
+  }
+}
+
+const exportDataBtn = document.getElementById('export-data-btn');
+const importDataBtn = document.getElementById('import-data-btn');
+const importDataInput = document.getElementById('import-data-input');
+
+exportDataBtn?.addEventListener('click', exportWorkoutData);
+importDataBtn?.addEventListener('click', () => importDataInput?.click());
+importDataInput?.addEventListener('change', async () => {
+  const file = importDataInput.files?.[0];
+  if(file) await importWorkoutData(file);
+  importDataInput.value = '';
+});
 
 // -------------------- INDULÁS --------------------
 const jsWeekday = new Date().getDay();
