@@ -425,7 +425,7 @@
   }
   footer a{ color:var(--ink-muted); }
   .backup-actions{
-    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+    display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;
   }
   .backup-btn{
     min-height:46px; border-radius:12px;
@@ -437,6 +437,17 @@
   .backup-btn:active{
     background:color-mix(in srgb,var(--upper) 25%,var(--card-hover));
     transform:translateY(1px);
+  }
+  .collection-footer-btn{
+    border-color:color-mix(in srgb,var(--collection) 50%,var(--line));
+    background:color-mix(in srgb,var(--collection) 10%,var(--card));
+    color:#d8c0a2;
+  }
+  .collection-footer-btn:active,
+  .collection-footer-btn.active{
+    border-color:var(--collection);
+    background:color-mix(in srgb,var(--collection) 20%,var(--card-hover));
+    color:#f0dfc9;
   }
   .backup-file-input{ display:none; }
   .backup-status{
@@ -503,9 +514,8 @@
 
 
   /* ---------- Gyűjtemény és napi összeállítás ---------- */
-  .tabs{ overflow-x:auto; scrollbar-width:none; }
-  .tabs::-webkit-scrollbar{ display:none; }
-  .tab{ min-width:62px; }
+  .tabs{ overflow:visible; }
+  .tab{ min-width:0; }
   .tab[data-key="collection"]{
     min-width:92px;
     color:color-mix(in srgb,var(--collection) 58%,var(--ink-muted));
@@ -532,10 +542,12 @@
     box-shadow:0 0 7px color-mix(in srgb,var(--collection) 70%,transparent);
   }
   @media (max-width:430px){
-    .tabs{ gap:4px; padding-left:8px; padding-right:8px; }
-    .tab{ flex:0 0 auto; min-width:68px; font-size:11px; padding-left:7px; padding-right:7px; }
-    .tab[data-key="progress"]{ min-width:82px; }
-    .tab[data-key="collection"]{ min-width:88px; }
+    .tabs{ gap:3px; padding-left:7px; padding-right:7px; }
+    .tab{
+      flex:1 1 0; min-width:0; font-size:10px;
+      padding:9px 2px 8px; letter-spacing:0; white-space:nowrap;
+    }
+    .tab .dot{ margin-bottom:4px; }
   }
 
   .add-exercise-wrap{
@@ -926,6 +938,7 @@
   <div class="backup-actions">
     <button type="button" class="backup-btn" id="export-data-btn">EXPORT</button>
     <button type="button" class="backup-btn" id="import-data-btn">IMPORT</button>
+    <button type="button" class="backup-btn collection-footer-btn" id="collection-view-btn">GYŰJTEMÉNY</button>
   </div>
   <input class="backup-file-input" type="file" id="import-data-input" accept=".json,application/json">
   <div class="backup-status" id="backup-status" role="status" aria-live="polite"></div>
@@ -2260,13 +2273,15 @@ function initializeProgressDialogs(){
 
 function buildViews(){
   ALL_VIEWS.forEach(view=>{
-    const tab=document.createElement('button');
-    tab.className='tab';
-    tab.dataset.key=view.key;
-    tab.style.setProperty('--accent',`var(--${view.accent})`);
-    tab.innerHTML=`<span class="dot"></span>${view.label}`;
-    tab.addEventListener('click',()=>showView(view.key));
-    tabsEl.appendChild(tab);
+    if(view.key!=='collection'){
+      const tab=document.createElement('button');
+      tab.className='tab';
+      tab.dataset.key=view.key;
+      tab.style.setProperty('--accent',`var(--${view.accent})`);
+      tab.innerHTML=`<span class="dot"></span>${view.label}`;
+      tab.addEventListener('click',()=>showView(view.key));
+      tabsEl.appendChild(tab);
+    }
 
     const section=document.createElement('section');
     section.className=`day-section${view.key==='collection'?' collection-section':''}${view.key==='progress'?' progress-section':''}`;
@@ -2489,6 +2504,7 @@ function showView(viewKey){
   localStorage.setItem('selectedDay',viewKey);
   document.querySelectorAll('.day-section').forEach(section=>section.style.display=section.id===`day-${viewKey}`?'block':'none');
   document.querySelectorAll('.tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.key===viewKey));
+  document.getElementById('collection-view-btn')?.classList.toggle('active',viewKey==='collection');
   const activeTab=document.querySelector(`.tab[data-key="${CSS.escape(viewKey)}"]`);
   if(activeTab&&tabsEl){
     requestAnimationFrame(()=>{
@@ -2644,12 +2660,14 @@ async function importWorkoutData(file){
 
 const exportDataBtn=document.getElementById('export-data-btn');
 const importDataBtn=document.getElementById('import-data-btn');
+const collectionViewBtn=document.getElementById('collection-view-btn');
 const importDataInput=document.getElementById('import-data-input');
 const exportModal=document.getElementById('export-modal');
 const exportNameForm=document.getElementById('export-name-form');
 const exportNameInput=document.getElementById('export-name-input');
 const exportCancelBtn=document.getElementById('export-cancel-btn');
 exportDataBtn?.addEventListener('click',openExportNameDialog);
+collectionViewBtn?.addEventListener('click',()=>showView('collection'));
 exportCancelBtn?.addEventListener('click',closeExportNameDialog);
 exportNameForm?.addEventListener('submit',event=>{event.preventDefault();exportWorkoutData(exportNameInput?.value);closeExportNameDialog();});
 exportModal?.addEventListener('click',event=>{if(event.target===exportModal)closeExportNameDialog();});
