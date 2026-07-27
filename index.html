@@ -449,7 +449,7 @@
   }
   footer a{ color:var(--ink-muted); }
   .backup-actions{
-    display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;
+    display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px;
   }
   .backup-btn{
     min-height:46px; border-radius:12px;
@@ -461,6 +461,23 @@
   .backup-btn:active{
     background:color-mix(in srgb,var(--upper) 25%,var(--card-hover));
     transform:translateY(1px);
+  }
+  .footer-add-btn{
+    border-color:color-mix(in srgb,var(--friday) 58%,var(--line));
+    background:color-mix(in srgb,var(--friday) 15%,var(--card));
+    color:var(--friday); font-size:25px; line-height:1;
+  }
+  .footer-add-btn:active{
+    background:color-mix(in srgb,var(--friday) 27%,var(--card-hover));
+  }
+  .footer-add-btn:disabled{
+    opacity:.34; cursor:not-allowed; transform:none;
+    border-color:var(--line); background:var(--card); color:var(--ink-faint);
+  }
+  @media (max-width:430px){
+    .backup-actions{ gap:6px; }
+    .backup-btn{ min-height:44px; padding:6px 3px; font-size:11px; }
+    .footer-add-btn{ font-size:24px; }
   }
   .collection-footer-btn{
     border-color:color-mix(in srgb,var(--collection) 50%,var(--line));
@@ -591,6 +608,29 @@
     background:color-mix(in srgb,var(--accent) 26%,var(--card));
   }
   .empty-day-space{ min-height:12px; }
+
+  /* A napi nézetben a gyakorlatkártyák körül nincs külön külső doboz. */
+  .day-workout-panel{
+    margin:0 0 18px;
+    padding:0;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    overflow:visible;
+    box-shadow:none;
+  }
+  .day-workout-panel::after{ display:none; }
+  .day-workout-panel .ex-list{ margin-top:0; }
+  .day-workout-panel .exercise:last-child{ margin-bottom:0; }
+  .day-workout-panel .ex-list:empty::before{
+    content:"Még nincs gyakorlat hozzáadva ehhez a naphoz.";
+    display:block;
+    padding:30px 12px 34px;
+    text-align:center;
+    color:var(--ink-muted);
+    font-size:13px;
+    line-height:1.55;
+  }
 
   .collection-section{
     --accent:var(--collection);
@@ -960,6 +1000,7 @@
 
 <footer class="backup-footer">
   <div class="backup-actions">
+    <button type="button" class="backup-btn footer-add-btn" id="footer-add-exercise-btn" aria-label="Gyakorlat hozzáadása az aktuális naphoz">+</button>
     <button type="button" class="backup-btn" id="export-data-btn">EXPORT</button>
     <button type="button" class="backup-btn" id="import-data-btn">IMPORT</button>
     <button type="button" class="backup-btn collection-footer-btn" id="collection-view-btn">GYŰJTEMÉNY</button>
@@ -1094,7 +1135,7 @@ const DATA = [
       },
       {
         "uid": "mon-pec-deck-01",
-        "n": "Tárogatás gépen",
+        "n": "Gépi tárogatás",
         "id": "Butterfly",
         "primary": "chest",
         "secondary": [],
@@ -1106,7 +1147,7 @@ const DATA = [
       },
       {
         "uid": "mon-lat-pulldown-01",
-        "n": "Semleges vagy közepes fogású lehúzás",
+        "n": "Közepes szélességű semleges fogású lehúzás",
         "id": "Close-Grip_Front_Lat_Pulldown",
         "primary": "lats",
         "secondary": [
@@ -1116,12 +1157,12 @@ const DATA = [
         "rest": "2–3 perc",
         "guide": "Emeld meg enyhén a mellkasod, dőlj hátra körülbelül 10–15°-ot, de ne homoríts nagyot. Először húzd lefelé a vállövedet, utána vezesd a könyöködet lefelé a bordáid mellé, és húzd a fogantyút a felső mellkas irányába. Röviden tartsd meg, majd teljes kontrollal engedd fel úgy, hogy a vállad felfelé nyúlhasson, de a törzsed ne mozduljon előre-hátra.",
         "tip": "9/9/9 szabályos ismétlésnél emelj a legkisebb fokozattal.",
-        "setup": "Állítsd a combtámaszt annyira szorosra, hogy a combodat stabilan lefogja, de ne nyomja fájdalmasan. Úgy ülj, hogy a csiga és a fogantyú nagyjából a fejed fölött legyen, és nyújtott kar mellett a súlylapok ne érjenek össze. Semleges fogantyúnál a tenyerek nézzenek egymás felé; közepes rúdfogásnál körülbelül vállszélességnél kissé szélesebben fogj, ne a rúd legszélén. A talpad legyen lent, a térded a combtámasz alatt.",
+        "setup": "Állítsd a combtámaszt annyira szorosra, hogy a combodat stabilan lefogja, de ne nyomja fájdalmasan. Úgy ülj, hogy a csiga és a közepes szélességű semleges fogantyú nagyjából a fejed fölött legyen, és nyújtott kar mellett a súlylapok ne érjenek össze. Fogd a fogantyút úgy, hogy a tenyerek egymás felé nézzenek, a csuklód egyenes maradjon, a talpad pedig stabilan lent legyen.",
         "avoid": "Ne húzd tarkó mögé, ne rántsd meg a súlyt, és ne alakítsd nagy hátradőléssel evezéssé. Ha a fogantyú csak hasmagasságig jut, valószínűleg túl nagy a súly vagy túl sokat dőlsz hátra."
       },
       {
         "uid": "mon-chest-supported-row-01",
-        "n": "Melltámaszos gépi evezés",
+        "n": "Semleges fogású melltámaszos gépi evezés",
         "id": "Lying_T-Bar_Row",
         "primary": "middleback",
         "secondary": [
@@ -1129,9 +1170,9 @@ const DATA = [
           "biceps"
         ],
         "rest": "2–3 perc",
-        "guide": "Tartsd a mellkasodat végig a párnán. A húzást a könyök hátravezetésével indítsd; semleges vagy szűk fogásnál a könyök a törzshöz közelebb, a fogantyú az alsó bordák felé haladjon. Finoman zárd a lapockákat, majd lassan engedd előre a kart, amíg a hátizom megnyúlik.",
+        "guide": "Tartsd a mellkasodat végig a párnán. A húzást a könyök hátravezetésével indítsd; semleges fogásnál a könyök a törzshöz közelebb, a fogantyú az alsó bordák felé haladjon. Finoman zárd a lapockákat, majd lassan engedd előre a kart, amíg a hátizom megnyúlik.",
         "tip": "9/9/9 tiszta ismétlésnél emelj egy kis lépéssel.",
-        "setup": "Állítsd az ülés- vagy mellpárnahelyzetet úgy, hogy a fogantyúk teljesen előrenyújtott kar mellett a mellkas alsó-középső része előtt legyenek. A mellpárna a szegycsontot támassza, ne a torkodat vagy a hasad puha részét. Ha van állítható kezdőhelyzet, engedje a lapockádat előrecsúszni anélkül, hogy a súlylapok összeérnének. Válassz olyan fogást, amelynél a csuklód egyenes, a vállad pedig nem csavarodik kellemetlenül.",
+        "setup": "Állítsd az ülés- vagy mellpárnahelyzetet úgy, hogy a fogantyúk teljesen előrenyújtott kar mellett a mellkas alsó-középső része előtt legyenek. A mellpárna a szegycsontot támassza, ne a torkodat vagy a hasad puha részét. Ha van állítható kezdőhelyzet, engedje a lapockádat előrecsúszni anélkül, hogy a súlylapok összeérnének. Válassz semleges fogást, amelynél a tenyerek egymás felé néznek, a csuklód egyenes, a vállad pedig nem csavarodik kellemetlenül.",
         "avoid": "Ne emeld el a mellkasodat a támasztól, ne homoríts rá a végére, és ne húzd fel a válladat. Ha minden ismétlésnél hátrabillensz, a mellpárna helyzete vagy a súly nem megfelelő."
       },
       {
@@ -1168,7 +1209,7 @@ const DATA = [
       },
       {
         "uid": "mon-hammer-curl-01",
-        "n": "Kalapácsfogású bicepszhajlítás ülve",
+        "n": "Álló kalapácsfogású bicepszhajlítás",
         "id": "Hammer_Curls",
         "primary": "biceps",
         "secondary": [
@@ -1177,8 +1218,8 @@ const DATA = [
         "rest": "60–90 mp",
         "guide": "Tartsd a könyököd a törzsed mellett, majd hajlítsd a karod úgy, hogy a semleges tenyérhelyzet végig megmaradjon. Emeld addig, amíg az alkar közel kerül a felkarhoz, de a vállad nem mozdul előre. Rövid megtartás után engedd vissza teljes kontrollal, majd a másik karral vagy egyszerre ismételj.",
         "tip": "12/12/12 ismétlésnél emelj a legkisebb súlylépéssel.",
-        "setup": "A háttámlát állítsd közel függőlegesre, körülbelül 75–90° közé. Az ülés legyen olyan magas, hogy a talpad teljesen leérjen, a hátad és a fejed pedig kényelmesen a támlán maradjon. A súlyzók a tested mellett szabadon lógjanak, ne akadjanak az ülésbe vagy a combodba. A tenyerek nézzenek egymás felé, a csuklód legyen egyenes.",
-        "avoid": "Ne emeld előre a könyököd, ne hajlítsd be a csuklód, és ne pattintsd el a súlyzót a combodról. Ha a törzsed elválik a támlától, válassz kisebb súlyt."
+        "setup": "Állj csípő- vagy vállszélességű terpeszben, a térded legyen enyhén laza, a törzsed pedig magas és stabil. Tarts egy-egy kézi súlyzót a tested mellett úgy, hogy a tenyerek egymás felé nézzenek. A válladat húzd enyhén hátra-le, a csuklód maradjon egyenes, a könyököd pedig a törzsed mellett.",
+        "avoid": "Ne emeld előre a könyököd, ne hajlítsd be a csuklód, és ne lendítsd fel a súlyzót csípőből. Ha hintázni kezdesz vagy hátradőlsz, válassz kisebb súlyt."
       }
     ]
   },
@@ -1190,7 +1231,7 @@ const DATA = [
     "exercises": [
       {
         "uid": "tue-belt-hack-squat-01",
-        "n": "Öves guggolás (belt squat) vagy háttámlás hack-guggolás",
+        "n": "Hack-guggolás gépen",
         "id": "Hack_Squat",
         "approx": true,
         "primary": "quadriceps",
@@ -1201,12 +1242,12 @@ const DATA = [
         "rest": "2–3 perc",
         "guide": "Vegyél levegőt és feszítsd meg a törzsed, majd a térdet és a csípőt egyszerre hajlítva ereszkedj. A térded kövesse a második-harmadik lábujj irányát. Menj addig, amíg a medencéd stabil, a sarkad lent van és a gerinced nem jelez fájdalmat. A teljes talpadon keresztül nyomd vissza magad, fent pedig ne csapd ki a térded.",
         "tip": "9/9/9 fájdalommentes ismétlésnél emelj kis lépéssel. Ne növeld egyszerre a súlyt és a mélységet.",
-        "setup": "Öves guggolásnál az övet alacsonyan, a csípőcsontok körül rögzítsd, a terhelés pedig a két lábad között, középen fusson. Állj a platformon vállszéles vagy kissé szélesebb terpeszben, a lábfej enyhén kifelé nézzen; kapaszkodót csak egyensúlyozásra használj. Hack-guggolásnál a vállad kerüljön a párnák alá, a hátad és a medencéd teljesen simuljon a támlához. A lábad a platform középső részén legyen, olyan magasságban, hogy a sarkad lent maradjon. Állítsd a biztonsági ütközőt olyan mélységre, ahonnan fájdalom nélkül vissza tudsz indulni.",
-        "avoid": "Ne engedd befelé esni a térded, ne emeld fel a sarkad, és ne erőltesd a mélységet medencebillenéssel. Hack-gépen ne válassz olyan alacsony lábpozíciót, amelyben a sarkad elemelkedik vagy a térded kellemetlenül terhelődik."
+        "setup": "A vállad kerüljön a párnák alá, a hátad és a medencéd teljesen simuljon a támlához. A lábad a platform középső részén legyen vállszéles vagy kissé szélesebb terpeszben, a lábfej enyhén kifelé nézzen, és a sarkad maradjon lent. Kapaszkodj stabilan a fogantyúkba, majd állítsd a biztonsági ütközőt olyan mélységre, ahonnan fájdalom nélkül vissza tudsz indulni.",
+        "avoid": "Ne engedd befelé esni a térded, ne emeld fel a sarkad, és ne erőltesd a mélységet medencebillenéssel. Ne válassz olyan alacsony lábpozíciót, amelyben a sarkad elemelkedik vagy a térded kellemetlenül terhelődik."
       },
       {
         "uid": "tue-leg-press-01",
-        "n": "45°-os lábtolás – combfeszítő fókusz",
+        "n": "45°-os lábtolás",
         "id": "Leg_Press",
         "primary": "quadriceps",
         "secondary": [
@@ -1221,7 +1262,7 @@ const DATA = [
       },
       {
         "uid": "tue-seated-leg-curl-01",
-        "n": "Ülő combhajlítás gépen",
+        "n": "Ülő gépi lábhajlítás",
         "id": "Seated_Leg_Curl",
         "primary": "hamstrings",
         "secondary": [],
@@ -1233,19 +1274,19 @@ const DATA = [
       },
       {
         "uid": "tue-standing-calf-01",
-        "n": "Álló vádliemelés gépen vagy lábtolón",
+        "n": "Álló gépi vádliemelés",
         "id": "Standing_Calf_Raises",
         "primary": "calves",
         "secondary": [],
         "rest": "60–90 mp",
         "guide": "Engedd a sarkadat lassan lefelé, amíg erős, de kényelmes nyúlást érzel a vádlidban. Innen nyomd le a talppárnát a nagylábujj és a kislábujj alatti részen egyenletesen, emelkedj a lehető legmagasabbra, és tartsd meg röviden. Minden ismétlés azonos, kontrollált mozgástartományban történjen.",
         "tip": "12/12/12 teljes mozgástartományú ismétlésnél emelj mérsékelt lépéssel.",
-        "setup": "Álló gépnél a vállpárnát úgy állítsd be, hogy felállva stabilan megtartson, de ne kelljen behúzott nyakkal állnod. A talppárnák a lábujjak mögötti elülső talprészen legyenek, a sarok szabadon mozogjon. A térd maradjon enyhén hajlított, ne legyen mereven kizárva. Lábtolón feküdj stabilan a támlán, a platform alsó szélére csak az elülső talprészt tedd, a térded pedig maradjon közel nyújtva, de ne zárd ki; a biztosítókar legyen elérhető.",
-        "avoid": "Ne rugózz az alsó helyzetben, ne gördülj a boka külső vagy belső élére, és lábtolón ne engedd lecsúszni a lábfejedet a platformról. A térddel ne pumpáld a súlyt."
+        "setup": "Állítsd a vállpárnát úgy, hogy felállva stabilan megtartson, de ne kelljen behúzott nyakkal állnod. Az elülső talprészed a platform szélén támaszkodjon, a sarkad pedig szabadon mozoghasson. A térded maradjon enyhén hajlított, ne legyen mereven kizárva. A törzsed legyen magas és stabil, a kapaszkodót csak a testhelyzet rögzítésére használd.",
+        "avoid": "Ne rugózz az alsó helyzetben, ne gördülj a boka külső vagy belső élére, és ne engedd lecsúszni a lábfejedet a platformról. A térddel ne pumpáld a súlyt."
       },
       {
         "uid": "tue-machine-crunch-01",
-        "n": "Gépi hasprés (ab crunch machine)",
+        "n": "Gépi hasprés",
         "id": "Ab_Crunch_Machine",
         "primary": "core",
         "secondary": [
@@ -1268,7 +1309,7 @@ const DATA = [
     "exercises": [
       {
         "uid": "thu-incline-chest-press-01",
-        "n": "Gépi ferdepados mellnyomás",
+        "n": "Ferdepados gépi mellnyomás",
         "id": "Leverage_Incline_Chest_Press",
         "primary": "chest",
         "secondary": [
@@ -1283,7 +1324,7 @@ const DATA = [
       },
       {
         "uid": "thu-lat-pulldown-01",
-        "n": "Szűk vagy semleges fogású lehúzás",
+        "n": "Szűk semleges fogású lehúzás",
         "id": "Close-Grip_Front_Lat_Pulldown",
         "primary": "lats",
         "secondary": [
@@ -1292,12 +1333,12 @@ const DATA = [
         "rest": "2–3 perc",
         "guide": "A mellkasod legyen enyhén megemelve, a törzsed csak kismértékben dőljön hátra. Húzd lefelé a válladat, majd vezesd a könyököd a bordáid mellé, és közelítsd a fogantyút a felső mellkashoz. Rövid megtartás után engedd fel teljesen kontrollálva, hogy a széles hátizom megnyúljon.",
         "tip": "9/9/9 ismétlésnél emelj egy kis fokozatot.",
-        "setup": "Rögzíts szűk semleges fogantyút vagy kényelmes, vállszélességnél nem sokkal szűkebb megoldást. Állítsd a combtámaszt úgy, hogy a combod ne emelkedjen el, de a térded ne szoruljon. Úgy helyezkedj el, hogy a csiga közvetlenül fölötted legyen, nyújtott karnál pedig maradjon feszülés a kábelen. A talpad legyen stabil, a fogantyút szimmetrikusan fogd.",
+        "setup": "Rögzíts szűk semleges fogantyút. Állítsd a combtámaszt úgy, hogy a combod ne emelkedjen el, de a térded ne szoruljon. Úgy helyezkedj el, hogy a csiga közvetlenül fölötted legyen, nyújtott karnál pedig maradjon feszülés a kábelen. A talpad legyen stabil, a fogantyút szimmetrikusan fogd, a tenyerek egymás felé nézzenek.",
         "avoid": "Ne húzd a fogantyút a hasadhoz nagy hátradőléssel, ne rángasd meg a súlyt, és ne engedd a válladat előrecsuklani az alsó helyzetben. A könyök ne vándoroljon messze hátra a törzs mögé."
       },
       {
         "uid": "thu-chest-supported-row-01",
-        "n": "Melltámaszos evezés – második fogás",
+        "n": "Széles fogású melltámaszos gépi evezés",
         "id": "Lying_T-Bar_Row",
         "primary": "middleback",
         "secondary": [
@@ -1307,12 +1348,12 @@ const DATA = [
         "rest": "90–120 mp",
         "guide": "Tartsd a mellkasod a párnán, majd húzd a könyököd hátra és kissé oldalra. A fogantyú a felső bordák vagy az alsó mellkas irányába érkezzen. Röviden feszíts rá a felső hátizmokra, utána kontrolláltan engedd előre a kart és a lapockát.",
         "tip": "9/9/9 tiszta ismétlésnél emelj kis lépéssel.",
-        "setup": "Állítsd a mellpárnát úgy, hogy stabilan a szegycsontodat támassza, a fogantyúk pedig nyújtott kar mellett a mellkas középső-felső része előtt legyenek. A hétfői változathoz képest válassz kissé szélesebb, felülfogásos vagy más kényelmes fogást. A beállítás akkor jó, ha a könyököt 45–70°-ban kifelé vezetheted anélkül, hogy a vállad becsípődne, és teljes előrenyúlásnál sem kell elemelni a mellkasodat.",
+        "setup": "Állítsd a mellpárnát úgy, hogy stabilan a szegycsontodat támassza, a fogantyúk pedig nyújtott kar mellett a mellkas középső-felső része előtt legyenek. Válassz a vállszélességnél szélesebb, felülfogásos fogást. A beállítás akkor jó, ha a könyököt 45–70°-ban kifelé vezetheted anélkül, hogy a vállad becsípődne, és teljes előrenyúlásnál sem kell elemelni a mellkasodat.",
         "avoid": "Ne rántsd hátra a fejed, ne húzd fel a vállad, és ne erőltesd a könyököt messze a törzs mögé. Ha a mellkasod elemelkedik, túl nagy a súly vagy túl távol van a mellpárna."
       },
       {
         "uid": "thu-reverse-pec-deck-01",
-        "n": "Fordított pec-deck gép – hátsó váll",
+        "n": "Fordított gépi tárogatás",
         "id": "Reverse_Machine_Flyes",
         "primary": "shoulders",
         "secondary": [
@@ -1338,19 +1379,19 @@ const DATA = [
       },
       {
         "uid": "thu-triceps-pushdown-01",
-        "n": "Tricepszletolás V-rúddal vagy egyenes rúddal",
+        "n": "Tricepszletolás V-rúddal",
         "id": "Triceps_Pushdown_-_V-Bar_Attachment",
         "primary": "triceps",
         "secondary": [],
         "rest": "60–90 mp",
         "guide": "A felkarod maradjon mozdulatlan, miközben a könyököd kinyújtásával lefelé tolod a rudat. Alul röviden feszíts rá a tricepszre, de ne csapd ki erőből a könyököd. Lassan engedd vissza addig, amíg az alkar közel kerül a felkarhoz, a könyök pedig továbbra is a tested mellett marad.",
         "tip": "12/12/12 ismétlésnél emelj egy fokozatot.",
-        "setup": "Állítsd a csigát a legfelső állásba, és rögzíts V-rudat vagy egyenes rudat. Fogd vállszélességben vagy annál kissé szűkebben úgy, hogy a csuklód egyenes maradjon. Állj közel a csigához, a lábad stabilan vagy enyhe harántterpeszben legyen. A könyöködet húzd a bordáid mellé; a kezdőhelyzetben az alkar nagyjából vízszintes vagy kissé fölötte legyen.",
+        "setup": "Állítsd a csigát a legfelső állásba, és rögzíts V-rudat. Fogd kényelmesen, nagyjából vállszélességben úgy, hogy a csuklód egyenes maradjon. Állj közel a csigához, a lábad stabilan vagy enyhe harántterpeszben legyen. A könyöködet húzd a bordáid mellé; a kezdőhelyzetben az alkar nagyjából vízszintes vagy kissé fölötte legyen.",
         "avoid": "Ne dőlj rá a rúdra, ne mozgasd előre-hátra a könyököd, és ne törd hátra a csuklód. Ha a vállad vagy a törzsed segít, csökkentsd a súlyt."
       },
       {
         "uid": "thu-cable-curl-01",
-        "n": "Kábeles bicepszhajlítás",
+        "n": "Csigás bicepszhajlítás",
         "id": "Standing_Biceps_Cable_Curl",
         "primary": "biceps",
         "secondary": [
@@ -1372,7 +1413,7 @@ const DATA = [
     "exercises": [
       {
         "uid": "fri-leg-press-01",
-        "n": "45°-os lábtolás – második heti inger",
+        "n": "45°-os lábtolás",
         "id": "Leg_Press",
         "primary": "quadriceps",
         "secondary": [
@@ -1383,11 +1424,11 @@ const DATA = [
         "guide": "Engedd le a platformot lassan addig, amíg a medencéd még nem billen alá és a derekad nem kerekedik el a támlától. A teljes talpadon keresztül nyomd vissza, a térded maradjon a lábfej vonalában. Fent ne zárd ki erősen a térdet; tartsd végig kontroll alatt a súlyt.",
         "tip": "9/9/9 fájdalommentes ismétlésnél emelj kis lépéssel.",
         "setup": "A háttámlát olyan helyzetbe állítsd, amelynél a derekad és a medencéd stabilan felfekszik. A lábad legyen vállszélességben a platform középső részén, a lábfej enyhén kifelé fordítva. A teljes talpad és különösen a sarkad maradjon lent. Állítsd a biztonsági ütközőt a saját fájdalommentes mélységedhez, majd könnyű súllyal ellenőrizd, hogy a térded a lábujjak irányába mozog.",
-        "avoid": "Ne emeld el a sarkad, ne engedd befelé esni a térded, és ne növeld egyszerre a súlyt és a mozgásmélységet. A második heti inger célja nem a technika rovására végzett súlyrekord."
+        "avoid": "Ne emeld el a sarkad, ne engedd befelé esni a térded, és ne növeld egyszerre a súlyt és a mozgásmélységet. "
       },
       {
         "uid": "fri-seated-leg-curl-01",
-        "n": "Ülő combhajlítás gépen",
+        "n": "Ülő gépi lábhajlítás",
         "id": "Seated_Leg_Curl",
         "primary": "hamstrings",
         "secondary": [],
@@ -1399,7 +1440,7 @@ const DATA = [
       },
       {
         "uid": "fri-leg-extension-01",
-        "n": "Lábnyújtás gépen",
+        "n": "Gépi lábnyújtás",
         "id": "Leg_Extensions",
         "primary": "quadriceps",
         "secondary": [],
@@ -1411,7 +1452,7 @@ const DATA = [
       },
       {
         "uid": "fri-seated-calf-01",
-        "n": "Ülő vádliemelés",
+        "n": "Ülő gépi vádliemelés",
         "id": "Seated_Calf_Raise",
         "primary": "calves",
         "secondary": [],
@@ -1423,28 +1464,28 @@ const DATA = [
       },
       {
         "uid": "fri-hyperextension-01",
-        "n": "45°-os hiperhajlítás (hátfeszítés) – később súlyozva",
-        "id": "Hyperextensions_Back_Extensions",
+        "n": "Súlyozott törzsemelés 45°-os padon",
+        "id": "Weighted_Hyperextension",
         "images": [
-          "https://upload.wikimedia.org/wikipedia/commons/0/06/Roman_chair_%28hyperextension%29_animation.gif"
+          "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgODAwIDUyMCI+CgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMxNzFhMWYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMjIyNzMwIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic2hhZG93IiB4PSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj4KICAgICAgPGZlRHJvcFNoYWRvdyBkeD0iMCIgZHk9IjgiIHN0ZERldmlhdGlvbj0iMTAiIGZsb29kLWNvbG9yPSIjMDAwIiBmbG9vZC1vcGFjaXR5PSIuMzUiLz4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KCjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTIwIiByeD0iMjgiIGZpbGw9InVybCgjYmcpIi8+CjxnIG9wYWNpdHk9Ii4xNiIgc3Ryb2tlPSIjZThlYmU5Ij48cGF0aCBkPSJNNzAgNDQwIEg3MzAiLz48cGF0aCBkPSJNNzAgMzkwIEg3MzAiLz48cGF0aCBkPSJNNzAgMzQwIEg3MzAiLz48L2c+CjxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIj4KICA8cGF0aCBkPSJNNDAwIDMwNSBMNTM1IDM2NSIgc3Ryb2tlPSIjN2E4MzhmIiBzdHJva2Utd2lkdGg9IjM0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNNTI1IDM1NCBMNjQ4IDQwOCIgc3Ryb2tlPSIjNWY2NzczIiBzdHJva2Utd2lkdGg9IjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNNDI0IDMxNCBMMzYwIDQ1NCIgc3Ryb2tlPSIjNWY2NzczIiBzdHJva2Utd2lkdGg9IjI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNNTUwIDM3MiBMNTM1IDQ1NiIgc3Ryb2tlPSIjNWY2NzczIiBzdHJva2Utd2lkdGg9IjIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNMzMwIDQ1NiBINTc1IiBzdHJva2U9IiM1ZjY3NzMiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxyZWN0IHg9IjM4OCIgeT0iMjY4IiB3aWR0aD0iOTIiIGhlaWdodD0iNjIiIHJ4PSIyMiIgdHJhbnNmb3JtPSJyb3RhdGUoMjQgNDM0IDI5OSkiIGZpbGw9IiM1RkEwNzgiLz4KICA8cmVjdCB4PSI2MjIiIHk9IjM3NSIgd2lkdGg9IjM0IiBoZWlnaHQ9IjgyIiByeD0iMTUiIHRyYW5zZm9ybT0icm90YXRlKDI0IDYzOSA0MTYpIiBmaWxsPSIjOGQ5NmEyIi8+CiAgPHJlY3QgeD0iNjYwIiB5PSIzOTAiIHdpZHRoPSIzNCIgaGVpZ2h0PSI4MiIgcng9IjE1IiB0cmFuc2Zvcm09InJvdGF0ZSgyNCA2NzcgNDMxKSIgZmlsbD0iIzhkOTZhMiIvPgo8L2c+CjxnIHN0cm9rZT0iI2U4ZWJlOSIgc3Ryb2tlLXdpZHRoPSIyNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBmaWxsPSJub25lIj4KICA8cGF0aCBkPSJNNjQwIDQwNiBMNTM1IDM1NCBMNDMwIDI3NiIvPgogIDxwYXRoIGQ9Ik00MzAgMjc2IEwzMTUgMzM4IEwyMzUgMzg2Ii8+CjwvZz4KPGcgc3Ryb2tlPSIjZDVkOWRjIiBzdHJva2Utd2lkdGg9IjE0IiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9Im5vbmUiPgogIDxwYXRoIGQ9Ik0yOTYgMzQyIEwyNTQgMzE5Ii8+CiAgPHBhdGggZD0iTTI5NiAzNTAgTDI1NyAzNzIiLz4KPC9nPgo8Y2lyY2xlIGN4PSIyMTAiIGN5PSI0MDUiIHI9IjI4IiBmaWxsPSIjZThlYmU5Ii8+CjxjaXJjbGUgY3g9IjI5MiIgY3k9IjM0NiIgcj0iMzQiIGZpbGw9IiNiODg5NDIiIHN0cm9rZT0iI2UyYmQ3MiIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxjaXJjbGUgY3g9IjI5MiIgY3k9IjM0NiIgcj0iMTAiIGZpbGw9IiMyYTJlMzUiLz4KPHBhdGggZD0iTTI3NSAyODAgQzIzMCAzMDAgMjE1IDMzMCAyMjIgMzYxIiBmaWxsPSJub25lIiBzdHJva2U9IiM1RkEwNzgiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtZGFzaGFycmF5PSIxMCAxMiIvPjxwYXRoIGQ9Ik0yMjIgMzYxIGwtOCAtMjIgbDI0IDgiIGZpbGw9IiM1RkEwNzgiLz4KPGcgZm9udC1mYW1pbHk9IkludGVyLEFyaWFsLHNhbnMtc2VyaWYiPgogIDxyZWN0IHg9IjQ2IiB5PSI0MiIgd2lkdGg9IjIwOCIgaGVpZ2h0PSI0OCIgcng9IjI0IiBmaWxsPSIjNUZBMDc4IiBmaWxsLW9wYWNpdHk9Ii4xOCIgc3Ryb2tlPSIjNUZBMDc4IiBzdHJva2Utb3BhY2l0eT0iLjU1Ii8+CiAgPHRleHQgeD0iMTUwIiB5PSI3MyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2RjZWZlNCI+QWxzw7MgaGVseXpldDwvdGV4dD4KICA8dGV4dCB4PSI0OCIgeT0iNDc0IiBmb250LXNpemU9IjE4IiBmaWxsPSIjYWViNWJkIj5BIHPDumx5dCBzdGFiaWxhbiB0YXJ0c2QgYSBtZWxsa2Fzb2Rob3ouPC90ZXh0Pgo8L2c+Cjwvc3ZnPg==",
+          "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgODAwIDUyMCI+CgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMxNzFhMWYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMjIyNzMwIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic2hhZG93IiB4PSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj4KICAgICAgPGZlRHJvcFNoYWRvdyBkeD0iMCIgZHk9IjgiIHN0ZERldmlhdGlvbj0iMTAiIGZsb29kLWNvbG9yPSIjMDAwIiBmbG9vZC1vcGFjaXR5PSIuMzUiLz4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KCjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTIwIiByeD0iMjgiIGZpbGw9InVybCgjYmcpIi8+CjxnIG9wYWNpdHk9Ii4xNiIgc3Ryb2tlPSIjZThlYmU5Ij48cGF0aCBkPSJNNzAgNDQwIEg3MzAiLz48cGF0aCBkPSJNNzAgMzkwIEg3MzAiLz48cGF0aCBkPSJNNzAgMzQwIEg3MzAiLz48L2c+CjxnIGZpbHRlcj0idXJsKCNzaGFkb3cpIj4KICA8cGF0aCBkPSJNNDAwIDMwNSBMNTM1IDM2NSIgc3Ryb2tlPSIjN2E4MzhmIiBzdHJva2Utd2lkdGg9IjM0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNNTI1IDM1NCBMNjQ4IDQwOCIgc3Ryb2tlPSIjNWY2NzczIiBzdHJva2Utd2lkdGg9IjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNNDI0IDMxNCBMMzYwIDQ1NCIgc3Ryb2tlPSIjNWY2NzczIiBzdHJva2Utd2lkdGg9IjI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNNTUwIDM3MiBMNTM1IDQ1NiIgc3Ryb2tlPSIjNWY2NzczIiBzdHJva2Utd2lkdGg9IjIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNMzMwIDQ1NiBINTc1IiBzdHJva2U9IiM1ZjY3NzMiIHN0cm9rZS13aWR0aD0iMTgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxyZWN0IHg9IjM4OCIgeT0iMjY4IiB3aWR0aD0iOTIiIGhlaWdodD0iNjIiIHJ4PSIyMiIgdHJhbnNmb3JtPSJyb3RhdGUoMjQgNDM0IDI5OSkiIGZpbGw9IiM1RkEwNzgiLz4KICA8cmVjdCB4PSI2MjIiIHk9IjM3NSIgd2lkdGg9IjM0IiBoZWlnaHQ9IjgyIiByeD0iMTUiIHRyYW5zZm9ybT0icm90YXRlKDI0IDYzOSA0MTYpIiBmaWxsPSIjOGQ5NmEyIi8+CiAgPHJlY3QgeD0iNjYwIiB5PSIzOTAiIHdpZHRoPSIzNCIgaGVpZ2h0PSI4MiIgcng9IjE1IiB0cmFuc2Zvcm09InJvdGF0ZSgyNCA2NzcgNDMxKSIgZmlsbD0iIzhkOTZhMiIvPgo8L2c+CjxnIHN0cm9rZT0iI2U4ZWJlOSIgc3Ryb2tlLXdpZHRoPSIyNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBmaWxsPSJub25lIj4KICA8cGF0aCBkPSJNNjQwIDQwNiBMNTM1IDM1NCBMNDMwIDI3NiIvPgogIDxwYXRoIGQ9Ik00MzAgMjc2IEwzMTAgMjE4IEwyMDUgMTY3Ii8+CjwvZz4KPGcgc3Ryb2tlPSIjZDVkOWRjIiBzdHJva2Utd2lkdGg9IjE0IiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9Im5vbmUiPgogIDxwYXRoIGQ9Ik0yOTYgMjIyIEwyNTQgMTk5Ii8+CiAgPHBhdGggZD0iTTI5NiAyMzAgTDI1NyAyNTIiLz4KPC9nPgo8Y2lyY2xlIGN4PSIxNzgiIGN5PSIxNTEiIHI9IjI4IiBmaWxsPSIjZThlYmU5Ii8+CjxjaXJjbGUgY3g9IjI5MiIgY3k9IjIyNiIgcj0iMzQiIGZpbGw9IiNiODg5NDIiIHN0cm9rZT0iI2UyYmQ3MiIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxjaXJjbGUgY3g9IjI5MiIgY3k9IjIyNiIgcj0iMTAiIGZpbGw9IiMyYTJlMzUiLz4KPHBhdGggZD0iTTIzNiAzMzAgQzIxNCAyODYgMjI4IDIzMSAyNjYgMjAyIiBmaWxsPSJub25lIiBzdHJva2U9IiM1RkEwNzgiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtZGFzaGFycmF5PSIxMCAxMiIvPjxwYXRoIGQ9Ik0yNjYgMjAyIGwtMjMgMyBsMTMgMjAiIGZpbGw9IiM1RkEwNzgiLz4KPGcgZm9udC1mYW1pbHk9IkludGVyLEFyaWFsLHNhbnMtc2VyaWYiPgogIDxyZWN0IHg9IjQ2IiB5PSI0MiIgd2lkdGg9IjIwOCIgaGVpZ2h0PSI0OCIgcng9IjI0IiBmaWxsPSIjNUZBMDc4IiBmaWxsLW9wYWNpdHk9Ii4xOCIgc3Ryb2tlPSIjNUZBMDc4IiBzdHJva2Utb3BhY2l0eT0iLjU1Ii8+CiAgPHRleHQgeD0iMTUwIiB5PSI3MyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2RjZWZlNCI+RmVsc8WRIGhlbHl6ZXQ8L3RleHQ+CiAgPHRleHQgeD0iNDgiIHk9IjQ3NCIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2FlYjViZCI+QSBzw7pseXQgc3RhYmlsYW4gdGFydHNkIGEgbWVsbGthc29kaG96LjwvdGV4dD4KPC9nPgo8L3N2Zz4="
         ],
-        "imageLabel": "Helyes mozgás",
         "imageContain": true,
-        "creditHtml": "Illusztráció: <a href=\"https://commons.wikimedia.org/wiki/File:Roman_chair_(hyperextension)_animation.gif\" target=\"_blank\" rel=\"noopener noreferrer\">O'Dea / Wikimedia Commons</a> · <a href=\"https://creativecommons.org/licenses/by-sa/4.0/\" target=\"_blank\" rel=\"noopener noreferrer\">CC BY-SA 4.0</a>",
+
         "primary": "lowerback",
         "secondary": [
           "hamstrings",
           "glutes"
         ],
         "rest": "90–120 mp",
-        "guide": "Kezdetben keresztezd a karod a mellkasodon. Feszítsd meg enyhén a törzsed, majd a csípőből hajolva engedd le a felsőtestedet addig, amíg fájdalommentesen meg tudod őrizni a kontrollt. A combhajlító és a farizom segítségével emelkedj vissza addig, amíg a törzsed és a lábad nagyjából egyenes vonalat alkot. Fent állj meg, ne homoríts a vonal fölé.",
-        "tip": "Először saját testsúllyal érd el a 12/12/12 szabályos, fájdalommentes ismétlést. Ezután fogj 2,5–5 kg-os tárcsát a mellkasodhoz, és csak kis lépésekben emelj. Ha a medence feletti fájdalom erősödik, hagyd ki az adott napon.",
+        "guide": "Fogj egy tárcsát vagy kisebb súlyt a mellkasodhoz, feszítsd meg enyhén a törzsed, majd a csípőből hajolva engedd le a felsőtestedet addig, amíg fájdalommentesen meg tudod őrizni a kontrollt. A combhajlító és a farizom segítségével emelkedj vissza addig, amíg a törzsed és a lábad nagyjából egyenes vonalat alkot. Fent állj meg, ne homoríts a vonal fölé.",
+        "tip": "Tarts a mellkasodhoz olyan súlyt, amellyel mindhárom sorozat technikás és fájdalommentes marad. Ha a medence feletti fájdalom erősödik, hagyd ki az adott napon.",
         "setup": "Állítsd a felső párnát úgy, hogy annak felső széle a csípőhajlatod alatt, a combod felső részén legyen. A csípőnek szabadon kell hajolnia; ha a párna a hasadat vagy a medencéd tetejét nyomja, túl magas. Állítsd a lábtartót úgy, hogy a sarkad vagy az Achilles-ín környéke stabilan rögzüljön, a lábad ne csússzon. A medencéd feküdjön szimmetrikusan a párnán, a lábfejed nagyjából előre nézzen.",
-        "avoid": "Ne rántsd fel magad, ne fordítsd el a medencéd, és ne menj fájdalmas mélységbe. Súlyt csak akkor tarts a mellkasodon, amikor saját testsúllyal minden ismétlés stabil; a medence feletti fájdalom erősödésekor hagyd ki."
+        "avoid": "Ne rántsd fel magad, ne fordítsd el a medencéd, és ne menj fájdalmas mélységbe. A súlyt tartsd végig stabilan a mellkasod előtt; ha a medence feletti fájdalom erősödik, hagyd ki."
       },
       {
         "uid": "fri-machine-crunch-01",
-        "n": "Gépi hasprés (ab crunch machine)",
+        "n": "Gépi hasprés",
         "id": "Ab_Crunch_Machine",
         "primary": "core",
         "secondary": [
@@ -2321,10 +2362,9 @@ function buildViews(){
     }else if(view.key==='progress'){
       buildProgressView(section);
     }else{
-      section.innerHTML=`<div class="add-exercise-wrap"><button class="add-exercise-btn" type="button" aria-label="Gyakorlat hozzáadása">+</button></div><div class="phase-panel workout-panel"><div class="ex-list"></div><div class="empty-day-space"></div></div>`;
+      section.innerHTML=`<div class="phase-panel workout-panel day-workout-panel"><div class="ex-list"></div></div>`;
       const list=section.querySelector('.ex-list');
       dayLists.set(view.key,list);
-      section.querySelector('.add-exercise-btn').addEventListener('click',()=>openExercisePicker(view.key));
     }
     mainEl.appendChild(section);
   });
@@ -2495,6 +2535,13 @@ function showView(viewKey){
   document.querySelectorAll('.day-section').forEach(section=>section.style.display=section.id===`day-${viewKey}`?'block':'none');
   document.querySelectorAll('.tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.key===viewKey));
   document.getElementById('collection-view-btn')?.classList.toggle('active',viewKey==='collection');
+  const footerAddButton=document.getElementById('footer-add-exercise-btn');
+  const activeDay=DAY_CONFIGS.find(day=>day.key===viewKey);
+  if(footerAddButton){
+    footerAddButton.disabled=!activeDay;
+    footerAddButton.title=activeDay?`${activeDay.label} – gyakorlat hozzáadása`:'A + gomb egy edzésnap megnyitásakor használható';
+    footerAddButton.setAttribute('aria-label',activeDay?`${activeDay.label} naphoz gyakorlat hozzáadása`:'Gyakorlat hozzáadása – előbb válassz edzésnapot');
+  }
   const activeTab=document.querySelector(`.tab[data-key="${CSS.escape(viewKey)}"]`);
   if(activeTab&&tabsEl){
     requestAnimationFrame(()=>{
@@ -2649,6 +2696,7 @@ async function importWorkoutData(file){
 }
 
 const exportDataBtn=document.getElementById('export-data-btn');
+const footerAddExerciseBtn=document.getElementById('footer-add-exercise-btn');
 const importDataBtn=document.getElementById('import-data-btn');
 const collectionViewBtn=document.getElementById('collection-view-btn');
 const importDataInput=document.getElementById('import-data-input');
@@ -2657,6 +2705,10 @@ const exportNameForm=document.getElementById('export-name-form');
 const exportNameInput=document.getElementById('export-name-input');
 const exportCancelBtn=document.getElementById('export-cancel-btn');
 exportDataBtn?.addEventListener('click',openExportNameDialog);
+footerAddExerciseBtn?.addEventListener('click',()=>{
+  const selectedView=localStorage.getItem('selectedDay');
+  if(DAY_CONFIGS.some(day=>day.key===selectedView)) openExercisePicker(selectedView);
+});
 collectionViewBtn?.addEventListener('click',()=>showView('collection'));
 exportCancelBtn?.addEventListener('click',closeExportNameDialog);
 exportNameForm?.addEventListener('submit',event=>{event.preventDefault();exportWorkoutData(exportNameInput?.value);closeExportNameDialog();});
