@@ -1808,8 +1808,10 @@ function createExerciseCard(exercise,context){
       scrollBlockBelowHeader(card,320);
     }else{
       body.style.maxHeight='0';
-      const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      setTimeout(()=>window.scrollTo({top:0,behavior:reduce?'auto':'smooth'}),reduce?0:330);
+      if(context.kind==='day'){
+        const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        setTimeout(()=>window.scrollTo({top:0,behavior:reduce?'auto':'smooth'}),reduce?0:330);
+      }
     }
   });
 
