@@ -106,6 +106,79 @@
     border-radius:var(--radius); margin-bottom:13px; overflow:hidden;
     box-shadow:0 3px 10px rgba(0,0,0,.14);
   }
+
+  .exercise-row{
+    display:flex; align-items:stretch; min-width:0;
+  }
+  .exercise-row .ex-head{
+    width:auto; flex:1; min-width:0;
+  }
+  .drag-handle,
+  .exercise-state-btn{
+    flex:0 0 38px; width:38px; min-height:56px;
+    border:0; color:var(--ink-muted);
+    background:color-mix(in srgb, var(--accent) 8%, var(--card));
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace;
+    transition:background .15s ease,color .15s ease,opacity .15s ease;
+  }
+  .drag-handle{
+    border-right:1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+    cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none;
+    font-size:22px; line-height:1; letter-spacing:-3px; padding-right:3px;
+  }
+  .drag-handle:active{ cursor:grabbing; }
+  .exercise-state-btn{
+    border-left:1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+    flex-direction:column; gap:1px; font-weight:700;
+  }
+  .exercise-state-btn .state-icon{ font-size:16px; line-height:1; }
+  .exercise-state-btn .state-text{ font-size:9px; letter-spacing:.05em; }
+  .drag-handle:active,
+  .exercise-state-btn:active{
+    background:color-mix(in srgb, var(--accent) 20%, var(--card));
+    color:var(--accent);
+  }
+  .exercise.dragging{
+    opacity:.78; transform:scale(.995);
+    box-shadow:0 10px 28px rgba(0,0,0,.34);
+    position:relative; z-index:30;
+  }
+  body.exercise-drag-active{
+    user-select:none; -webkit-user-select:none;
+  }
+  .exercise.inactive{
+    border-color:var(--line); border-left-color:var(--ink-faint);
+    box-shadow:none;
+  }
+  .exercise.inactive .ex-head,
+  .exercise.inactive .drag-handle,
+  .exercise.inactive .exercise-state-btn{
+    background:color-mix(in srgb, var(--ink-faint) 8%, var(--card));
+  }
+  .exercise.inactive .ex-name,
+  .exercise.inactive .ex-sets,
+  .exercise.inactive .chevron,
+  .exercise.inactive .drag-handle{
+    opacity:.5;
+  }
+  .exercise.inactive .exercise-state-btn{
+    color:var(--upper);
+  }
+  .exercise.inactive .ex-sets{
+    color:var(--ink-muted); border-color:var(--line); background:transparent;
+  }
+  .exercise.inactive .chevron{
+    border-color:var(--line); background:var(--card-hover);
+  }
+  .exercise.inactive .chevron::after{ border-color:var(--ink-muted); }
+  @media (max-width:430px){
+    .drag-handle,.exercise-state-btn{ flex-basis:34px; width:34px; }
+    .ex-head{ padding-left:10px; padding-right:8px; gap:7px; }
+    .ex-name{ font-size:14px; }
+    .ex-sets{ font-size:12px; padding:4px 5px; }
+  }
+
   .ex-head{
     width:100%; display:flex; align-items:center; gap:10px;
     background:color-mix(in srgb, var(--accent) 11%, var(--card));
@@ -632,6 +705,7 @@ const DATA = [
     ],
     "exercises": [
       {
+        "uid": "mon-chest-press-01",
         "n": "Ülő gépi mellnyomás",
         "s": "3×5–9",
         "id": "Leverage_Chest_Press",
@@ -645,6 +719,7 @@ const DATA = [
         "tip": "Ha mindhárom sorozatban eléred a 9 ismétlést szabályosan, emelj a legkisebb elérhető lépéssel.",
       },
       {
+        "uid": "mon-pec-deck-01",
         "n": "Tárogatás gépen",
         "s": "3×8–12",
         "id": "Butterfly",
@@ -655,6 +730,7 @@ const DATA = [
         "tip": "12/12/12 tiszta ismétlésnél emelj egy kis fokozatot.",
       },
       {
+        "uid": "mon-lat-pulldown-01",
         "n": "Semleges vagy közepes fogású lehúzás",
         "s": "3×5–9",
         "id": "Close-Grip_Front_Lat_Pulldown",
@@ -668,6 +744,7 @@ const DATA = [
         "tip": "9/9/9 szabályos ismétlésnél emelj a legkisebb fokozattal.",
       },
       {
+        "uid": "mon-chest-supported-row-01",
         "n": "Melltámaszos gépi evezés",
         "s": "3×5–9",
         "id": "Lying_T-Bar_Row",
@@ -681,6 +758,7 @@ const DATA = [
         "tip": "9/9/9 tiszta ismétlésnél emelj egy kis lépéssel.",
       },
       {
+        "uid": "mon-machine-lateral-raise-01",
         "n": "Gépi oldalemelés",
         "s": "3×8–12",
         "id": "Side_Lateral_Raise",
@@ -699,6 +777,7 @@ const DATA = [
         "tip": "12/12/12 tiszta ismétlésnél emelj a gépen a legkisebb elérhető fokozattal.",
       },
       {
+        "uid": "mon-rope-triceps-01",
         "n": "Köteles tricepszletolás",
         "s": "3×8–12",
         "id": "Triceps_Pushdown_-_Rope_Attachment",
@@ -709,6 +788,7 @@ const DATA = [
         "tip": "12/12/12 szabályos ismétlésnél emelj egy fokozatot.",
       },
       {
+        "uid": "mon-hammer-curl-01",
         "n": "Kalapácsfogású bicepszhajlítás ülve",
         "s": "3×8–12",
         "id": "Hammer_Curls",
@@ -781,6 +861,7 @@ const DATA = [
     ],
     "exercises": [
       {
+        "uid": "tue-belt-hack-squat-01",
         "n": "Öves guggolás (belt squat) vagy háttámlás hack-guggolás",
         "s": "3×5–9",
         "id": "Hack_Squat",
@@ -795,6 +876,7 @@ const DATA = [
         "tip": "9/9/9 fájdalommentes ismétlésnél emelj kis lépéssel. Ne növeld egyszerre a súlyt és a mélységet.",
       },
       {
+        "uid": "tue-leg-press-01",
         "n": "45°-os lábtolás – combfeszítő fókusz",
         "s": "3×5–9",
         "id": "Leg_Press",
@@ -808,6 +890,7 @@ const DATA = [
         "tip": "9/9/9 szabályos, fájdalommentes ismétlésnél emelj a legkisebb biztonságos gépi lépéssel.",
       },
       {
+        "uid": "tue-seated-leg-curl-01",
         "n": "Ülő combhajlítás gépen",
         "s": "3×8–12",
         "id": "Seated_Leg_Curl",
@@ -818,6 +901,7 @@ const DATA = [
         "tip": "12/12/12 ismétlésnél emelj egy kis fokozatot.",
       },
       {
+        "uid": "tue-standing-calf-01",
         "n": "Álló vádliemelés gépen vagy lábtolón",
         "s": "3×8–12",
         "id": "Standing_Calf_Raises",
@@ -828,6 +912,7 @@ const DATA = [
         "tip": "12/12/12 teljes mozgástartományú ismétlésnél emelj mérsékelt lépéssel.",
       },
       {
+        "uid": "tue-machine-crunch-01",
         "n": "Gépi hasprés (ab crunch machine)",
         "s": "3×8–12",
         "id": "Ab_Crunch_Machine",
@@ -909,6 +994,7 @@ const DATA = [
     ],
     "exercises": [
       {
+        "uid": "thu-incline-chest-press-01",
         "n": "Gépi ferdepados mellnyomás",
         "s": "3×5–9",
         "id": "Leverage_Incline_Chest_Press",
@@ -922,6 +1008,7 @@ const DATA = [
         "tip": "9/9/9 ismétlésnél emelj a legkisebb lépéssel.",
       },
       {
+        "uid": "thu-lat-pulldown-01",
         "n": "Szűk vagy semleges fogású lehúzás",
         "s": "3×5–9",
         "id": "Close-Grip_Front_Lat_Pulldown",
@@ -934,6 +1021,7 @@ const DATA = [
         "tip": "9/9/9 ismétlésnél emelj egy kis fokozatot.",
       },
       {
+        "uid": "thu-chest-supported-row-01",
         "n": "Melltámaszos evezés – második fogás",
         "s": "3×5–9",
         "id": "Lying_T-Bar_Row",
@@ -947,6 +1035,7 @@ const DATA = [
         "tip": "9/9/9 tiszta ismétlésnél emelj kis lépéssel.",
       },
       {
+        "uid": "thu-reverse-pec-deck-01",
         "n": "Fordított pec-deck gép – hátsó váll",
         "s": "3×8–12",
         "id": "Reverse_Machine_Flyes",
@@ -959,6 +1048,7 @@ const DATA = [
         "tip": "12/12/12 tiszta ismétlésnél emelj, ha a vállad lent marad és nem lendülsz.",
       },
       {
+        "uid": "thu-cable-lateral-raise-01",
         "n": "Egykezes csigás oldalemelés",
         "s": "3×8–12/oldal",
         "id": "Standing_Low-Pulley_Deltoid_Raise",
@@ -969,6 +1059,7 @@ const DATA = [
         "tip": "12 ismétlés/oldal mindhárom sorozatban, tiszta technikával: emelj a legkisebb fokozattal.",
       },
       {
+        "uid": "thu-triceps-pushdown-01",
         "n": "Tricepszletolás V-rúddal vagy egyenes rúddal",
         "s": "3×8–12",
         "id": "Triceps_Pushdown_-_V-Bar_Attachment",
@@ -979,6 +1070,7 @@ const DATA = [
         "tip": "12/12/12 ismétlésnél emelj egy fokozatot.",
       },
       {
+        "uid": "thu-cable-curl-01",
         "n": "Kábeles bicepszhajlítás",
         "s": "3×8–12",
         "id": "Standing_Biceps_Cable_Curl",
@@ -1059,6 +1151,7 @@ const DATA = [
     ],
     "exercises": [
       {
+        "uid": "fri-leg-press-01",
         "n": "45°-os lábtolás – második heti inger",
         "s": "3×5–9",
         "id": "Leg_Press",
@@ -1072,6 +1165,7 @@ const DATA = [
         "tip": "9/9/9 fájdalommentes ismétlésnél emelj kis lépéssel.",
       },
       {
+        "uid": "fri-seated-leg-curl-01",
         "n": "Ülő combhajlítás gépen",
         "s": "3×8–12",
         "id": "Seated_Leg_Curl",
@@ -1082,6 +1176,7 @@ const DATA = [
         "tip": "12/12/12 ismétlésnél emelj egy kis fokozatot.",
       },
       {
+        "uid": "fri-leg-extension-01",
         "n": "Lábnyújtás gépen",
         "s": "3×8–12",
         "id": "Leg_Extensions",
@@ -1092,6 +1187,7 @@ const DATA = [
         "tip": "12/12/12 tiszta ismétlésnél emelj egy fokozatot.",
       },
       {
+        "uid": "fri-seated-calf-01",
         "n": "Ülő vádliemelés",
         "s": "3×8–12",
         "id": "Seated_Calf_Raise",
@@ -1102,6 +1198,7 @@ const DATA = [
         "tip": "12/12/12 teljes mozgástartományú ismétlésnél emelj mérsékelt lépéssel.",
       },
       {
+        "uid": "fri-hyperextension-01",
         "n": "45°-os hiperhajlítás (hátfeszítés) – később súlyozva",
         "s": "3×8–12",
         "id": "Hyperextensions_Back_Extensions",
@@ -1121,14 +1218,18 @@ const DATA = [
         "tip": "Először saját testsúllyal érd el a 12/12/12 szabályos, fájdalommentes ismétlést. Ezután fogj 2,5–5 kg-os tárcsát a mellkasodhoz, és csak kis lépésekben emelj. Ha a medence feletti fájdalom erősödik, hagyd ki az adott napon."
       },
       {
-        "n": "Térdelő csigás hasprés kötéllel",
+        "uid": "fri-machine-crunch-01",
+        "n": "Gépi hasprés (ab crunch machine)",
         "s": "3×8–12",
-        "id": "Cable_Crunch",
+        "id": "Ab_Crunch_Machine",
         "primary": "core",
-        "secondary": [],
+        "secondary": [
+          "obliques",
+          "hipflexors"
+        ],
         "rest": "60–90 mp",
-        "guide": "Rögzíts kötelet a felső csigára, majd térdelj le a géppel szemben. A kötél végeit tartsd a fejed két oldalán, a könyököd maradjon hajlítva és a karod helyzete ne változzon. A bordáidat közelítsd a medencédhez: a hasizmod megfeszítésével görbítsd a törzsed lefelé, miközben a csípőd csak minimálisan mozdul. Ne ülj hátra a sarkadra, és ne a karoddal húzd le a kötelet. Kontrolláltan engedd vissza a törzsed, de ne homoríts túl a felső helyzetben.",
-        "tip": "Ha mindhárom sorozatban eléred a 12 szabályos ismétlést változatlan kar- és csípőhelyzettel, emelj a gép legkisebb súlylépésével."
+        "guide": "Állítsd be az ülést és a támaszokat úgy, hogy a gép forgáspontja kényelmesen kövesse a törzsed hajlását. A medencéd maradjon az ülésen, a lábad legyen stabilan megtámasztva. A mozdulatot úgy indítsd, hogy a bordáidat közelíted a medencédhez; ne csak csípőből bukj előre, és ne a karoddal rángasd le a fogantyút. Az összehúzott helyzetben fújd ki a levegőt, tartsd meg röviden, majd 2–3 másodperc alatt engedd vissza kontrolláltan. Ne menj olyan hátsó véghelyzetbe, amely a derekadban vagy a medencéd felett fájdalmat okoz.",
+        "tip": "Ha a 12/12/12 ismétlés szabályosan megvan, emelj a gépen egy fokozatot."
       }
     ]
   }
@@ -1212,7 +1313,11 @@ function weekKey(d){
 }
 const WK = weekKey(new Date());
 
-function storeKey(dayKey, exIdx, setIdx){
+function storeKey(dayKey, exId, setIdx){
+  return `edzes_v10_${WK}_${exId}_${setIdx}`;
+}
+
+function legacyStoreKey(dayKey, exIdx, setIdx){
   return `edzes_v9_${WK}_${dayKey}_${exIdx}_${setIdx}`;
 }
 
@@ -1220,12 +1325,81 @@ function legacyWeightKey(dayKey, exIdx){
   return `weight_v9_${dayKey}_${exIdx}`;
 }
 
-function setWeightKey(dayKey, exIdx, setIdx){
+function legacySetWeightKey(dayKey, exIdx, setIdx){
   return `set_weight_v11_${dayKey}_${exIdx}_${setIdx}`;
 }
 
-function setRepsKey(dayKey, exIdx, setIdx){
+function legacySetRepsKey(dayKey, exIdx, setIdx){
   return `set_reps_v10_${dayKey}_${exIdx}_${setIdx}`;
+}
+
+function setWeightKey(dayKey, exId, setIdx){
+  return `set_weight_v12_${exId}_${setIdx}`;
+}
+
+function setRepsKey(dayKey, exId, setIdx){
+  return `set_reps_v12_${exId}_${setIdx}`;
+}
+
+function exerciseOrderKey(dayKey){
+  return `exercise_order_v1_${dayKey}`;
+}
+
+function exerciseActiveKey(exId){
+  return `exercise_active_v1_${exId}`;
+}
+
+function isExerciseActive(exId){
+  return localStorage.getItem(exerciseActiveKey(exId)) !== '0';
+}
+
+function saveExerciseOrder(dayKey, ids){
+  localStorage.setItem(exerciseOrderKey(dayKey), JSON.stringify(ids));
+}
+
+function getExerciseOrder(day){
+  const known = day.exercises.map(ex => ex.uid);
+  let stored = [];
+  try{
+    const parsed = JSON.parse(localStorage.getItem(exerciseOrderKey(day.key)) || '[]');
+    if(Array.isArray(parsed)) stored = parsed.filter(id => known.includes(id));
+  } catch(_error){
+    stored = [];
+  }
+  const merged = [...stored, ...known.filter(id => !stored.includes(id))];
+  const active = merged.filter(isExerciseActive);
+  const inactive = merged.filter(id => !isExerciseActive(id));
+  return [...active, ...inactive];
+}
+
+function migrateLegacyExerciseStorage(){
+  DATA.forEach(day => {
+    day.exercises.forEach((ex, exIdx) => {
+      const nSets = countSets(ex.s);
+      for(let setIdx = 0; setIdx < nSets; setIdx++){
+        const newCheck = storeKey(day.key, ex.uid, setIdx);
+        const oldCheck = legacyStoreKey(day.key, exIdx, setIdx);
+        if(localStorage.getItem(newCheck) === null && localStorage.getItem(oldCheck) !== null){
+          localStorage.setItem(newCheck, localStorage.getItem(oldCheck));
+        }
+
+        const newWeight = setWeightKey(day.key, ex.uid, setIdx);
+        const oldWeight = legacySetWeightKey(day.key, exIdx, setIdx);
+        if(localStorage.getItem(newWeight) === null){
+          const oldSetValue = localStorage.getItem(oldWeight);
+          const oldCommonValue = localStorage.getItem(legacyWeightKey(day.key, exIdx));
+          const value = oldSetValue !== null ? oldSetValue : oldCommonValue;
+          if(value !== null && value !== '') localStorage.setItem(newWeight, value);
+        }
+
+        const newReps = setRepsKey(day.key, ex.uid, setIdx);
+        const oldReps = legacySetRepsKey(day.key, exIdx, setIdx);
+        if(localStorage.getItem(newReps) === null && localStorage.getItem(oldReps) !== null){
+          localStorage.setItem(newReps, localStorage.getItem(oldReps));
+        }
+      }
+    });
+  });
 }
 
 function repRangeLabel(str){
@@ -1382,7 +1556,7 @@ DATA.forEach((day, dIdx) => {
   section.style.setProperty('--accent', `var(--${day.accent})`);
   section.style.display = 'none';
 
-  const totalSets = day.exercises.reduce((sum,ex)=> sum + countSets(ex.s), 0);
+  const totalSets = day.exercises.filter(ex => isExerciseActive(ex.uid)).reduce((sum,ex)=> sum + countSets(ex.s), 0);
 
   section.innerHTML = `
     <div class="phase-panel workout-panel">
@@ -1400,7 +1574,8 @@ DATA.forEach((day, dIdx) => {
     const nSets = countSets(ex.s);
     const card = document.createElement('div');
     card.className = 'exercise';
-    card.dataset.exIdx = eIdx;
+    card.dataset.exId = ex.uid;
+    card.dataset.day = day.key;
 
     const customImages = Array.isArray(ex.images) ? ex.images.filter(Boolean) : [];
     const img1 = customImages[0] || `${IMG_BASE}${ex.id}/0.jpg`;
@@ -1433,22 +1608,22 @@ DATA.forEach((day, dIdx) => {
 
     let circles = '';
     for(let i=0;i<nSets;i++){
-      circles += `<button class="set-circle" data-day="${day.key}" data-ex="${eIdx}" data-set="${i}">${i+1}</button>`;
+      circles += `<button class="set-circle" data-day="${day.key}" data-ex-id="${ex.uid}" data-set="${i}">${i+1}</button>`;
     }
     const rangeLabel = repRangeLabel(ex.s);
     const setInputs = Array.from({length:nSets}, (_, setIdx) => `
       <div class="performance-set">
         <div class="performance-set-title">${setIdx + 1}. szett</div>
         <div class="performance-field">
-          <label for="set-reps-${day.key}-${eIdx}-${setIdx}">Ismétlés</label>
-          <input type="number" id="set-reps-${day.key}-${eIdx}-${setIdx}"
-                 class="set-reps-input" data-day="${day.key}" data-ex-idx="${eIdx}" data-set-idx="${setIdx}"
+          <label for="set-reps-${ex.uid}-${setIdx}">Ismétlés</label>
+          <input type="number" id="set-reps-${ex.uid}-${setIdx}"
+                 class="set-reps-input" data-day="${day.key}" data-ex-id="${ex.uid}" data-set-idx="${setIdx}"
                  min="0" step="1" inputmode="numeric" placeholder="${rangeLabel}" value="">
         </div>
         <div class="performance-field">
-          <label for="set-weight-${day.key}-${eIdx}-${setIdx}">Súly (kg)</label>
-          <input type="number" id="set-weight-${day.key}-${eIdx}-${setIdx}"
-                 class="set-weight-input" data-day="${day.key}" data-ex-idx="${eIdx}" data-set-idx="${setIdx}"
+          <label for="set-weight-${ex.uid}-${setIdx}">Súly (kg)</label>
+          <input type="number" id="set-weight-${ex.uid}-${setIdx}"
+                 class="set-weight-input" data-day="${day.key}" data-ex-id="${ex.uid}" data-set-idx="${setIdx}"
                  min="0" step="0.5" inputmode="decimal" placeholder="kg" value="">
         </div>
       </div>`).join('');
@@ -1459,11 +1634,17 @@ DATA.forEach((day, dIdx) => {
     `;
 
     card.innerHTML = `
-      <button class="ex-head">
-        <span class="ex-name">${ex.n}</span>
-        <span class="ex-sets mono">${ex.s}</span>
-        <span class="chevron"></span>
-      </button>
+      <div class="exercise-row">
+        <button class="drag-handle" type="button" aria-label="${ex.n} sorrendjének módosítása" title="Fogd meg és húzd fel vagy le">⠿</button>
+        <button class="ex-head" type="button">
+          <span class="ex-name">${ex.n}</span>
+          <span class="ex-sets mono">${ex.s}</span>
+          <span class="chevron"></span>
+        </button>
+        <button class="exercise-state-btn" type="button" aria-label="Gyakorlat kikapcsolása" title="Gyakorlat kikapcsolása">
+          <span class="state-icon">⏻</span><span class="state-text">KI</span>
+        </button>
+      </div>
       <div class="ex-body">
         <div class="ex-body-inner">
           ${weightHtml}
@@ -1482,7 +1663,15 @@ DATA.forEach((day, dIdx) => {
 
     const head = card.querySelector('.ex-head');
     const body = card.querySelector('.ex-body');
+    const dragHandle = card.querySelector('.drag-handle');
+    const stateButton = card.querySelector('.exercise-state-btn');
     let loaded = false;
+
+    stateButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      toggleExerciseState(day.key, ex.uid);
+    });
+    setupExerciseDrag(dragHandle, card, list, day.key);
 
     head.addEventListener('click', () => {
       const wasOpen = card.classList.contains('open');
@@ -1530,6 +1719,120 @@ DATA.forEach((day, dIdx) => {
 
   section.querySelector('[data-reset]').addEventListener('click', () => resetDay(day.key));
 });
+
+
+// -------------------- GYAKORLATSORREND ÉS AKTÍV ÁLLAPOT --------------------
+function updateExerciseCardState(card){
+  if(!card) return;
+  const active = isExerciseActive(card.dataset.exId);
+  card.classList.toggle('inactive', !active);
+  const button = card.querySelector('.exercise-state-btn');
+  if(button){
+    button.querySelector('.state-text').textContent = active ? 'KI' : 'BE';
+    button.setAttribute('aria-label', active ? 'Gyakorlat kikapcsolása' : 'Gyakorlat bekapcsolása');
+    button.title = active ? 'Gyakorlat kikapcsolása' : 'Gyakorlat bekapcsolása';
+  }
+}
+
+function applyExerciseLayout(dayKey){
+  const day = DATA.find(item => item.key === dayKey);
+  const list = document.querySelector(`#day-${dayKey} .ex-list`);
+  if(!day || !list) return;
+  const cards = new Map([...list.querySelectorAll('.exercise')].map(card => [card.dataset.exId, card]));
+  getExerciseOrder(day).forEach(exId => {
+    const card = cards.get(exId);
+    if(card){
+      updateExerciseCardState(card);
+      list.appendChild(card);
+    }
+  });
+  refreshProgress(dayKey);
+}
+
+function toggleExerciseState(dayKey, exId){
+  const active = isExerciseActive(exId);
+  localStorage.setItem(exerciseActiveKey(exId), active ? '0' : '1');
+  const day = DATA.find(item => item.key === dayKey);
+  if(!day) return;
+  const order = getExerciseOrder(day).filter(id => id !== exId);
+  if(active) order.push(exId); else order.unshift(exId);
+  saveExerciseOrder(dayKey, order);
+
+  const card = document.querySelector(`#day-${dayKey} .exercise[data-ex-id="${exId}"]`);
+  if(card && active){
+    card.classList.remove('open');
+    const body = card.querySelector('.ex-body');
+    if(body) body.style.maxHeight = '0';
+  }
+  applyExerciseLayout(dayKey);
+}
+
+function saveCurrentDomOrder(dayKey){
+  const list = document.querySelector(`#day-${dayKey} .ex-list`);
+  if(!list) return;
+  saveExerciseOrder(dayKey, [...list.querySelectorAll('.exercise')].map(card => card.dataset.exId));
+}
+
+function setupExerciseDrag(handle, card, list, dayKey){
+  if(!handle || !card || !list) return;
+  let dragging = false;
+  let pointerId = null;
+  let lastY = 0;
+  let scrollFrame = 0;
+
+  function autoScroll(){
+    if(!dragging) return;
+    const edge = 82;
+    let delta = 0;
+    if(lastY < edge) delta = -12;
+    else if(lastY > window.innerHeight - edge) delta = 12;
+    if(delta) window.scrollBy(0, delta);
+    scrollFrame = requestAnimationFrame(autoScroll);
+  }
+
+  function finishDrag(){
+    if(!dragging) return;
+    dragging = false;
+    card.classList.remove('dragging');
+    document.body.classList.remove('exercise-drag-active');
+    if(scrollFrame) cancelAnimationFrame(scrollFrame);
+    scrollFrame = 0;
+    try{ if(pointerId !== null) handle.releasePointerCapture(pointerId); } catch(_error){}
+    pointerId = null;
+    saveCurrentDomOrder(dayKey);
+  }
+
+  handle.addEventListener('pointerdown', event => {
+    if(event.pointerType === 'mouse' && event.button !== 0) return;
+    event.preventDefault();
+    dragging = true;
+    pointerId = event.pointerId;
+    lastY = event.clientY;
+    handle.setPointerCapture(pointerId);
+    card.classList.add('dragging');
+    document.body.classList.add('exercise-drag-active');
+    if(scrollFrame) cancelAnimationFrame(scrollFrame);
+    scrollFrame = requestAnimationFrame(autoScroll);
+  });
+
+  handle.addEventListener('pointermove', event => {
+    if(!dragging || event.pointerId !== pointerId) return;
+    event.preventDefault();
+    lastY = event.clientY;
+    const underPointer = document.elementFromPoint(event.clientX, event.clientY);
+    const target = underPointer?.closest('.exercise');
+    if(!target || target === card || target.parentElement !== list) return;
+    // Az aktív és kikapcsolt csoportok külön maradnak, hogy a kikapcsoltak mindig alul legyenek.
+    if(target.classList.contains('inactive') !== card.classList.contains('inactive')) return;
+    const rect = target.getBoundingClientRect();
+    const after = event.clientY > rect.top + rect.height / 2;
+    list.insertBefore(card, after ? target.nextSibling : target);
+  });
+
+  handle.addEventListener('pointerup', finishDrag);
+  handle.addEventListener('pointercancel', finishDrag);
+  handle.addEventListener('lostpointercapture', finishDrag);
+}
 
 
 // -------------------- KÜLÖN NYÚJTÁS FÜL --------------------
@@ -1627,30 +1930,21 @@ document.addEventListener('change', (e) => {
   const input = e.target.closest('.set-weight-input');
   if (!input) return;
   const day = input.dataset.day;
-  const exIdx = input.dataset.exIdx;
+  const exId = input.dataset.exId;
   const setIdx = input.dataset.setIdx;
   const val = input.value.trim();
-  const key = setWeightKey(day, exIdx, setIdx);
+  const key = setWeightKey(day, exId, setIdx);
   if (val === '') localStorage.removeItem(key); else localStorage.setItem(key, val);
 });
 
 function loadSetWeights(dayKey){
   document.querySelectorAll(`#day-${dayKey} .set-weight-input`).forEach(input => {
     const day = input.dataset.day;
-    const exIdx = input.dataset.exIdx;
+    const exId = input.dataset.exId;
     const setIdx = input.dataset.setIdx;
-    const key = setWeightKey(day, exIdx, setIdx);
+    const key = setWeightKey(day, exId, setIdx);
     let stored = localStorage.getItem(key);
 
-    // Az előző verzió egyetlen közös súlyértékét első megnyitáskor
-    // átmásolja mindhárom sorozathoz, hogy a korábbi adat ne vesszen el.
-    if (stored === null) {
-      const legacy = localStorage.getItem(legacyWeightKey(day, exIdx));
-      if (legacy !== null && legacy !== '') {
-        stored = legacy;
-        localStorage.setItem(key, legacy);
-      }
-    }
     input.value = stored !== null ? stored : '';
   });
 }
@@ -1660,16 +1954,16 @@ document.addEventListener('change', (e) => {
   const input = e.target.closest('.set-reps-input');
   if (!input) return;
   const day = input.dataset.day;
-  const exIdx = input.dataset.exIdx;
+  const exId = input.dataset.exId;
   const setIdx = input.dataset.setIdx;
   const val = input.value.trim();
-  const key = setRepsKey(day, exIdx, setIdx);
+  const key = setRepsKey(day, exId, setIdx);
   if (val === '') localStorage.removeItem(key); else localStorage.setItem(key, val);
 });
 
 function loadSetReps(dayKey){
   document.querySelectorAll(`#day-${dayKey} .set-reps-input`).forEach(input => {
-    const stored = localStorage.getItem(setRepsKey(input.dataset.day, input.dataset.exIdx, input.dataset.setIdx));
+    const stored = localStorage.getItem(setRepsKey(input.dataset.day, input.dataset.exId, input.dataset.setIdx));
     input.value = stored !== null ? stored : '';
   });
 }
@@ -1677,12 +1971,14 @@ function loadSetReps(dayKey){
 // -------------------- PIPÁK KEZELÉSE --------------------
 function refreshProgress(dayKey){
   const day = DATA.find(d => d.key === dayKey);
-  const total = day.exercises.reduce((sum,ex)=> sum + countSets(ex.s), 0);
+  if(!day) return;
+  const activeExercises = day.exercises.filter(ex => isExerciseActive(ex.uid));
+  const total = activeExercises.reduce((sum,ex)=> sum + countSets(ex.s), 0);
   let done = 0;
-  day.exercises.forEach((ex, eIdx) => {
+  activeExercises.forEach(ex => {
     const n = countSets(ex.s);
     for(let i=0;i<n;i++){
-      if(localStorage.getItem(storeKey(dayKey, eIdx, i)) === '1') done++;
+      if(localStorage.getItem(storeKey(dayKey, ex.uid, i)) === '1') done++;
     }
   });
   const label = document.getElementById(`label-${dayKey}`);
@@ -1691,7 +1987,7 @@ function refreshProgress(dayKey){
 
 function applyStoredChecks(dayKey){
   document.querySelectorAll(`#day-${dayKey} .set-circle`).forEach(btn => {
-    const key = storeKey(dayKey, btn.dataset.ex, btn.dataset.set);
+    const key = storeKey(dayKey, btn.dataset.exId, btn.dataset.set);
     btn.classList.toggle('done', localStorage.getItem(key) === '1');
   });
   loadSetWeights(dayKey);
@@ -1710,9 +2006,9 @@ document.addEventListener('click', (e) => {
   const btn = e.target.closest('.set-circle');
   if(!btn) return;
   const dayKey = btn.dataset.day;
-  const exIdx = btn.dataset.ex;
+  const exId = btn.dataset.exId;
   const setIdx = btn.dataset.set;
-  const key = storeKey(dayKey, exIdx, setIdx);
+  const key = storeKey(dayKey, exId, setIdx);
   const nowDone = !btn.classList.contains('done');
   btn.classList.toggle('done', nowDone);
   if(nowDone) localStorage.setItem(key, '1'); else localStorage.removeItem(key);
@@ -1736,9 +2032,9 @@ document.addEventListener('click', (e) => {
 function resetDay(dayKey){
   if(!confirm('Biztosan törlöd a mai pipákat ehhez a naphoz?')) return;
   const day = DATA.find(d => d.key === dayKey);
-  day.exercises.forEach((ex, eIdx) => {
+  day.exercises.filter(ex => isExerciseActive(ex.uid)).forEach(ex => {
     const n = countSets(ex.s);
-    for(let i=0;i<n;i++) localStorage.removeItem(storeKey(dayKey, eIdx, i));
+    for(let i=0;i<n;i++) localStorage.removeItem(storeKey(dayKey, ex.uid, i));
   });
   ['warmup','cooldown'].forEach(phase => {
     const items = Array.isArray(day[phase]) ? day[phase] : [];
@@ -1760,8 +2056,13 @@ function showDay(dayKey){
 
 // -------------------- EXPORT / IMPORT --------------------
 const BACKUP_APP_ID = 'mark-edzesterv';
-const BACKUP_VERSION = 1;
+const BACKUP_VERSION = 2;
 const BACKUP_PREFIXES = [
+  'edzes_v10_',
+  'set_weight_v12_',
+  'set_reps_v12_',
+  'exercise_order_v1_',
+  'exercise_active_v1_',
   'edzes_v9_',
   'weight_v9_',
   'set_weight_v11_',
@@ -1813,7 +2114,7 @@ function exportWorkoutData(){
 
 function validateBackup(payload){
   if(!payload || typeof payload !== 'object') return false;
-  if(payload.app !== BACKUP_APP_ID || payload.version !== BACKUP_VERSION) return false;
+  if(payload.app !== BACKUP_APP_ID || ![1, BACKUP_VERSION].includes(payload.version)) return false;
   if(!payload.data || typeof payload.data !== 'object' || Array.isArray(payload.data)) return false;
   return Object.entries(payload.data).every(([key, value]) =>
     isWorkoutStorageKey(key) && (typeof value === 'string' || value === null)
@@ -1845,6 +2146,8 @@ async function importWorkoutData(file){
     Object.entries(payload.data).forEach(([key, value]) => {
       if(value !== null) localStorage.setItem(key, value);
     });
+    migrateLegacyExerciseStorage();
+    DATA.forEach(day => applyExerciseLayout(day.key));
     // Az importált adatokat azonnal visszatöltjük a már megjelenített mezőkbe,
     // így nincs szükség kézi oldalfrissítésre.
     DATA.forEach(day => applyStoredChecks(day.key));
@@ -1886,6 +2189,8 @@ importDataInput?.addEventListener('change', async () => {
 });
 
 // -------------------- INDULÁS --------------------
+migrateLegacyExerciseStorage();
+DATA.forEach(day => applyExerciseLayout(day.key));
 const jsWeekday = new Date().getDay();
 const dayMap = {0:'monday', 1:'monday', 2:'tuesday', 3:'thursday', 4:'thursday', 5:'friday', 6:'monday'};
 const savedDay = localStorage.getItem('selectedDay');
