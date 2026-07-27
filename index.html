@@ -794,6 +794,39 @@
     background:linear-gradient(180deg,color-mix(in srgb,var(--progress) 9%,var(--card)),var(--card));
   }
   .progress-toolbar-row{ display:flex; align-items:flex-end; gap:9px; flex-wrap:wrap; }
+  .progress-search-toolbar{
+    display:flex; align-items:center; gap:8px; width:100%; min-width:0;
+    margin:0 0 16px;
+  }
+  .progress-search-box{
+    flex:1 1 auto; min-width:0; display:flex; align-items:center; gap:7px;
+  }
+  .progress-search-input{
+    flex:1 1 0; width:0; min-width:0; min-height:42px; padding:9px 12px;
+    border:1px solid color-mix(in srgb,var(--progress) 34%,var(--line));
+    border-radius:12px; background:color-mix(in srgb,var(--progress) 4%,var(--bg));
+    color:var(--ink); font-family:'Inter',sans-serif;
+  }
+  .progress-search-input:focus{
+    outline:none; border-color:var(--progress);
+    box-shadow:0 0 0 2px color-mix(in srgb,var(--progress) 13%,transparent);
+  }
+  .progress-search-input::-webkit-search-cancel-button{ display:none; }
+  .progress-search-clear{
+    width:42px; height:42px; flex:0 0 42px; border-radius:12px; cursor:pointer;
+    border:1px solid color-mix(in srgb,var(--progress) 28%,var(--line));
+    background:color-mix(in srgb,var(--progress) 7%,var(--card));
+    color:var(--ink-muted); font-size:21px; line-height:1;
+  }
+  .progress-search-clear:active{
+    background:color-mix(in srgb,var(--progress) 14%,var(--card));
+  }
+  @media (max-width:430px){
+    .progress-search-toolbar{ gap:6px; }
+    .progress-search-box{ gap:6px; }
+    .progress-search-input{ min-height:40px; padding:8px 10px; }
+    .progress-search-clear{ width:40px; height:40px; flex-basis:40px; }
+  }
   .progress-control{ flex:1; min-width:180px; }
   .progress-control-label{
     display:block; margin:0 0 6px; color:var(--ink-muted);
@@ -1825,6 +1858,7 @@ let progressActiveList=null;
 let progressInactiveList=null;
 let progressPendingBanner=null;
 let progressDateInput=null;
+let progressSearchInput=null;
 let progressMode='sets';
 let progressRange='8';
 let progressEditing=null;
@@ -2175,10 +2209,18 @@ function renderProgress(){
   if(!progressSection||!progressActiveList||!progressInactiveList) return;
   cleanupOrphanProgressData();
   const assignments=assignedDaysByExercise();
-  const active=[...COLLECTION].filter(exercise=>(assignments.get(exercise.uid)||[]).length).sort(compareExerciseNames);
-  const inactive=[...COLLECTION].filter(exercise=>!(assignments.get(exercise.uid)||[]).length).sort(compareExerciseNames);
-  progressActiveList.innerHTML=active.length?active.map(exercise=>createProgressCardHtml(exercise,assignments.get(exercise.uid)||[])).join(''):'<div class="progress-empty">Nincs egyik napra sem felvett gyakorlat.</div>';
-  progressInactiveList.innerHTML=inactive.length?inactive.map(exercise=>createProgressCardHtml(exercise,[])).join(''):'<div class="progress-empty">Minden gyakorlat szerepel legalább egy napon.</div>';
+  const query=String(progressSearchInput?.value||'').trim().toLocaleLowerCase('hu-HU');
+  const matchesSearch=exercise=>!query||exercise.n.toLocaleLowerCase('hu-HU').includes(query);
+  const allActive=[...COLLECTION].filter(exercise=>(assignments.get(exercise.uid)||[]).length).sort(compareExerciseNames);
+  const allInactive=[...COLLECTION].filter(exercise=>!(assignments.get(exercise.uid)||[]).length).sort(compareExerciseNames);
+  const active=allActive.filter(matchesSearch);
+  const inactive=allInactive.filter(matchesSearch);
+  progressActiveList.innerHTML=active.length
+    ?active.map(exercise=>createProgressCardHtml(exercise,assignments.get(exercise.uid)||[])).join('')
+    :`<div class="progress-empty">${query?'Nincs találat a felvett gyakorlatok között.':'Nincs egyik napra sem felvett gyakorlat.'}</div>`;
+  progressInactiveList.innerHTML=inactive.length
+    ?inactive.map(exercise=>createProgressCardHtml(exercise,[])).join('')
+    :`<div class="progress-empty">${query?'Nincs találat a nem felvett gyakorlatok között.':'Minden gyakorlat szerepel legalább egy napon.'}</div>`;
   progressSection.querySelector('[data-progress-count="active"]').textContent=String(active.length);
   progressSection.querySelector('[data-progress-count="inactive"]').textContent=String(inactive.length);
   progressSection.querySelectorAll('[data-progress-mode]').forEach(button=>button.classList.toggle('active',button.dataset.progressMode===progressMode));
@@ -2198,12 +2240,20 @@ function buildProgressView(section){
   const cutoff=storedCutoff&&storedCutoff<=today?storedCutoff:today;
   const activeOpen=localStorage.getItem(PROGRESS_ACTIVE_OPEN_KEY)!=='0';
   const inactiveOpen=localStorage.getItem(PROGRESS_INACTIVE_OPEN_KEY)==='1';
-  section.innerHTML=`<div class="progress-toolbar"><div class="progress-toolbar-row"><div class="progress-control"><label class="progress-control-label" for="progress-cutoff-date">Eredmények eddig</label><div class="progress-date-line"><input class="progress-date-input" id="progress-cutoff-date" type="date" max="${today}" value="${cutoff}"><button class="progress-today-btn" id="progress-today-btn" type="button">MA</button></div></div></div><div class="progress-toolbar-row"><div class="progress-control"><span class="progress-control-label">Grafikon nézete</span><div class="progress-choice-row"><button class="progress-choice-btn" type="button" data-progress-mode="sets">SZETTEK</button><button class="progress-choice-btn" type="button" data-progress-mode="volume">VOLUMEN</button><button class="progress-choice-btn" type="button" data-progress-mode="best">LEGJOBB SZETT</button></div></div></div><div class="progress-toolbar-row"><div class="progress-control"><span class="progress-control-label">Megjelenített alkalmak</span><div class="progress-choice-row"><button class="progress-choice-btn" type="button" data-progress-range="4">4</button><button class="progress-choice-btn" type="button" data-progress-range="8">8</button><button class="progress-choice-btn" type="button" data-progress-range="12">12</button><button class="progress-choice-btn" type="button" data-progress-range="all">ÖSSZES</button></div></div></div></div><div class="progress-pending-banner" hidden><span class="progress-pending-dot"></span><span class="progress-pending-text"></span></div><div class="progress-group ${activeOpen?'open':''}" data-progress-group="active"><button class="progress-group-head" type="button"><span class="progress-group-title">Felvett gyakorlatok</span><span class="progress-group-count" data-progress-count="active">0</span><span class="progress-group-arrow"></span></button><div class="progress-group-body"><div class="progress-active-list"></div></div></div><div class="progress-group ${inactiveOpen?'open':''}" data-progress-group="inactive"><button class="progress-group-head" type="button"><span class="progress-group-title">Nem felvett gyakorlatok</span><span class="progress-group-count" data-progress-count="inactive">0</span><span class="progress-group-arrow"></span></button><div class="progress-group-body"><div class="progress-inactive-list"></div></div></div>`;
+  section.innerHTML=`<div class="progress-toolbar"><div class="progress-toolbar-row"><div class="progress-control"><label class="progress-control-label" for="progress-cutoff-date">Eredmények eddig</label><div class="progress-date-line"><input class="progress-date-input" id="progress-cutoff-date" type="date" max="${today}" value="${cutoff}"><button class="progress-today-btn" id="progress-today-btn" type="button">MA</button></div></div></div><div class="progress-toolbar-row"><div class="progress-control"><span class="progress-control-label">Grafikon nézete</span><div class="progress-choice-row"><button class="progress-choice-btn" type="button" data-progress-mode="sets">SZETTEK</button><button class="progress-choice-btn" type="button" data-progress-mode="volume">VOLUMEN</button><button class="progress-choice-btn" type="button" data-progress-mode="best">LEGJOBB SZETT</button></div></div></div><div class="progress-toolbar-row"><div class="progress-control"><span class="progress-control-label">Megjelenített alkalmak</span><div class="progress-choice-row"><button class="progress-choice-btn" type="button" data-progress-range="4">4</button><button class="progress-choice-btn" type="button" data-progress-range="8">8</button><button class="progress-choice-btn" type="button" data-progress-range="12">12</button><button class="progress-choice-btn" type="button" data-progress-range="all">ÖSSZES</button></div></div></div></div><div class="progress-search-toolbar"><div class="progress-search-box"><input class="progress-search-input" type="search" placeholder="Gyakorlat keresése" autocomplete="off" aria-label="Keresés a fejlődés gyakorlatai között"><button class="progress-search-clear" type="button" aria-label="Keresés törlése">×</button></div></div><div class="progress-pending-banner" hidden><span class="progress-pending-dot"></span><span class="progress-pending-text"></span></div><div class="progress-group ${activeOpen?'open':''}" data-progress-group="active"><button class="progress-group-head" type="button"><span class="progress-group-title">Felvett gyakorlatok</span><span class="progress-group-count" data-progress-count="active">0</span><span class="progress-group-arrow"></span></button><div class="progress-group-body"><div class="progress-active-list"></div></div></div><div class="progress-group ${inactiveOpen?'open':''}" data-progress-group="inactive"><button class="progress-group-head" type="button"><span class="progress-group-title">Nem felvett gyakorlatok</span><span class="progress-group-count" data-progress-count="inactive">0</span><span class="progress-group-arrow"></span></button><div class="progress-group-body"><div class="progress-inactive-list"></div></div></div>`;
   progressSection=section;
   progressActiveList=section.querySelector('.progress-active-list');
   progressInactiveList=section.querySelector('.progress-inactive-list');
   progressPendingBanner=section.querySelector('.progress-pending-banner');
   progressDateInput=section.querySelector('#progress-cutoff-date');
+  progressSearchInput=section.querySelector('.progress-search-input');
+  const progressSearchClear=section.querySelector('.progress-search-clear');
+  progressSearchInput.addEventListener('input',renderProgress);
+  progressSearchClear.addEventListener('click',()=>{
+    progressSearchInput.value='';
+    renderProgress();
+    progressSearchInput.focus();
+  });
   section.querySelector('#progress-today-btn').addEventListener('click',()=>{
     progressDateInput.value=today; localStorage.setItem(PROGRESS_CUTOFF_KEY,today); renderProgress();
   });
