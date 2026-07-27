@@ -636,28 +636,13 @@
     --accent:var(--collection);
   }
   .collection-toolbar{
-    display:flex; align-items:center; justify-content:flex-end; gap:8px;
+    display:flex; align-items:center; gap:8px;
     margin:0 0 12px;
     width:100%; min-width:0;
-  }
-  .collection-toolbar.search-open{ justify-content:flex-start; }
-  .collection-search-toggle{
-    min-height:42px; padding:9px 13px; border-radius:12px; cursor:pointer;
-    flex:0 0 auto; white-space:nowrap;
-    border:1px solid color-mix(in srgb,var(--collection) 38%,var(--line));
-    background:color-mix(in srgb,var(--collection) 8%,var(--card));
-    color:#d8c2a4; font-family:'Space Grotesk',sans-serif;
-    font-size:12px; font-weight:700; letter-spacing:.04em;
-    transition:background .15s ease,border-color .15s ease,transform .15s ease;
-  }
-  .collection-search-toggle:active{
-    transform:scale(.97);
-    background:color-mix(in srgb,var(--collection) 15%,var(--card));
   }
   .collection-search-box{
     flex:1 1 auto; min-width:0; display:flex; align-items:center; gap:7px;
   }
-  .collection-search-box[hidden]{ display:none; }
   .collection-search-input{
     flex:1 1 0; width:0; min-width:0; min-height:42px; padding:9px 12px;
     border:1px solid color-mix(in srgb,var(--collection) 34%,var(--line));
@@ -685,7 +670,6 @@
   .collection-empty[hidden]{ display:none; }
   @media (max-width:430px){
     .collection-toolbar{ gap:6px; }
-    .collection-search-toggle{ min-height:40px; padding:8px 10px; font-size:11px; }
     .collection-search-box{ gap:6px; }
     .collection-search-input{ min-height:40px; padding:8px 10px; }
     .collection-search-clear{ width:40px; height:40px; flex-basis:40px; }
@@ -1835,8 +1819,6 @@ const mainEl=document.getElementById('main');
 const dayLists=new Map();
 let collectionList=null;
 let collectionEmpty=null;
-let collectionToolbar=null;
-let collectionSearchBox=null;
 let collectionSearchInput=null;
 let progressSection=null;
 let progressActiveList=null;
@@ -2342,8 +2324,7 @@ function buildViews(){
     if(view.key==='collection'){
       section.innerHTML=`
         <div class="collection-toolbar">
-          <button class="collection-search-toggle" type="button" aria-expanded="false">KERESÉS</button>
-          <div class="collection-search-box" hidden>
+          <div class="collection-search-box">
             <input class="collection-search-input" type="search" placeholder="Gyakorlat keresése" autocomplete="off" aria-label="Keresés a gyűjteményben">
             <button class="collection-search-clear" type="button" aria-label="Keresés törlése">×</button>
           </div>
@@ -2354,23 +2335,8 @@ function buildViews(){
         </div>`;
       collectionList=section.querySelector('.collection-list');
       collectionEmpty=section.querySelector('.collection-empty');
-      collectionToolbar=section.querySelector('.collection-toolbar');
-      collectionSearchBox=section.querySelector('.collection-search-box');
       collectionSearchInput=section.querySelector('.collection-search-input');
-      const searchToggle=section.querySelector('.collection-search-toggle');
       const searchClear=section.querySelector('.collection-search-clear');
-      searchToggle.addEventListener('click',()=>{
-        const opening=collectionSearchBox.hidden;
-        collectionSearchBox.hidden=!opening;
-        collectionToolbar.classList.toggle('search-open',opening);
-        searchToggle.setAttribute('aria-expanded',String(opening));
-        if(opening){
-          setTimeout(()=>collectionSearchInput.focus(),30);
-        }else{
-          collectionSearchInput.value='';
-          renderCollection();
-        }
-      });
       collectionSearchInput.addEventListener('input',renderCollection);
       searchClear.addEventListener('click',()=>{
         collectionSearchInput.value='';
