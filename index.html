@@ -22,6 +22,13 @@
     --pull:#4AA8FF;
     --leg:#4ADE80;
     --upper:#B98BFA;
+
+    /* Egységes napi színtéma – a korábbi pénteki smaragdzöld dizájn */
+    --monday:#5FA078;
+    --tuesday:#5FA078;
+    --thursday:#5FA078;
+    --friday:#5FA078;
+
     --collection:#A86F2A;
     --progress:#5E82C6;
 
@@ -72,8 +79,25 @@
     background:var(--ink-faint); margin:0 auto 5px;
     transition:background .15s ease, box-shadow .15s ease;
   }
-  .tab.active{ background:var(--card); border-color:var(--accent); color:var(--ink); }
-  .tab.active .dot{ background:var(--accent); box-shadow:0 0 8px var(--accent); }
+  .tab.active{
+    background:linear-gradient(180deg,
+      color-mix(in srgb,var(--accent) 13%,var(--card)),
+      color-mix(in srgb,var(--accent) 5%,var(--card))
+    );
+    border-color:color-mix(in srgb,var(--accent) 72%,var(--line));
+    color:var(--ink);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.025),
+               0 4px 14px color-mix(in srgb,var(--accent) 8%,transparent);
+  }
+  .tab.active .dot{
+    background:var(--accent);
+    box-shadow:0 0 7px color-mix(in srgb,var(--accent) 55%,transparent);
+  }
+  .tab[data-key="monday"] .dot{ background:color-mix(in srgb,var(--monday) 68%,var(--ink-faint)); }
+  .tab[data-key="tuesday"] .dot{ background:color-mix(in srgb,var(--tuesday) 68%,var(--ink-faint)); }
+  .tab[data-key="thursday"] .dot{ background:color-mix(in srgb,var(--thursday) 68%,var(--ink-faint)); }
+  .tab[data-key="friday"] .dot{ background:color-mix(in srgb,var(--friday) 68%,var(--ink-faint)); }
+  .tab.active .dot{ background:var(--accent); }
 
   /* ---------- Day section ---------- */
   main{ max-width:560px; margin:0 auto; padding:18px 14px 0; }
@@ -1051,7 +1075,7 @@ const DATA = [
     "key": "monday",
     "label": "HÉTFŐ",
     "sub": "Felsőtest A – vízszintes nyomás, széles hát, váll és kar",
-    "accent": "upper",
+    "accent": "monday",
     "exercises": [
       {
         "uid": "mon-chest-press-01",
@@ -1169,7 +1193,7 @@ const DATA = [
     "key": "tuesday",
     "label": "KEDD",
     "sub": "Alsótest A – combfeszítő fókusz, combhajlító, vádli és törzs",
-    "accent": "leg",
+    "accent": "tuesday",
     "exercises": [
       {
         "uid": "tue-belt-hack-squat-01",
@@ -1252,7 +1276,7 @@ const DATA = [
     "key": "thursday",
     "label": "CSÜTÖRTÖK",
     "sub": "Felsőtest B – felső mellkas, hátvastagság, váll és kar",
-    "accent": "upper",
+    "accent": "thursday",
     "exercises": [
       {
         "uid": "thu-incline-chest-press-01",
@@ -1363,7 +1387,7 @@ const DATA = [
     "key": "friday",
     "label": "PÉNTEK",
     "sub": "Alsótest B – második lábinger, vádli, törzs és alsó hát",
-    "accent": "leg",
+    "accent": "friday",
     "exercises": [
       {
         "uid": "fri-leg-press-01",
@@ -1726,7 +1750,6 @@ function createExerciseCard(exercise,context){
       ${left}
       <button class="ex-head" type="button">
         <span class="ex-name">${exercise.n}</span>
-        <span class="ex-sets mono">${exercise.s}</span>
         <span class="chevron"></span>
       </button>
       ${right}
