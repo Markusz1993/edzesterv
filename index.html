@@ -645,9 +645,12 @@
     --accent:var(--collection);
   }
   .collection-toolbar{
-    display:flex; align-items:center; gap:8px;
+    display:grid; gap:9px;
     margin:0 0 12px;
     width:100%; min-width:0;
+  }
+  .collection-search-row{
+    display:flex; align-items:center; gap:8px; width:100%; min-width:0;
   }
   .collection-search-box{
     flex:1 1 auto; min-width:0; display:flex; align-items:center; gap:7px;
@@ -672,16 +675,59 @@
   .collection-search-clear:active{
     background:color-mix(in srgb,var(--collection) 14%,var(--card));
   }
+  .collection-filter-toggle{
+    flex:0 0 auto; min-height:42px; padding:8px 12px; border-radius:12px; cursor:pointer;
+    border:1px solid color-mix(in srgb,var(--collection) 38%,var(--line));
+    background:color-mix(in srgb,var(--collection) 9%,var(--card));
+    color:#d8c0a2; font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:700;
+    letter-spacing:.045em; white-space:nowrap;
+  }
+  .collection-filter-toggle:active,
+  .collection-filter-toggle.active{
+    border-color:var(--collection);
+    background:color-mix(in srgb,var(--collection) 20%,var(--card-hover));
+    color:#f0dfc9;
+  }
+  .collection-filter-toggle .filter-toggle-mark{
+    display:inline-block; margin-left:5px; transition:transform .18s ease;
+  }
+  .collection-filter-toggle[aria-expanded="true"] .filter-toggle-mark{ transform:rotate(180deg); }
+  .collection-filter-panel{
+    display:flex; flex-wrap:wrap; gap:7px; padding:10px;
+    border:1px solid color-mix(in srgb,var(--collection) 28%,var(--line));
+    border-radius:14px;
+    background:linear-gradient(180deg,color-mix(in srgb,var(--collection) 7%,var(--card)),var(--card));
+  }
+  .collection-filter-panel[hidden]{ display:none; }
+  .collection-filter-btn{
+    min-height:38px; padding:8px 11px; border-radius:11px; cursor:pointer;
+    border:1px solid color-mix(in srgb,var(--collection) 25%,var(--line));
+    background:color-mix(in srgb,var(--collection) 5%,var(--bg));
+    color:var(--ink-muted); font-family:'Space Grotesk',sans-serif;
+    font-size:11px; font-weight:700; letter-spacing:.025em;
+  }
+  .collection-filter-btn:active{
+    background:color-mix(in srgb,var(--collection) 15%,var(--card-hover));
+  }
+  .collection-filter-btn.active{
+    border-color:var(--collection);
+    background:color-mix(in srgb,var(--collection) 22%,var(--card-hover));
+    color:#f0dfc9;
+    box-shadow:0 0 0 1px color-mix(in srgb,var(--collection) 12%,transparent);
+  }
   .collection-empty{
     padding:22px 12px; text-align:center; color:var(--ink-muted);
     font-size:13px;
   }
   .collection-empty[hidden]{ display:none; }
   @media (max-width:430px){
-    .collection-toolbar{ gap:6px; }
-    .collection-search-box{ gap:6px; }
+    .collection-toolbar{ gap:7px; }
+    .collection-search-row,.collection-search-box{ gap:6px; }
     .collection-search-input{ min-height:40px; padding:8px 10px; }
     .collection-search-clear{ width:40px; height:40px; flex-basis:40px; }
+    .collection-filter-toggle{ min-height:40px; padding:7px 9px; font-size:10px; }
+    .collection-filter-panel{ gap:6px; padding:8px; }
+    .collection-filter-btn{ min-height:37px; padding:7px 9px; font-size:10px; }
   }
   .collection-section .workout-panel{
     background:linear-gradient(180deg,
@@ -1141,34 +1187,51 @@ const MUSCLES = {
   lowerback:   { hu:"Alsó hát (gerincfeszítők)", img:"Gray389%20-%20Erector%20spinae.png" }
 };
 
+const COLLECTION_MUSCLE_FILTERS = [
+  { key:'all', label:'ÖSSZES', primaries:[] },
+  { key:'chest', label:'MELL', primaries:['chest'] },
+  { key:'back', label:'HÁT', primaries:['lats','middleback','traps','lowerback'] },
+  { key:'shoulders', label:'VÁLL', primaries:['shoulders'] },
+  { key:'biceps', label:'BICEPSZ', primaries:['biceps'] },
+  { key:'triceps', label:'TRICEPSZ', primaries:['triceps'] },
+  { key:'core', label:'HAS', primaries:['core','obliques'] },
+  { key:'quadriceps', label:'COMBFESZÍTŐ', primaries:['quadriceps'] },
+  { key:'hamstrings', label:'COMBHAJLÍTÓ', primaries:['hamstrings'] },
+  { key:'calves', label:'VÁDLI', primaries:['calves'] },
+  { key:'glutes', label:'FARIZOM', primaries:['glutes'] }
+];
+
 
 const EXERCISE_FOCUS_BY_NAME = {
-  "Ülő gépi mellnyomás": "Nagy mellizom – középső–alsó rostok",
-  "Gépi tárogatás": "Nagy mellizom – középső, szegycsonti rostok",
-  "Széles lehúzás": "Széles hátizom – felső–külső hangsúly",
-  "Semleges fogású melltámaszos gépi evezés": "Széles hátizom alsó része és hátközép",
+  "Ülő gépi mellnyomás": "Nagy mellizom – szegycsonti, középső–alsó rostok",
+  "Gépi tárogatás": "Nagy mellizom – szegycsonti rostok",
+  "Széles lehúzás": "Széles hátizom – teljes izom",
+  "Semleges fogású melltámaszos gépi evezés": "Hátközép – rombuszizmok és középső csuklyásizom",
   "Gépi oldalemelés": "Deltaizom – oldalsó fej",
-  "Köteles tricepszletolás": "Tricepsz – oldalsó és középső fej",
-  "Álló kalapácsfogású bicepszhajlítás": "Karizom és karorsócsonti izom",
-  "Hack-guggolás gépen": "Négyfejű combizom – teljes elülső comb",
-  "45°-os lábtolás": "Négyfejű combizom – teljes elülső comb",
-  "Ülő gépi lábhajlítás": "Combhajlítók – teljes hátsó comb",
-  "Álló gépi vádliemelés": "Kétfejű lábikraizom",
-  "Gépi hasprés": "Egyenes hasizom – teljes hossz",
-  "Ferdepados gépi mellnyomás": "Nagy mellizom – felső, kulcscsonti rostok",
-  "Szűk lehúzás": "Széles hátizom – alsó rostok hangsúlya",
+  "Köteles tricepszletolás": "Tricepsz – teljes izom, oldalsó és középső fej hangsúlyával",
+  "Álló kalapácsfogású bicepszhajlítás": "Karizom (brachialis) és karorsócsonti izom hangsúlya",
+  "Hack-guggolás gépen": "Négyfejű combizom – teljes izomcsoport",
+  "45°-os lábtolás": "Négyfejű combizom – teljes izomcsoport",
+  "Ülő gépi lábhajlítás": "Combhajlító izmok – teljes izomcsoport",
+  "Álló gépi vádliemelés": "Kétfejű lábikraizom – külső és belső fej",
+  "Gépi hasprés": "Egyenes hasizom – teljes izom",
+  "Ferdepados gépi mellnyomás": "Nagy mellizom – kulcscsonti, felső rostok",
+  "Szűk lehúzás": "Széles hátizom – teljes izom",
   "Széles fogású melltámaszos gépi evezés": "Felső hát – rombuszizmok és középső csuklyásizom",
   "Fordított gépi tárogatás": "Deltaizom – hátsó fej",
   "Egykezes csigás oldalemelés": "Deltaizom – oldalsó fej",
-  "Tricepszletolás V-rúddal": "Tricepsz – oldalsó és középső fej",
-  "Csigás bicepszhajlítás": "Bicepsz – rövid és hosszú fej",
-  "Gépi lábnyújtás": "Négyfejű combizom – teljes elülső comb",
-  "Ülő gépi vádliemelés": "Gázlóizom",
-  "Súlyozott törzsemelés 45°-os padon": "Gerincfeszítők – ágyéki szakasz",
-  "Ülő csigás evezés párhuzamos fogantyúval": "Hátközép és széles hátizom alsó része",
+  "Tricepszletolás V-rúddal": "Tricepsz – teljes izom, oldalsó és középső fej hangsúlyával",
+  "Csigás bicepszhajlítás": "Bicepsz – hosszú és rövid fej",
+  "Gépi lábnyújtás": "Négyfejű combizom – teljes izomcsoport",
+  "Ülő gépi vádliemelés": "Gázlóizom (soleus)",
+  "Súlyozott törzsemelés 45°-os padon": "Gerincfeszítő izmok – ágyéki szakasz",
+  "Ülő csigás evezés párhuzamos fogantyúval": "Hátközép – rombuszizmok és középső csuklyásizom",
   "Gépi vállnyomás": "Deltaizom – elülső és oldalsó fej",
-  "Smith-keretes fekvenyomás": "Nagy mellizom – középső–alsó rostok",
-  "Ferdepados Smith-keretes fekvenyomás": "Nagy mellizom – felső, kulcscsonti rostok"
+  "Smith-keretes fekvenyomás": "Nagy mellizom – szegycsonti, középső–alsó rostok",
+  "Ferdepados Smith-keretes fekvenyomás": "Nagy mellizom – kulcscsonti, felső rostok",
+  "Hason fekvő gépi lábhajlítás": "Combhajlító izmok – teljes izomcsoport",
+  "Fej fölötti csigás tricepsznyújtás": "Tricepsz – hosszú fej hangsúlya",
+  "Pallof-nyomás": "Ferde hasizmok és haránt hasizom"
 };
 
 function exerciseFocus(exercise){
@@ -1664,6 +1727,59 @@ const COLLECTION_ONLY_EXERCISES = [
     "tip": "Ha mindhárom sorozatban elérted a 9 tiszta ismétlést, emelj a legkisebb tárcsalépéssel.",
     "setup": "Állítsd a pad háttámláját mérsékelt, körülbelül 25–35°-os dőlésre, majd helyezd a Smith-keret alá úgy, hogy a rúd a felső mellkasodra érkezzen. Fogd a rudat a vállszélességnél kissé szélesebben, húzd a lapockádat hátra és lefelé, és tartsd a fejedet és a medencédet a padon. A talpad legyen stabilan a talajon. Állítsd a biztonsági ütközőket közvetlenül a fájdalommentes alsó pont alá.",
     "avoid": "Ne állítsd túl meredekre a padot, mert a terhelés egyre inkább az elülső vállra kerül. Ne engedd a rudat a nyakadhoz, ne emeld fel a válladat, és ne told el a medencédet a padról. Ha a rúd nem a felső mellkasodra érkezik, igazítsd a pad helyzetét."
+  },
+  {
+    "uid": "collection-lying-leg-curl-01",
+    "n": "Hason fekvő gépi lábhajlítás",
+    "id": "Lying_Leg_Curls",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Lying_Leg_Curls/0.jpg",
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Lying_Leg_Curls/1.jpg"
+    ],
+    "primary": "hamstrings",
+    "secondary": [],
+    "rest": "90–120 mp",
+    "guide": "Tartsd a medencédet és a hasadat a párnán, majd a térded hajlításával húzd a sarkadat a farizmod irányába. A combod maradjon a gépen, a mozdulatot ne csípőemeléssel segítsd. A felső helyzetben röviden feszíts rá a combhajlítóra, majd 2–3 másodperc alatt engedd vissza a kart majdnem teljes térdnyújtásig úgy, hogy a súlylapok ne csapódjanak össze.",
+    "tip": "Ha mindhárom sorozatban elérted a 12 szabályos ismétlést, emelj a gépen a legkisebb elérhető fokozattal.",
+    "setup": "Feküdj hasra úgy, hogy a térdízületed közel essen a gép forgástengelyéhez. Állítsd a lábpárnát a lábszárad alsó részére, közvetlenül a boka fölé, ne az Achilles-ínra. A térded a pad szélénél vagy kissé mögötte legyen, a medencéd és a törzsed teljesen feküdjön fel, a fogantyúkat pedig stabilan fogd meg. A kezdőhelyzetben a térded legyen majdnem, de ne erőből teljesen kinyújtva.",
+    "avoid": "Ne emeld el a medencédet és a combodat a padról, ne homoríts rá a derekaddal, és ne rántsd fel a súlyt. Ha a lábpárna a bokádon vagy a térdhajlatodban nyom, állítsd újra a gépet. A mozgástartományt ne erőltesd görcs vagy térdfájdalom mellett."
+  },
+  {
+    "uid": "collection-overhead-cable-triceps-extension-01",
+    "n": "Fej fölötti csigás tricepsznyújtás",
+    "id": "Cable_Rope_Overhead_Triceps_Extension",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Cable_Rope_Overhead_Triceps_Extension/0.jpg",
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Cable_Rope_Overhead_Triceps_Extension/1.jpg"
+    ],
+    "primary": "triceps",
+    "secondary": [],
+    "rest": "60–90 mp",
+    "guide": "Tartsd a felkarodat a fejed mellett, a könyöködet pedig közel egymáshoz. A kötél alsó helyzetéből kizárólag a könyök nyújtásával emeld a kezed a fejed fölé. Fent nyújtsd ki kontrolláltan a karodat anélkül, hogy a válladat felhúznád, majd lassan engedd vissza a kötelet a fejed mögé addig, amíg erős, de fájdalommentes nyúlást érzel a tricepszedben.",
+    "tip": "Ha mindhárom sorozatban elérted a 12 tiszta ismétlést, emelj a csigán a legkisebb fokozattal.",
+    "setup": "Rögzíts kötelet az alsó csigához, fordulj háttal a gépnek, és emeld a kötelet a fejed mögé semleges fogással. Állj stabil, enyhén haránt terpeszben, a térded legyen laza, a bordáidat pedig tartsd a medencéd fölött. A könyököd nézzen előre-felfelé és maradjon a fejed közelében; lépj annyira előre, hogy a kábel a teljes mozgás alatt feszüljön.",
+    "avoid": "Ne homoríts nagyot, ne told előre a bordáidat, és ne mozgasd a felkarodat előre-hátra minden ismétlésnél. Ne engedd szétnyílni a könyöködet, és ne használj akkora súlyt, amelynél a derekaddal vagy a válladdal kell lendítened."
+  },
+  {
+    "uid": "collection-pallof-press-01",
+    "n": "Pallof-nyomás",
+    "id": "Pallof_Press",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Pallof_Press/0.jpg",
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Pallof_Press/1.jpg"
+    ],
+    "primary": "core",
+    "secondary": [
+      "obliques",
+      "shoulders",
+      "chest",
+      "triceps"
+    ],
+    "rest": "60–90 mp",
+    "guide": "Feszítsd meg a hasadat és a farizmodat, majd a fogantyút a mellkasod közepétől nyomd egyenesen előre. Ahogy a karod távolodik a testedtől, ne engedd, hogy a kábel irányába elfordítsa vagy oldalra húzza a törzsedet. Nyújtott kar mellett tartsd meg 1–2 másodpercig, majd kontrolláltan húzd vissza a fogantyút a mellkasodhoz. Az előírt ismétléseket mindkét oldalra végezd el.",
+    "tip": "A beírt ismétlésszám oldalanként értendő. Ha a 12/12/12 ismétlés mindkét oldalra stabil törzzsel megvan, emelj a legkisebb fokozattal.",
+    "setup": "Állítsd a csigát mellkasmagasságba, és rögzíts egykezes fogantyút. Állj oldalasan a géphez csípő- vagy vállszélességű terpeszben, enyhén hajlított térddel. Fogd meg a markolatot mindkét kézzel a mellkasod előtt, majd lépj oldalra addig, hogy a kábel már a kezdőhelyzetben is feszüljön. A vállad, a medencéd és a lábfejed előre nézzen, a bordáid maradjanak a medencéd fölött.",
+    "avoid": "Ne fordítsd el a válladat vagy a medencédet, ne dőlj a kábel irányával ellentétes oldalra, és ne engedd, hogy a derekad homorítással vegye át a stabilizálást. Ha a karod elfárad a törzsed előtt, csökkentsd a súlyt; itt a mozdulatlanság fontosabb, mint a nagy terhelés."
   }
 ];
 
@@ -2004,6 +2120,9 @@ const dayLists=new Map();
 let collectionList=null;
 let collectionEmpty=null;
 let collectionSearchInput=null;
+let collectionFilterPanel=null;
+let collectionFilterToggle=null;
+let collectionMuscleFilter='all';
 let progressSection=null;
 let progressActiveList=null;
 let progressInactiveList=null;
@@ -2022,12 +2141,47 @@ function compareExerciseNames(a,b){
   return a.n.localeCompare(b.n,'hu-HU',{sensitivity:'base',numeric:true});
 }
 
+function availableCollectionMuscleFilters(){
+  const primaries=new Set(COLLECTION.map(exercise=>exercise.primary));
+  return COLLECTION_MUSCLE_FILTERS.filter(filter=>
+    filter.key==='all'||filter.primaries.some(primary=>primaries.has(primary))
+  );
+}
+
+function renderCollectionMuscleFilters(){
+  if(!collectionFilterPanel) return;
+  const filters=availableCollectionMuscleFilters();
+  if(!filters.some(filter=>filter.key===collectionMuscleFilter)) collectionMuscleFilter='all';
+  collectionFilterPanel.replaceChildren();
+  filters.forEach(filter=>{
+    const button=document.createElement('button');
+    button.type='button';
+    button.className=`collection-filter-btn${filter.key===collectionMuscleFilter?' active':''}`;
+    button.dataset.filter=filter.key;
+    button.textContent=filter.label;
+    button.setAttribute('aria-pressed',filter.key===collectionMuscleFilter?'true':'false');
+    button.addEventListener('click',()=>{
+      collectionMuscleFilter=filter.key;
+      renderCollectionMuscleFilters();
+      renderCollection();
+    });
+    collectionFilterPanel.appendChild(button);
+  });
+  if(collectionFilterToggle){
+    const active=filters.find(filter=>filter.key===collectionMuscleFilter);
+    collectionFilterToggle.classList.toggle('active',collectionMuscleFilter!=='all');
+    collectionFilterToggle.title=collectionMuscleFilter==='all'?'Izomcsoport szerinti szűrés':`Aktív szűrő: ${active?.label||''}`;
+  }
+}
+
 function renderCollection(){
   if(!collectionList) return;
   const query=String(collectionSearchInput?.value||'').trim().toLocaleLowerCase('hu-HU');
+  const activeFilter=COLLECTION_MUSCLE_FILTERS.find(filter=>filter.key===collectionMuscleFilter);
   const visible=[...COLLECTION]
     .sort(compareExerciseNames)
-    .filter(exercise=>!query||exercise.n.toLocaleLowerCase('hu-HU').includes(query));
+    .filter(exercise=>!query||exercise.n.toLocaleLowerCase('hu-HU').includes(query))
+    .filter(exercise=>!activeFilter||activeFilter.key==='all'||activeFilter.primaries.includes(exercise.primary));
   collectionList.replaceChildren();
   visible.forEach(exercise=>collectionList.appendChild(createExerciseCard(exercise,{kind:'collection',accent:'collection'})));
   if(collectionEmpty) collectionEmpty.hidden=visible.length>0;
@@ -2525,10 +2679,14 @@ function buildViews(){
     if(view.key==='collection'){
       section.innerHTML=`
         <div class="collection-toolbar">
-          <div class="collection-search-box">
-            <input class="collection-search-input" type="search" placeholder="Gyakorlat keresése" autocomplete="off" aria-label="Keresés a gyűjteményben">
-            <button class="collection-search-clear" type="button" aria-label="Keresés törlése">×</button>
+          <div class="collection-search-row">
+            <div class="collection-search-box">
+              <input class="collection-search-input" type="search" placeholder="Gyakorlat keresése" autocomplete="off" aria-label="Keresés a gyűjteményben">
+              <button class="collection-search-clear" type="button" aria-label="Keresés törlése">×</button>
+            </div>
+            <button class="collection-filter-toggle" type="button" aria-expanded="false" aria-controls="collection-filter-panel">SZŰRŐK <span class="filter-toggle-mark" aria-hidden="true">⌄</span></button>
           </div>
+          <div class="collection-filter-panel" id="collection-filter-panel" hidden></div>
         </div>
         <div class="phase-panel workout-panel">
           <div class="ex-list collection-list"></div>
@@ -2537,6 +2695,8 @@ function buildViews(){
       collectionList=section.querySelector('.collection-list');
       collectionEmpty=section.querySelector('.collection-empty');
       collectionSearchInput=section.querySelector('.collection-search-input');
+      collectionFilterPanel=section.querySelector('.collection-filter-panel');
+      collectionFilterToggle=section.querySelector('.collection-filter-toggle');
       const searchClear=section.querySelector('.collection-search-clear');
       collectionSearchInput.addEventListener('input',renderCollection);
       searchClear.addEventListener('click',()=>{
@@ -2544,6 +2704,12 @@ function buildViews(){
         renderCollection();
         collectionSearchInput.focus();
       });
+      collectionFilterToggle.addEventListener('click',()=>{
+        const willOpen=collectionFilterPanel.hidden;
+        collectionFilterPanel.hidden=!willOpen;
+        collectionFilterToggle.setAttribute('aria-expanded',willOpen?'true':'false');
+      });
+      renderCollectionMuscleFilters();
       renderCollection();
     }else if(view.key==='progress'){
       buildProgressView(section);
