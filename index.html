@@ -1542,6 +1542,88 @@ const DATA = [
   }
 ];
 
+
+// Ezek a gyakorlatok alapból csak a Gyűjteményben jelennek meg.
+// Edzésnaphoz kizárólag a + gombbal kerülnek hozzáadásra.
+const COLLECTION_ONLY_EXERCISES = [
+  {
+    "uid": "collection-seated-cable-row-neutral-01",
+    "n": "Ülő csigás evezés párhuzamos fogantyúval",
+    "id": "Seated_Cable_Rows",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Seated_Cable_Rows/0.jpg",
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Seated_Cable_Rows/1.jpg"
+    ],
+    "primary": "middleback",
+    "secondary": [
+      "lats",
+      "biceps",
+      "shoulders"
+    ],
+    "rest": "2–3 perc",
+    "guide": "Tartsd a mellkasodat enyhén megemelve és a törzsedet közel függőlegesen. A húzást a lapockák finom hátra-le vezetésével indítsd, majd húzd a könyöködet a törzsed mellett hátra, és közelítsd a párhuzamos fogantyút a köldököd vagy az alsó bordáid felé. Röviden feszíts rá a hátizmaidra, utána 2–3 másodperc alatt engedd előre a karodat, hogy a lapockád kontrolláltan előrecsússzon.",
+    "tip": "Ha mindhárom sorozatban elérted a 9 szabályos ismétlést, emelj a gépen a legkisebb elérhető fokozattal.",
+    "setup": "Ülj a mélycsigás evezőgéphez, és támaszd a teljes talpadat a platformra. A térded maradjon enyhén hajlított, ne legyen teljesen kinyújtva. Rögzíts vállszélességű párhuzamos fogantyút, amelynél a tenyerek egymás felé néznek. Fogd meg a markolatot egyenes csuklóval, húzd ki magad, és úgy helyezkedj el, hogy nyújtott kar mellett is maradjon feszülés a kábelen.",
+    "avoid": "Ne lendítsd hátra a törzsed minden ismétlésnél, ne görbítsd be a derekad, és ne húzd fel a válladat a füledhez. A fogantyút ne a mellkasodhoz, hanem az alsó bordák vagy a köldök környékére húzd."
+  },
+  {
+    "uid": "collection-machine-shoulder-press-01",
+    "n": "Gépi vállnyomás",
+    "id": "Machine_Shoulder_Military_Press",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Machine_Shoulder_Military_Press/0.jpg",
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Machine_Shoulder_Military_Press/1.jpg"
+    ],
+    "primary": "shoulders",
+    "secondary": [
+      "triceps"
+    ],
+    "rest": "2–3 perc",
+    "guide": "Tartsd a fejedet, a hátadat és a medencédet a támlán. Nyomd a fogantyúkat felfelé a gép természetes ívén, miközben a könyököd a csuklód alatt vagy kissé mögötte marad. Fent ne csapd ki erőből a könyököd, majd 2–3 másodperc alatt engedd vissza a fogantyúkat a fájdalommentes alsó helyzetig.",
+    "tip": "Ha mindhárom sorozatban elérted a 9 tiszta ismétlést, emelj a legkisebb gépi lépéssel.",
+    "setup": "Állítsd az ülést úgy, hogy a fogantyúk a vállad vagy a füled alsó részének magasságából induljanak. Az alsó helyzetben az alkarod legyen közel függőleges, a könyököd pedig kissé a törzsed előtt, ne teljesen oldalra kiforgatva. A hátad és a medencéd simuljon a támlához, a talpad teljesen érjen le. Olyan fogást válassz, amelyben a csuklód egyenes és a vállad nem feszül kellemetlenül.",
+    "avoid": "Ne homoríts nagyot, ne emeld el a medencédet a támlától, és ne húzd fel a válladat. Ha a fogantyúk túl mélyre kerülnek vagy a könyököd messze a tested mögé jut, állítsd magasabbra az ülést vagy csökkentsd a mozgástartományt."
+  },
+  {
+    "uid": "collection-smith-flat-bench-press-01",
+    "n": "Smith-keretes fekvenyomás",
+    "id": "Smith_Machine_Bench_Press",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Smith_Machine_Bench_Press/0.jpg",
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Smith_Machine_Bench_Press/1.jpg"
+    ],
+    "primary": "chest",
+    "secondary": [
+      "shoulders",
+      "triceps"
+    ],
+    "rest": "2–3 perc",
+    "guide": "Oldd ki a rudat, majd 2–3 másodperc alatt engedd a mellkasod középső-alsó részéhez. A könyököd a törzsedhez képest nagyjából 45–70°-ban haladjon, az alkarod pedig az alsó helyzetben legyen közel függőleges. Nyomd vissza a rudat a mellizmod és a tricepszed erejével, fent pedig ne csapd ki erőből a könyököd.",
+    "tip": "Ha mindhárom sorozatban elérted a 9 szabályos ismétlést, növeld a terhelést a legkisebb tárcsalépéssel.",
+    "setup": "Tegyél vízszintes padot a Smith-keret alá, és helyezd úgy, hogy a rúd a mellkasod középső-alsó részére érkezzen. Fogd a rudat a vállszélességnél kissé szélesebben, a csuklód legyen egyenes. Húzd a lapockádat hátra és lefelé, emeld ki enyhén a mellkasodat, a fejed és a medencéd maradjon a padon, a talpad pedig stabilan a talajon. Állítsd a biztonsági ütközőket közvetlenül a saját alsó mozgáspontod alá.",
+    "avoid": "Ne pattintsd vissza a rudat a mellkasodról, ne engedd a könyököd teljesen oldalra, és ne törd hátra a csuklód. Ha a rúd a nyakadhoz vagy a hasadhoz érkezik, igazítsd előrébb vagy hátrébb a padot."
+  },
+  {
+    "uid": "collection-smith-incline-bench-press-01",
+    "n": "Ferdepados Smith-keretes fekvenyomás",
+    "id": "Smith_Machine_Incline_Bench_Press",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Smith_Machine_Incline_Bench_Press/0.jpg",
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Smith_Machine_Incline_Bench_Press/1.jpg"
+    ],
+    "primary": "chest",
+    "secondary": [
+      "shoulders",
+      "triceps"
+    ],
+    "rest": "2–3 perc",
+    "guide": "Oldd ki a rudat, majd kontrolláltan engedd a felső mellkasod felé. Az alkarod az alsó helyzetben legyen közel függőleges, a könyököd pedig ne nyíljon teljesen oldalra. Nyomd a rudat felfelé a vezetősín mentén, miközben a vállad lent marad, fent pedig ne csapd ki erőből a könyököd.",
+    "tip": "Ha mindhárom sorozatban elérted a 9 tiszta ismétlést, emelj a legkisebb tárcsalépéssel.",
+    "setup": "Állítsd a pad háttámláját mérsékelt, körülbelül 25–35°-os dőlésre, majd helyezd a Smith-keret alá úgy, hogy a rúd a felső mellkasodra érkezzen. Fogd a rudat a vállszélességnél kissé szélesebben, húzd a lapockádat hátra és lefelé, és tartsd a fejedet és a medencédet a padon. A talpad legyen stabilan a talajon. Állítsd a biztonsági ütközőket közvetlenül a fájdalommentes alsó pont alá.",
+    "avoid": "Ne állítsd túl meredekre a padot, mert a terhelés egyre inkább az elülső vállra kerül. Ne engedd a rudat a nyakadhoz, ne emeld fel a válladat, és ne told el a medencédet a padról. Ha a rúd nem a felső mellkasodra érkezik, igazítsd a pad helyzetét."
+  }
+];
+
 // -------------------- KÖZPONTI GYŰJTEMÉNY --------------------
 const DAY_CONFIGS = DATA.map(day => ({
   key: day.key,
@@ -1574,6 +1656,21 @@ DATA.forEach(day => {
     canonical.legacySources.push({dayKey:day.key, uid:exercise.uid});
     EXERCISE_ALIAS_TO_CANONICAL.set(exercise.uid, canonical.uid);
   });
+});
+
+COLLECTION_ONLY_EXERCISES.forEach(exercise => {
+  const nameKey = normalizedExerciseName(exercise.n);
+  let canonical = collectionByName.get(nameKey);
+  if(!canonical){
+    canonical = {
+      ...exercise,
+      legacySources: []
+    };
+    collectionByName.set(nameKey, canonical);
+    COLLECTION.push(canonical);
+    COLLECTION_BY_ID.set(canonical.uid, canonical);
+  }
+  EXERCISE_ALIAS_TO_CANONICAL.set(exercise.uid, canonical.uid);
 });
 
 const PROGRESS_VIEW = {key:'progress', label:'FEJLŐDÉS', accent:'progress'};
