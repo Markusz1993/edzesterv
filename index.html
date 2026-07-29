@@ -1171,6 +1171,7 @@ const MUSCLES = {
   shoulders:   { hu:"Váll (deltaizom)",          img:"Deltoideus.png" },
   triceps:     { hu:"Tricepsz",                  img:"Triceps_brachii.png" },
   biceps:      { hu:"Bicepsz",                   img:"Biceps_brachii.png" },
+  brachialis:   { hu:"Karizom (brachialis)",       img:"" },
   lats:        { hu:"Széles hátizom",            img:"Latissimus_dorsi.PNG" },
   middleback:  { hu:"Középső hát",               img:"Rhomboid_muscles_back.png" },
   traps:       { hu:"Trapézizom",                img:"Trapezius.png" },
@@ -1231,7 +1232,8 @@ const EXERCISE_FOCUS_BY_NAME = {
   "Ferdepados Smith-keretes fekvenyomás": "Nagy mellizom – kulcscsonti, felső rostok",
   "Hason fekvő gépi lábhajlítás": "Combhajlító izmok – teljes izomcsoport",
   "Fej fölötti csigás tricepsznyújtás": "Tricepsz – hosszú fej hangsúlya",
-  "Pallof-nyomás": "Ferde hasizmok és haránt hasizom"
+  "Pallof-nyomás": "Ferde hasizmok és haránt hasizom",
+  "Ülő gépi bicepszhajlítás felkartámasszal": "Bicepsz – hosszú és rövid fej"
 };
 
 function exerciseFocus(exercise){
@@ -1759,6 +1761,25 @@ const COLLECTION_ONLY_EXERCISES = [
     "tip": "Ha mindhárom sorozatban elérted a 12 tiszta ismétlést, emelj a csigán a legkisebb fokozattal.",
     "setup": "Rögzíts kötelet az alsó csigához, fordulj háttal a gépnek, és emeld a kötelet a fejed mögé semleges fogással. Állj stabil, enyhén haránt terpeszben, a térded legyen laza, a bordáidat pedig tartsd a medencéd fölött. A könyököd nézzen előre-felfelé és maradjon a fejed közelében; lépj annyira előre, hogy a kábel a teljes mozgás alatt feszüljön.",
     "avoid": "Ne homoríts nagyot, ne told előre a bordáidat, és ne mozgasd a felkarodat előre-hátra minden ismétlésnél. Ne engedd szétnyílni a könyöködet, és ne használj akkora súlyt, amelynél a derekaddal vagy a válladdal kell lendítened."
+  },
+  {
+    "uid": "collection-machine-preacher-curl-01",
+    "n": "Ülő gépi bicepszhajlítás felkartámasszal",
+    "id": "Machine_Preacher_Curls",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Machine_Preacher_Curls/0.jpg",
+      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Machine_Preacher_Curls/1.jpg"
+    ],
+    "primary": "biceps",
+    "secondary": [
+      "brachialis",
+      "forearms"
+    ],
+    "rest": "60–90 mp",
+    "guide": "A felkarodat végig tartsd a támaszon, és kizárólag a könyök hajlításával emeld a fogantyút. Húzd fel addig, amíg erősen meg tudod feszíteni a bicepszedet anélkül, hogy a vállad előremozdulna vagy a könyököd elemelkedne. A felső helyzetben röviden tartsd meg, majd 2–3 másodperc alatt engedd vissza a kart majdnem teljes könyöknyújtásig, miközben a súlylapok nem csapódnak össze.",
+    "tip": "Ha mindhárom sorozatban elérted a 12 szabályos ismétlést azonos súllyal, emelj a gépen a legkisebb elérhető fokozattal.",
+    "setup": "Állítsd az ülésmagasságot úgy, hogy a felkarod teljes hosszában kényelmesen feküdjön a ferde támaszon, a hónaljad pedig közel kerüljön annak felső széléhez. Ha a gép forgástengelye látható, a könyökízületed kerüljön hozzá közel. Fogd meg a markolatokat alsó fogással, tenyérrel felfelé, tartsd egyenesen a csuklódat, a válladat pedig lazán leengedve. A kezdőhelyzetben maradjon enyhe hajlítás a könyöködben, és a súly már legyen feszülésben.",
+    "avoid": "Ne emeld el a felkarodat a támaszról, ne gördítsd előre a válladat, és ne dőlj hátra a fogantyú felhúzásához. Ne engedd a könyöködet erőből teljesen kinyúlni a súly alatt, és ne hajlítsd hátra a csuklódat. Ha az első ismétlést csak lendületből tudod elindítani, csökkentsd a súlyt vagy állítsd újra az ülést."
   },
   {
     "uid": "collection-pallof-press-01",
