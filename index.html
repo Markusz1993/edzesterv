@@ -2394,7 +2394,12 @@ function buildProgressChart(exercise,entries){
   if(!entries.length) return '<div class="progress-chart-empty">Még nincs rögzített eredmény ehhez a gyakorlathoz.</div>';
   const mode=['sets','volume','best'].includes(progressMode)?progressMode:'sets';
   const isAll=progressRangeValue()==='all';
-  const width=isAll?Math.max(390,entries.length*76+70):430;
+  // A szettnézetben egy dátumhoz akár három külön karika tartozik.
+  // Több dátumnál szélesebb, vízszintesen görgethető vászon kell, hogy a
+  // szettkarikák se egymást, se a szomszédos dátum pontjait ne takarják.
+  const needsScrollableSetWidth=mode==='sets'&&entries.length>4;
+  const usesFixedPixelWidth=isAll||needsScrollableSetWidth;
+  const width=usesFixedPixelWidth?Math.max(430,entries.length*76+70):430;
   const height=250,left=46,right=20,top=24,bottom=205;
   const innerWidth=width-left-right;
   const xAt=index=>entries.length===1?left+innerWidth/2:left+(index/(entries.length-1))*innerWidth;
@@ -2439,7 +2444,11 @@ function buildProgressChart(exercise,entries){
         const best=array[bestIndex];
         return item.weight>best.weight||(item.weight===best.weight&&item.reps>best.reps)?itemIndex:bestIndex;
       },-1);
-      const offsets=mode==='best'?[0]:points.length===1?[0]:points.length===2?[-7,7]:[-11,0,11];
+      // A normál karika sugara 9 px, kijelölve 11 px, a PR-gyűrű pedig
+      // még nagyobb. A korábbi 11–14 px-es középtávolság emiatt átfedést
+      // okozott. A 28 px-es középtávolság már kijelölt állapotban is
+      // külön tartja a szetteket, azonos súlynál is.
+      const offsets=mode==='best'?[0]:points.length===1?[0]:points.length===2?[-14,14]:[-28,0,28];
       if(mode==='sets'&&points.length>1){
         const ys=points.map(set=>scale.y(set.weight));
         shapes+=`<line x1="${x}" y1="${Math.min(...ys)}" x2="${x}" y2="${Math.max(...ys)}" stroke="#77849a" stroke-opacity=".38" stroke-width="1.4"/>`;
@@ -2463,7 +2472,7 @@ function buildProgressChart(exercise,entries){
   }
   const labels=entries.map((entry,index)=>`<text x="${xAt(index)}" y="${bottom+28}" text-anchor="middle" fill="${selected===entry.date?'#e9efff':'#777e89'}" font-family="JetBrains Mono,monospace" font-size="9">${formatProgressDate(entry.date,true)}</text>`).join('');
   const axisLabel=mode==='volume'?'Volumen (kg)':'Súly (kg)';
-  return `<svg class="progress-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${exercise.n} fejlődési grafikonja" style="width:${isAll?width+'px':'100%'}"><text x="${left}" y="14" fill="#8b93a0" font-family="JetBrains Mono,monospace" font-size="9">${axisLabel}</text>${grid.join('')}${shapes}${labels}</svg>`;
+  return `<svg class="progress-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${exercise.n} fejlődési grafikonja" style="width:${usesFixedPixelWidth?width+'px':'100%'}"><text x="${left}" y="14" fill="#8b93a0" font-family="JetBrains Mono,monospace" font-size="9">${axisLabel}</text>${grid.join('')}${shapes}${labels}</svg>`;
 }
 function progressLegendHtml(){
   const latest='<span class="progress-legend-item"><span class="progress-legend-dot" style="background:transparent;border:2px solid #f5f7ff"></span>legutóbbi</span>';
