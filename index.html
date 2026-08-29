@@ -1174,7 +1174,11 @@
 <script>
 const REPDB_IMAGE_BASE = "https://exercise-dataset.com/images/flat/";
 const REPDB_MUSCLE_BASE = "https://raw.githubusercontent.com/RepDB/repdb-example-flutter/main/assets/images/muscles/";
-const EXERCISEDB_GIF_BASE = "https://d205bpvrqc9yn1.cloudfront.net/";
+const EXERCISEDB_V1_IMAGE_BASE = "https://v1.exercisedb.dev/image?resolution=360&exerciseId=";
+
+function exerciseDbImageUrl(id){
+  return `${EXERCISEDB_V1_IMAGE_BASE}${encodeURIComponent(id)}`;
+}
 
 const MUSCLES = {
   chest:       { hu:"Mellizom" },
@@ -1239,40 +1243,40 @@ const EXERCISE_MEDIA_BY_NAME = {
 
 // RepDB egységes célizom-illusztráció minden gyakorlatnál.
 const REPDB_MUSCLE_BY_NAME = {
-  "Ülő gépi mellnyomás": "chest.webp",
-  "Gépi tárogatás": "chest.webp",
-  "Széles lehúzás": "lats.webp",
+  "Ülő gépi mellnyomás": "pectoralis-major.webp",
+  "Gépi tárogatás": "pectoralis-major.webp",
+  "Széles lehúzás": "latissimus-dorsi.webp",
   "Semleges fogású melltámaszos gépi evezés": "rhomboids.webp",
-  "Gépi oldalemelés": "lateral-shoulders.webp",
-  "Köteles tricepszletolás": "triceps.webp",
-  "Álló kalapácsfogású bicepszhajlítás": "biceps.webp",
-  "Hack-guggolás gépen": "quads.webp",
-  "45°-os lábtolás": "quads.webp",
+  "Gépi oldalemelés": "lateral-deltoid.webp",
+  "Köteles tricepszletolás": "triceps-brachii.webp",
+  "Álló kalapácsfogású bicepszhajlítás": "brachialis.webp",
+  "Hack-guggolás gépen": "quadriceps.webp",
+  "45°-os lábtolás": "quadriceps.webp",
   "Ülő gépi lábhajlítás": "hamstrings.webp",
-  "Álló gépi vádliemelés": "calves.webp",
-  "Gépi hasprés": "abdominals.webp",
-  "Ferdepados gépi mellnyomás": "chest.webp",
-  "Szűk lehúzás": "lats.webp",
+  "Álló gépi vádliemelés": "gastrocnemius.webp",
+  "Gépi hasprés": "rectus-abdominis.webp",
+  "Ferdepados gépi mellnyomás": "pectoralis-major-clavicular-head.webp",
+  "Szűk lehúzás": "latissimus-dorsi.webp",
   "Széles fogású melltámaszos gépi evezés": "rhomboids.webp",
-  "Fordított gépi tárogatás": "rear-shoulders.webp",
-  "Egykezes csigás oldalemelés": "lateral-shoulders.webp",
-  "Tricepszletolás V-rúddal": "triceps.webp",
-  "Csigás bicepszhajlítás": "biceps.webp",
-  "Gépi lábnyújtás": "quads.webp",
+  "Fordított gépi tárogatás": "posterior-deltoid.webp",
+  "Egykezes csigás oldalemelés": "lateral-deltoid.webp",
+  "Tricepszletolás V-rúddal": "triceps-brachii.webp",
+  "Csigás bicepszhajlítás": "biceps-brachii.webp",
+  "Gépi lábnyújtás": "quadriceps.webp",
   "Ülő gépi vádliemelés": "soleus.webp",
   "Súlyozott törzsemelés 45°-os padon": "erector-spinae.webp",
   "Ülő csigás evezés párhuzamos fogantyúval": "rhomboids.webp",
-  "Gépi vállnyomás": "front-shoulders.webp",
-  "Smith-keretes fekvenyomás": "chest.webp",
-  "Ferdepados Smith-keretes fekvenyomás": "chest.webp",
+  "Gépi vállnyomás": "anterior-deltoid.webp",
+  "Smith-keretes fekvenyomás": "pectoralis-major.webp",
+  "Ferdepados Smith-keretes fekvenyomás": "pectoralis-major-clavicular-head.webp",
   "Hason fekvő gépi lábhajlítás": "hamstrings.webp",
-  "Fej fölötti csigás tricepsznyújtás": "triceps.webp",
-  "Pallof-nyomás": "obliques.webp",
-  "Térdelő gépi törzsrotáció": "obliques.webp",
+  "Fej fölötti csigás tricepsznyújtás": "triceps-brachii.webp",
+  "Pallof-nyomás": "external-oblique.webp",
+  "Térdelő gépi törzsrotáció": "external-oblique.webp",
   "Gépi csípőtávolítás": "abductors.webp",
   "Gépi combközelítés": "adductors.webp",
-  "Gépi farizomnyújtás (glute kickback)": "glutes.webp",
-  "Ülő gépi bicepszhajlítás felkartámasszal": "biceps.webp"
+  "Gépi farizomnyújtás (glute kickback)": "gluteus-maximus.webp",
+  "Ülő gépi bicepszhajlítás felkartámasszal": "biceps-brachii.webp"
 };
 
 function getExerciseMedia(exercise){
@@ -2141,7 +2145,7 @@ function exerciseMediaHtml(exercise){
             <div class="frame contain-frame"><img data-src="${img2}" alt="${exercise.n} – Vég" loading="lazy"><span>Vég</span></div>`;
   }
 
-  const gif=`${EXERCISEDB_GIF_BASE}${media.id}.gif`;
+  const gif=exerciseDbImageUrl(media.id);
   return `<div class="frame contain-frame"><img data-src="${gif}" alt="${exercise.n} – végrehajtás" loading="lazy"><span>Végrehajtás</span></div>`;
 }
 
@@ -2155,15 +2159,25 @@ function markImageUnavailable(img){
   if(!frame.querySelector('.image-fallback')){
     const fallback=document.createElement('div');
     fallback.className='image-fallback';
-    fallback.textContent='Kép nem elérhető';
+    fallback.textContent='Illusztráció';
     frame.insertBefore(fallback,frame.firstChild);
   }
 }
 
 function loadCardImages(container){
   container.querySelectorAll('img[data-src]').forEach(img=>{
-    img.addEventListener('error',()=>markImageUnavailable(img),{once:true});
-    img.src=img.dataset.src;
+    const src=img.dataset.src;
+    let retries=0;
+    img.addEventListener('error',()=>{
+      if(retries<1){
+        retries+=1;
+        const separator=src.includes('?')?'&':'?';
+        img.src=`${src}${separator}retry=${Date.now()}`;
+        return;
+      }
+      markImageUnavailable(img);
+    });
+    img.src=src;
     img.removeAttribute('data-src');
   });
 }
