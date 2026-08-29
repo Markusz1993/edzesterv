@@ -260,6 +260,15 @@
     width:100%; height:auto; display:block; border-radius:var(--radius-sm);
     background:var(--line); aspect-ratio:1/1; object-fit:cover;
   }
+  .frame.image-missing{
+    min-height:0;
+  }
+  .frame.image-missing .image-fallback{
+    width:100%; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+    padding:12px; border-radius:var(--radius-sm); background:var(--line); color:var(--ink-faint);
+    text-align:center; font-family:'JetBrains Mono',monospace; font-size:10px; line-height:1.4;
+  }
+
   .frame span{
     display:block; text-align:center; font-size:10px; color:var(--ink-faint);
     margin-top:5px; font-family:'JetBrains Mono',monospace; letter-spacing:.04em; text-transform:uppercase;
@@ -1163,30 +1172,128 @@
 </div>
 
 <script>
-const IMG_BASE = "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/";
-const MUSCLE_IMG_BASE = "https://commons.wikimedia.org/wiki/Special:FilePath/";
+const REPDB_IMAGE_BASE = "https://exercise-dataset.com/images/flat/";
+const REPDB_MUSCLE_BASE = "https://raw.githubusercontent.com/RepDB/repdb-example-flutter/main/assets/images/muscles/";
+const EXERCISEDB_GIF_BASE = "https://d205bpvrqc9yn1.cloudfront.net/";
 
 const MUSCLES = {
-  chest:       { hu:"Mellizom",                 img:"Pectoralis_major.png" },
-  shoulders:   { hu:"Váll (deltaizom)",          img:"Deltoideus.png" },
-  triceps:     { hu:"Tricepsz",                  img:"Triceps_brachii.png" },
-  biceps:      { hu:"Bicepsz",                   img:"Biceps_brachii.png" },
-  brachialis:   { hu:"Karizom (brachialis)",       img:"" },
-  lats:        { hu:"Széles hátizom",            img:"Latissimus_dorsi.PNG" },
-  middleback:  { hu:"Középső hát",               img:"Rhomboid_muscles_back.png" },
-  traps:       { hu:"Trapézizom",                img:"Trapezius.png" },
-  quadriceps:  { hu:"Combfeszítő (elülső comb)", img:"Quadriceps_he.png" },
-  hamstrings:  { hu:"Combhajlító (hátsó comb)",  img:"M%C3%BAsculo_biceps_femoral.png" },
-  calves:      { hu:"Vádli",                     img:"Gastrocnemius.png" },
-  glutes:      { hu:"Farizom",                   img:"Gluteus_maximus.png" },
-  adductors:   { hu:"Combközelítő",              img:"Adductor_longus.gif" },
-  abductors:   { hu:"Combtávolító",              img:"Gluteus_medius.gif" },
-  forearms:    { hu:"Alkar",                     img:"Flexor-carpi-radialis.png" },
-  core:        { hu:"Egyenes hasizom",            img:"Rectus_abdominis.png" },
-  obliques:    { hu:"Ferde hasizmok",             img:"Grays%20Anatomy%20Muscle%20oblique%20externe.png" },
-  hipflexors:  { hu:"Csípőhajlítók",              img:"" },
-  lowerback:   { hu:"Alsó hát (gerincfeszítők)", img:"Gray389%20-%20Erector%20spinae.png" }
+  chest:       { hu:"Mellizom" },
+  shoulders:   { hu:"Váll (deltaizom)" },
+  triceps:     { hu:"Tricepsz" },
+  biceps:      { hu:"Bicepsz" },
+  brachialis:  { hu:"Karizom (brachialis)" },
+  lats:        { hu:"Széles hátizom" },
+  middleback:  { hu:"Középső hát" },
+  traps:       { hu:"Trapézizom" },
+  quadriceps:  { hu:"Combfeszítő (elülső comb)" },
+  hamstrings:  { hu:"Combhajlító (hátsó comb)" },
+  calves:      { hu:"Vádli" },
+  glutes:      { hu:"Farizom" },
+  adductors:   { hu:"Combközelítő" },
+  abductors:   { hu:"Combtávolító" },
+  forearms:    { hu:"Alkar" },
+  core:        { hu:"Egyenes hasizom" },
+  obliques:    { hu:"Ferde hasizmok" },
+  hipflexors:  { hu:"Csípőhajlítók" },
+  lowerback:   { hu:"Alsó hát (gerincfeszítők)" }
 };
+
+// 27 gyakorlat: RepDB Free Public Edition (start/peak WebP)
+// 7 speciális gyakorlat: ExerciseDB v1 (animált GIF)
+const EXERCISE_MEDIA_BY_NAME = {
+  "Ülő gépi mellnyomás": { source:"repdb", slug:"chest-press-machine" },
+  "Gépi tárogatás": { source:"repdb", slug:"pec-deck" },
+  "Széles lehúzás": { source:"repdb", slug:"lat-pulldown" },
+  "Semleges fogású melltámaszos gépi evezés": { source:"exercisedb", id:"0588", approx:true, sourceName:"Lever Narrow Grip Seated Row" },
+  "Gépi oldalemelés": { source:"repdb", slug:"plate-loaded-lateral-raise", approx:true },
+  "Köteles tricepszletolás": { source:"repdb", slug:"tricep-pushdown", approx:true },
+  "Álló kalapácsfogású bicepszhajlítás": { source:"repdb", slug:"hammer-curl" },
+  "Hack-guggolás gépen": { source:"repdb", slug:"hack-squat" },
+  "45°-os lábtolás": { source:"repdb", slug:"leg-press" },
+  "Ülő gépi lábhajlítás": { source:"repdb", slug:"seated-leg-curl" },
+  "Álló gépi vádliemelés": { source:"repdb", slug:"standing-calf-raise", imageSlug:"machine-calf-raise" },
+  "Gépi hasprés": { source:"repdb", slug:"machine-seated-crunch" },
+  "Ferdepados gépi mellnyomás": { source:"exercisedb", id:"1299", sourceName:"Lever Incline Chest Press" },
+  "Szűk lehúzás": { source:"repdb", slug:"v-bar-lat-pulldown" },
+  "Széles fogású melltámaszos gépi evezés": { source:"exercisedb", id:"1350", approx:true, sourceName:"Lever Seated Row" },
+  "Fordított gépi tárogatás": { source:"exercisedb", id:"0602", sourceName:"Lever Seated Reverse Fly" },
+  "Egykezes csigás oldalemelés": { source:"repdb", slug:"cable-lateral-raise" },
+  "Tricepszletolás V-rúddal": { source:"repdb", slug:"v-bar-tricep-pushdown" },
+  "Csigás bicepszhajlítás": { source:"repdb", slug:"cable-curl" },
+  "Gépi lábnyújtás": { source:"repdb", slug:"leg-extension" },
+  "Ülő gépi vádliemelés": { source:"repdb", slug:"seated-calf-raise" },
+  "Súlyozott törzsemelés 45°-os padon": { source:"repdb", slug:"back-extension", approx:true },
+  "Ülő csigás evezés párhuzamos fogantyúval": { source:"repdb", slug:"seated-cable-row", approx:true },
+  "Gépi vállnyomás": { source:"repdb", slug:"machine-shoulder-press" },
+  "Smith-keretes fekvenyomás": { source:"repdb", slug:"smith-machine-bench-press" },
+  "Ferdepados Smith-keretes fekvenyomás": { source:"repdb", slug:"smith-machine-incline-bench-press" },
+  "Hason fekvő gépi lábhajlítás": { source:"repdb", slug:"leg-curl" },
+  "Fej fölötti csigás tricepsznyújtás": { source:"exercisedb", id:"0194", sourceName:"Cable Rope Overhead Triceps Extension" },
+  "Pallof-nyomás": { source:"repdb", slug:"cable-pallof-press" },
+  "Térdelő gépi törzsrotáció": { source:"exercisedb", id:"0583", sourceName:"Lever Kneeling Twist" },
+  "Gépi csípőtávolítás": { source:"repdb", slug:"hip-abduction" },
+  "Gépi combközelítés": { source:"repdb", slug:"hip-adduction" },
+  "Gépi farizomnyújtás (glute kickback)": { source:"exercisedb", id:"1037", sourceName:"Lever Standing Rear Kick" },
+  "Ülő gépi bicepszhajlítás felkartámasszal": { source:"repdb", slug:"machine-preacher-curl" }
+};
+
+// RepDB egységes célizom-illusztráció minden gyakorlatnál.
+const REPDB_MUSCLE_BY_NAME = {
+  "Ülő gépi mellnyomás": "chest.webp",
+  "Gépi tárogatás": "chest.webp",
+  "Széles lehúzás": "lats.webp",
+  "Semleges fogású melltámaszos gépi evezés": "rhomboids.webp",
+  "Gépi oldalemelés": "lateral-shoulders.webp",
+  "Köteles tricepszletolás": "triceps.webp",
+  "Álló kalapácsfogású bicepszhajlítás": "biceps.webp",
+  "Hack-guggolás gépen": "quads.webp",
+  "45°-os lábtolás": "quads.webp",
+  "Ülő gépi lábhajlítás": "hamstrings.webp",
+  "Álló gépi vádliemelés": "calves.webp",
+  "Gépi hasprés": "abdominals.webp",
+  "Ferdepados gépi mellnyomás": "chest.webp",
+  "Szűk lehúzás": "lats.webp",
+  "Széles fogású melltámaszos gépi evezés": "rhomboids.webp",
+  "Fordított gépi tárogatás": "rear-shoulders.webp",
+  "Egykezes csigás oldalemelés": "lateral-shoulders.webp",
+  "Tricepszletolás V-rúddal": "triceps.webp",
+  "Csigás bicepszhajlítás": "biceps.webp",
+  "Gépi lábnyújtás": "quads.webp",
+  "Ülő gépi vádliemelés": "soleus.webp",
+  "Súlyozott törzsemelés 45°-os padon": "erector-spinae.webp",
+  "Ülő csigás evezés párhuzamos fogantyúval": "rhomboids.webp",
+  "Gépi vállnyomás": "front-shoulders.webp",
+  "Smith-keretes fekvenyomás": "chest.webp",
+  "Ferdepados Smith-keretes fekvenyomás": "chest.webp",
+  "Hason fekvő gépi lábhajlítás": "hamstrings.webp",
+  "Fej fölötti csigás tricepsznyújtás": "triceps.webp",
+  "Pallof-nyomás": "obliques.webp",
+  "Térdelő gépi törzsrotáció": "obliques.webp",
+  "Gépi csípőtávolítás": "abductors.webp",
+  "Gépi combközelítés": "adductors.webp",
+  "Gépi farizomnyújtás (glute kickback)": "glutes.webp",
+  "Ülő gépi bicepszhajlítás felkartámasszal": "biceps.webp"
+};
+
+function getExerciseMedia(exercise){
+  return EXERCISE_MEDIA_BY_NAME[exercise.n] || null;
+}
+
+function getRepDbMuscleImage(exercise){
+  const filename=REPDB_MUSCLE_BY_NAME[exercise.n];
+  return filename ? `${REPDB_MUSCLE_BASE}${filename}` : '';
+}
+
+function imageSourceCreditHtml(exercise){
+  const media=getExerciseMedia(exercise);
+  if(!media) return '';
+  const repdb='<a href="https://repdb.co/" target="_blank" rel="noopener noreferrer">RepDB</a>';
+  if(media.source==='exercisedb'){
+    return `Végrehajtás: <a href="https://github.com/Johnson-Jia/exercises-dataset" target="_blank" rel="noopener noreferrer">ExerciseDB v1</a> · Célizom-illusztráció: ${repdb}`;
+  }
+  return `Végrehajtási és célizom-illusztráció: ${repdb}`;
+}
+
 
 const COLLECTION_MUSCLE_FILTERS = [
   { key:'all', label:'ÖSSZES', primaries:[] },
@@ -1315,12 +1422,6 @@ const DATA = [
         "uid": "mon-machine-lateral-raise-01",
         "n": "Gépi oldalemelés",
         "id": "Side_Lateral_Raise",
-        "images": [
-          "https://s3.eu-west-3.amazonaws.com/gymkee.users/admin/exercises/ojnw21m5xbowdikmkm8x4qthumbnail-1755195274792.jpg",
-          "https://s3.eu-west-3.amazonaws.com/gymkee.users/admin/exercises/vmuaemj70ot68gzgr725bthumbnail-1755195281384.jpg"
-        ],
-        "imageContain": true,
-        "creditHtml": "Illusztráció: <a href=\"https://gymkee.com/exercises/shoulders/lateral-raise-machine/\" target=\"_blank\" rel=\"noopener noreferrer\">Gymkee</a>",
         "primary": "shoulders",
         "secondary": [
           "traps"
@@ -1373,7 +1474,6 @@ const DATA = [
         "uid": "tue-belt-hack-squat-01",
         "n": "Hack-guggolás gépen",
         "id": "Hack_Squat",
-        "approx": true,
         "primary": "quadriceps",
         "secondary": [
           "glutes",
@@ -1466,16 +1566,6 @@ const DATA = [
         "uid": "thu-lat-pulldown-01",
         "n": "Szűk lehúzás",
         "id": "Close-Grip_Front_Lat_Pulldown",
-        "images": [
-          "https://commons.wikimedia.org/wiki/Special:FilePath/V-bar-pull-down-1.png",
-          "https://commons.wikimedia.org/wiki/Special:FilePath/V-bar-pull-down-2.png"
-        ],
-        "imageLabels": [
-          "Start",
-          "Vég"
-        ],
-        "imageContain": true,
-        "creditHtml": "Illusztrációk: <a href=\"https://commons.wikimedia.org/wiki/File:V-bar-pull-down-1.png\" target=\"_blank\" rel=\"noopener noreferrer\">Everkinetic / Wikimedia Commons</a> · <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\" target=\"_blank\" rel=\"noopener noreferrer\">CC BY-SA 3.0</a>",
         "primary": "lats",
         "secondary": [
           "biceps"
@@ -1616,11 +1706,6 @@ const DATA = [
         "uid": "fri-hyperextension-01",
         "n": "Súlyozott törzsemelés 45°-os padon",
         "id": "Weighted_Hyperextension",
-        "images": [
-          "https://liftmanual.com/wp-content/uploads/2023/04/weighted-hyperextension.webp",
-          "https://fitwill.app/_next/image?q=75&url=%2Fapi%2Fimage%2F1234%3Fw%3D1024%26h%3D576&w=3840"
-        ],
-        "imageContain": true,
         "primary": "lowerback",
         "secondary": [
           "hamstrings",
@@ -1630,13 +1715,7 @@ const DATA = [
         "guide": "Fogj egy tárcsát vagy kisebb súlyt a mellkasodhoz, feszítsd meg enyhén a törzsed, majd a csípőből hajolva engedd le a felsőtestedet addig, amíg fájdalommentesen meg tudod őrizni a kontrollt. A combhajlító és a farizom segítségével emelkedj vissza addig, amíg a törzsed és a lábad nagyjából egyenes vonalat alkot. Fent állj meg, ne homoríts a vonal fölé.",
         "tip": "Tarts a mellkasodhoz olyan súlyt, amellyel mindhárom sorozat technikás és fájdalommentes marad. Ha a medence feletti fájdalom erősödik, hagyd ki az adott napon.",
         "setup": "Állítsd a felső párnát úgy, hogy annak felső széle a csípőhajlatod alatt, a combod felső részén legyen. A csípőnek szabadon kell hajolnia; ha a párna a hasadat vagy a medencéd tetejét nyomja, túl magas. Állítsd a lábtartót úgy, hogy a sarkad vagy az Achilles-ín környéke stabilan rögzüljön, a lábad ne csússzon. A medencéd feküdjön szimmetrikusan a párnán, a lábfejed nagyjából előre nézzen.",
-        "avoid": "Ne rántsd fel magad, ne fordítsd el a medencéd, és ne menj fájdalmas mélységbe. A súlyt tartsd végig stabilan a mellkasod előtt; ha a medence feletti fájdalom erősödik, hagyd ki.",
-        "imageLabels": [
-          "Súlyozott kivitelezés",
-          "Oldalnézet"
-        ],
-        "creditHtml": "Illusztrációk: <a href=\"https://liftmanual.com/weighted-hyperextension/\" target=\"_blank\" rel=\"noopener noreferrer\">Lift Manual</a> · <a href=\"https://fitwill.app/exercise/1234/plate-hyperextension/\" target=\"_blank\" rel=\"noopener noreferrer\">Fitwill</a>"
-      },
+        "avoid": "Ne rántsd fel magad, ne fordítsd el a medencéd, és ne menj fájdalmas mélységbe. A súlyt tartsd végig stabilan a mellkasod előtt; ha a medence feletti fájdalom erősödik, hagyd ki.",},
       {
         "uid": "fri-machine-crunch-01",
         "n": "Gépi hasprés",
@@ -1664,10 +1743,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-seated-cable-row-neutral-01",
     "n": "Ülő csigás evezés párhuzamos fogantyúval",
     "id": "Seated_Cable_Rows",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Seated_Cable_Rows/0.jpg",
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Seated_Cable_Rows/1.jpg"
-    ],
     "primary": "middleback",
     "secondary": [
       "lats",
@@ -1684,10 +1759,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-machine-shoulder-press-01",
     "n": "Gépi vállnyomás",
     "id": "Machine_Shoulder_Military_Press",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Machine_Shoulder_Military_Press/0.jpg",
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Machine_Shoulder_Military_Press/1.jpg"
-    ],
     "primary": "shoulders",
     "secondary": [
       "triceps"
@@ -1702,10 +1773,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-smith-flat-bench-press-01",
     "n": "Smith-keretes fekvenyomás",
     "id": "Smith_Machine_Bench_Press",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Smith_Machine_Bench_Press/0.jpg",
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Smith_Machine_Bench_Press/1.jpg"
-    ],
     "primary": "chest",
     "secondary": [
       "shoulders",
@@ -1721,10 +1788,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-smith-incline-bench-press-01",
     "n": "Ferdepados Smith-keretes fekvenyomás",
     "id": "Smith_Machine_Incline_Bench_Press",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Smith_Machine_Incline_Bench_Press/0.jpg",
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Smith_Machine_Incline_Bench_Press/1.jpg"
-    ],
     "primary": "chest",
     "secondary": [
       "shoulders",
@@ -1740,10 +1803,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-lying-leg-curl-01",
     "n": "Hason fekvő gépi lábhajlítás",
     "id": "Lying_Leg_Curls",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Lying_Leg_Curls/0.jpg",
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Lying_Leg_Curls/1.jpg"
-    ],
     "primary": "hamstrings",
     "secondary": [],
     "rest": "90–120 mp",
@@ -1756,10 +1815,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-overhead-cable-triceps-extension-01",
     "n": "Fej fölötti csigás tricepsznyújtás",
     "id": "Cable_Rope_Overhead_Triceps_Extension",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Cable_Rope_Overhead_Triceps_Extension/0.jpg",
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Cable_Rope_Overhead_Triceps_Extension/1.jpg"
-    ],
     "primary": "triceps",
     "secondary": [],
     "rest": "60–90 mp",
@@ -1772,10 +1827,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-machine-preacher-curl-01",
     "n": "Ülő gépi bicepszhajlítás felkartámasszal",
     "id": "Machine_Preacher_Curls",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Machine_Preacher_Curls/0.jpg",
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Machine_Preacher_Curls/1.jpg"
-    ],
     "primary": "biceps",
     "secondary": [
       "brachialis",
@@ -1791,17 +1842,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-machine-hip-abduction-01",
     "n": "Gépi csípőtávolítás",
     "id": "Machine_Hip_Abduction",
-    "images": [
-      "https://exercise-dataset.com/images/flat/hip-abduction-start.webp",
-      "https://exercise-dataset.com/images/flat/hip-abduction-peak.webp"
-    ],
-    "imageLabels": [
-      "Start",
-      "Vég"
-    ],
-    "imageContain": true,
-    "muscleImage": "https://static.wixstatic.com/media/2edbed_2880b4332cc94d3aae7fec20b4312b31~mv2.webp",
-    "creditHtml": "Végrehajtási illusztrációk: <a href=\"https://exercise-dataset.com/exercise/hip-abduction/\" target=\"_blank\" rel=\"noopener noreferrer\">RepDB</a> · Célizom-illusztráció: <a href=\"https://test.mayfieldlavender.com/hip-abduction-machine-benefits/\" target=\"_blank\" rel=\"noopener noreferrer\">Mayfield Lavender</a>",
     "primary": "abductors",
     "secondary": [
       "glutes"
@@ -1816,17 +1856,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-machine-hip-adduction-01",
     "n": "Gépi combközelítés",
     "id": "Machine_Hip_Adduction",
-    "images": [
-      "https://exercise-dataset.com/images/flat/hip-adduction-start.webp",
-      "https://exercise-dataset.com/images/flat/hip-adduction-peak.webp"
-    ],
-    "imageLabels": [
-      "Start",
-      "Vég"
-    ],
-    "imageContain": true,
-    "muscleImage": "https://static.strengthlevel.com/images/illustrations/hip-adduction-1000x1000.jpg",
-    "creditHtml": "Végrehajtási illusztrációk: <a href=\"https://exercise-dataset.com/exercise/hip-adduction/\" target=\"_blank\" rel=\"noopener noreferrer\">RepDB</a> · Célizom-illusztráció: <a href=\"https://strengthlevel.com/strength-standards/hip-adduction\" target=\"_blank\" rel=\"noopener noreferrer\">Strength Level</a>",
     "primary": "adductors",
     "secondary": [],
     "rest": "60–90 mp",
@@ -1839,17 +1868,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-machine-glute-kickback-01",
     "n": "Gépi farizomnyújtás (glute kickback)",
     "id": "Machine_Glute_Kickback",
-    "images": [
-      "https://muscledfit.com/cdn/shop/files/Vogue-Glute-Extension-_S-V-GE_M1.jpg?v=1746815013&width=1000",
-      "https://watsongym.co.uk/wp-content/uploads/2023/03/Glute-Machine-3.jpg"
-    ],
-    "imageLabels": [
-      "Végrehajtás",
-      "Másik nézet"
-    ],
-    "imageContain": true,
-    "muscleImage": "https://www.concept.se/storage/ma/a812efb397c64a179e53dd1756ea2c2e/45f3289608c64362b11534518d345e5f/jpg/D0FC0A429DE826E894D6E40550BFF47B27FB9C41/M8.jpg",
-    "creditHtml": "Végrehajtási képek: <a href=\"https://muscledfit.com/products/vogue-glute-extension-muscle-d-fitness-commercial-gym-equipment\" target=\"_blank\" rel=\"noopener noreferrer\">Muscle D Fitness</a> · <a href=\"https://watsongym.co.uk/product/single-stack-glute-machine/\" target=\"_blank\" rel=\"noopener noreferrer\">Watson Gym Equipment</a> · Célizom-illusztráció: <a href=\"https://www.concept.se/produkter/varumarken/egym/smart-strength/leg-glute-egym\" target=\"_blank\" rel=\"noopener noreferrer\">Concept / EGYM</a>",
     "primary": "glutes",
     "secondary": [
       "hamstrings",
@@ -1866,17 +1884,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-kneeling-machine-torso-rotation-01",
     "n": "Térdelő gépi törzsrotáció",
     "id": "Matrix_G7-S55_Rotary_Torso",
-    "images": [
-      "https://item-shopping.c.yimg.jp/i/n/ifitness-shop_matrix-g7-s55-v2_17",
-      "https://intowellness.in/wp-content/uploads/2024/10/Rotary_Torso_Rotation_Machine_.jpg"
-    ],
-    "imageLabels": [
-      "Matrix – végrehajtás",
-      "Térdelő végrehajtás"
-    ],
-    "imageContain": true,
-    "muscleImage": "https://item-shopping.c.yimg.jp/i/n/ifitness-shop_matrix-g7-s55-v2_15",
-    "creditHtml": "Matrix végrehajtási és célizom-illusztráció: <a href=\"https://www.ifitness.shop/g7-s55-v2_johnson_matrix\" target=\"_blank\" rel=\"noopener noreferrer\">iFitness / Johnson Health Tech MATRIX</a> · Térdelő végrehajtási fotó: <a href=\"https://intowellness.in/product/strength/m7-series-strength-gym-equipment/rotatory-torso-rotation-m7-2006/\" target=\"_blank\" rel=\"noopener noreferrer\">Into Wellness</a> · Géptípus: <a href=\"https://www.vitalforce.hu/termek/matrix-fitness-torzsfordito-gep-mx-g7-s55/\" target=\"_blank\" rel=\"noopener noreferrer\">Matrix Fitness G7-S55</a>",
     "primary": "obliques",
     "secondary": [
       "core"
@@ -1892,10 +1899,6 @@ const COLLECTION_ONLY_EXERCISES = [
     "uid": "collection-pallof-press-01",
     "n": "Pallof-nyomás",
     "id": "Pallof_Press",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Pallof_Press/0.jpg",
-      "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db/exercises/Pallof_Press/1.jpg"
-    ],
     "primary": "core",
     "secondary": [
       "obliques",
@@ -2127,18 +2130,42 @@ function scrollBlockBelowHeader(block,delay=0){
 }
 
 function exerciseMediaHtml(exercise){
-  const custom=Array.isArray(exercise.images)?exercise.images.filter(Boolean):[];
-  const labels=Array.isArray(exercise.imageLabels)?exercise.imageLabels:[];
-  const img1=custom[0]||`${IMG_BASE}${exercise.id}/0.jpg`;
-  const img2=custom[1]||`${IMG_BASE}${exercise.id}/1.jpg`;
-  if(custom.length===1){
-    const label=labels[0]||exercise.imageLabel||'Illusztráció';
-    return `<div class="frame ${exercise.imageContain?'contain-frame':''}"><img data-src="${img1}" alt="${exercise.n} – ${label}" loading="lazy"><span>${label}</span></div>`;
+  const media=getExerciseMedia(exercise);
+  if(!media) return '';
+
+  if(media.source==='repdb'){
+    const imageSlug=media.imageSlug||media.slug;
+    const img1=`${REPDB_IMAGE_BASE}${imageSlug}-start.webp`;
+    const img2=`${REPDB_IMAGE_BASE}${imageSlug}-peak.webp`;
+    return `<div class="frame contain-frame"><img data-src="${img1}" alt="${exercise.n} – Start" loading="lazy"><span>Start</span></div>
+            <div class="frame contain-frame"><img data-src="${img2}" alt="${exercise.n} – Vég" loading="lazy"><span>Vég</span></div>`;
   }
-  const label1=labels[0]||'Start';
-  const label2=labels[1]||'Vég';
-  return `<div class="frame ${exercise.imageContain?'contain-frame':''}"><img data-src="${img1}" alt="${exercise.n} – ${label1}" loading="lazy"><span>${label1}</span></div>
-          <div class="frame ${exercise.imageContain?'contain-frame':''}"><img data-src="${img2}" alt="${exercise.n} – ${label2}" loading="lazy"><span>${label2}</span></div>`;
+
+  const gif=`${EXERCISEDB_GIF_BASE}${media.id}.gif`;
+  return `<div class="frame contain-frame"><img data-src="${gif}" alt="${exercise.n} – végrehajtás" loading="lazy"><span>Végrehajtás</span></div>`;
+}
+
+function markImageUnavailable(img){
+  if(!img || img.dataset.imageFailed==='1') return;
+  img.dataset.imageFailed='1';
+  const frame=img.closest('.frame');
+  if(!frame) return;
+  frame.classList.add('image-missing');
+  img.style.display='none';
+  if(!frame.querySelector('.image-fallback')){
+    const fallback=document.createElement('div');
+    fallback.className='image-fallback';
+    fallback.textContent='Kép nem elérhető';
+    frame.insertBefore(fallback,frame.firstChild);
+  }
+}
+
+function loadCardImages(container){
+  container.querySelectorAll('img[data-src]').forEach(img=>{
+    img.addEventListener('error',()=>markImageUnavailable(img),{once:true});
+    img.src=img.dataset.src;
+    img.removeAttribute('data-src');
+  });
 }
 
 function createExerciseCard(exercise,context){
@@ -2168,7 +2195,9 @@ function createExerciseCard(exercise,context){
   const primary=MUSCLES[exercise.primary]||{hu:exercise.primary,img:''};
   const secondary=(exercise.secondary||[]).map(key=>MUSCLES[key]?.hu||key);
   const focus=exerciseFocus(exercise);
-  const muscleImg=exercise.muscleImage || (primary.img?`${MUSCLE_IMG_BASE}${primary.img}`:'');
+  const muscleImg=getRepDbMuscleImage(exercise);
+  const mediaMeta=getExerciseMedia(exercise);
+  const sourceCredit=imageSourceCreditHtml(exercise);
   const guideParts=[];
   if(exercise.setup) guideParts.push(`<span class="step"><b>Beállítás:</b> ${exercise.setup.replace(/\n/g,'<br>')}</span>`);
   if(exercise.guide) guideParts.push(`<span class="step"><b>Végrehajtás:</b> ${exercise.guide.replace(/\n/g,'<br>')}</span>`);
@@ -2197,8 +2226,8 @@ function createExerciseCard(exercise,context){
         ${exerciseMediaHtml(exercise)}
         ${muscleImg?`<div class="frame muscle-frame"><img data-src="${muscleImg}" alt="${focus} – fő fókusz" loading="lazy"><span>Fő fókusz</span></div>`:''}
       </div>
-      ${exercise.approx?`<div class="approx-note">≈ Nincs pontosan egyező felvétel az adatbázisban — ez a legközelebbi elérhető gép/mozgás.</div>`:''}
-      ${exercise.creditHtml?`<div class="image-credit">${exercise.creditHtml}</div>`:''}
+      ${mediaMeta?.approx?`<div class="approx-note">≈ Nincs teljesen azonos RepDB-változat — a legközelebbi, biomechanikailag megfelelő illusztráció látható.</div>`:''}
+      ${sourceCredit?`<div class="image-credit">${sourceCredit}</div>`:''}
       <div class="muscle-note"><div class="muscle-note-row"><span class="muscle-note-label">Fő fókusz:</span> ${focus}</div><div class="muscle-note-row m-secondary"><span class="muscle-note-label">Mellékizmok:</span> ${secondary.length?secondary.join(', '):'nincs jelentős közreműködő izom'}</div></div>
       ${guideParts.length?`<div class="guide-box"><strong>🧠 Beállítás és helyes végrehajtás:</strong>${guideParts.join('')}</div>`:''}
     </div></div>`;
@@ -2218,7 +2247,7 @@ function createExerciseCard(exercise,context){
     card.classList.toggle('open',open);
     if(open){
       if(!loaded){
-        body.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.dataset.src;img.removeAttribute('data-src');});
+        loadCardImages(body);
         loaded=true;
       }
       body.style.maxHeight='3200px';
