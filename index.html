@@ -1173,11 +1173,27 @@
 
 <script>
 const REPDB_IMAGE_BASE = "https://exercise-dataset.com/images/flat/";
-const REPDB_MUSCLE_BASE = "https://raw.githubusercontent.com/RepDB/repdb-example-flutter/main/assets/images/muscles/";
+const REPDB_IMAGE_GITHUB_BASE = "https://raw.githubusercontent.com/RepDB/exercise-dataset/main/images/flat/";
+const REPDB_IMAGE_JSDELIVR_BASE = "https://cdn.jsdelivr.net/gh/RepDB/exercise-dataset@main/images/flat/";
+const REPDB_MUSCLE_BASE = "https://exercise-dataset.com/images/muscles/";
+const REPDB_MUSCLE_GITHUB_BASE = "https://raw.githubusercontent.com/RepDB/repdb-example-flutter/main/assets/images/muscles/";
+const REPDB_MUSCLE_JSDELIVR_BASE = "https://cdn.jsdelivr.net/gh/RepDB/repdb-example-flutter@main/assets/images/muscles/";
 const EXERCISEDB_V1_IMAGE_BASE = "https://v1.exercisedb.dev/image?resolution=360&exerciseId=";
+const EXERCISEDB_V1_IMAGE_SMALL_BASE = "https://v1.exercisedb.dev/image?resolution=180&exerciseId=";
+const EXERCISEDB_CLOUDFRONT_BASE = "https://d205bpvrqc9yn1.cloudfront.net/";
+const FREE_EXERCISE_DB_BASE = "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/";
 
 function exerciseDbImageUrl(id){
   return `${EXERCISEDB_V1_IMAGE_BASE}${encodeURIComponent(id)}`;
+}
+function exerciseDbFallbackUrls(id){
+  return [
+    `${EXERCISEDB_V1_IMAGE_SMALL_BASE}${encodeURIComponent(id)}`,
+    `${EXERCISEDB_CLOUDFRONT_BASE}${encodeURIComponent(id)}.gif`
+  ];
+}
+function encodeImageFallbacks(urls){
+  return encodeURIComponent(JSON.stringify((urls||[]).filter(Boolean)));
 }
 
 const MUSCLES = {
@@ -1241,6 +1257,18 @@ const EXERCISE_MEDIA_BY_NAME = {
   "Ülő gépi bicepszhajlítás felkartámasszal": { source:"repdb", slug:"machine-preacher-curl" }
 };
 
+// Ha egy ExerciseDB-kép átmenetileg nem érhető el, ezek a közeli RepDB-képek
+// biztosítják, hogy ne maradjon üres a kártya.
+const EXERCISEDB_REPDB_BACKUP = {
+  "0588": "seated-cable-row",
+  "1299": "smith-machine-incline-bench-press",
+  "1350": "wide-grip-seated-cable-row",
+  "0602": "dumbbell-reverse-fly",
+  "0194": "overhead-tricep-extension",
+  "0583": "one-arm-landmine-press",
+  "1037": "glute-kickback"
+};
+
 // RepDB egységes célizom-illusztráció minden gyakorlatnál.
 const REPDB_MUSCLE_BY_NAME = {
   "Ülő gépi mellnyomás": "pectoralis-major.webp",
@@ -1283,9 +1311,14 @@ function getExerciseMedia(exercise){
   return EXERCISE_MEDIA_BY_NAME[exercise.n] || null;
 }
 
-function getRepDbMuscleImage(exercise){
+function getRepDbMuscleSources(exercise){
   const filename=REPDB_MUSCLE_BY_NAME[exercise.n];
-  return filename ? `${REPDB_MUSCLE_BASE}${filename}` : '';
+  if(!filename) return [];
+  return [
+    `${REPDB_MUSCLE_BASE}${filename}`,
+    `${REPDB_MUSCLE_GITHUB_BASE}${filename}`,
+    `${REPDB_MUSCLE_JSDELIVR_BASE}${filename}`
+  ];
 }
 
 function imageSourceCreditHtml(exercise){
@@ -2139,14 +2172,40 @@ function exerciseMediaHtml(exercise){
 
   if(media.source==='repdb'){
     const imageSlug=media.imageSlug||media.slug;
-    const img1=`${REPDB_IMAGE_BASE}${imageSlug}-start.webp`;
-    const img2=`${REPDB_IMAGE_BASE}${imageSlug}-peak.webp`;
-    return `<div class="frame contain-frame"><img data-src="${img1}" alt="${exercise.n} – Start" loading="lazy"><span>Start</span></div>
-            <div class="frame contain-frame"><img data-src="${img2}" alt="${exercise.n} – Vég" loading="lazy"><span>Vég</span></div>`;
+    const startFile=`${imageSlug}-start.webp`;
+    const peakFile=`${imageSlug}-peak.webp`;
+    const mainFile=`${imageSlug}-main.webp`;
+    const legacyId=exercise.id ? encodeURIComponent(exercise.id) : '';
+
+    const startPrimary=`${REPDB_IMAGE_BASE}${startFile}`;
+    const peakPrimary=`${REPDB_IMAGE_BASE}${peakFile}`;
+    const startFallbacks=[
+      `${REPDB_IMAGE_GITHUB_BASE}${startFile}`,
+      `${REPDB_IMAGE_JSDELIVR_BASE}${startFile}`,
+      `${REPDB_IMAGE_BASE}${mainFile}`,
+      `${REPDB_IMAGE_GITHUB_BASE}${mainFile}`,
+      legacyId ? `${FREE_EXERCISE_DB_BASE}${legacyId}/0.jpg` : ''
+    ];
+    const peakFallbacks=[
+      `${REPDB_IMAGE_GITHUB_BASE}${peakFile}`,
+      `${REPDB_IMAGE_JSDELIVR_BASE}${peakFile}`,
+      `${REPDB_IMAGE_BASE}${mainFile}`,
+      `${REPDB_IMAGE_GITHUB_BASE}${mainFile}`,
+      legacyId ? `${FREE_EXERCISE_DB_BASE}${legacyId}/1.jpg` : ''
+    ];
+
+    return `<div class="frame contain-frame"><img data-src="${startPrimary}" data-fallbacks="${encodeImageFallbacks(startFallbacks)}" alt="${exercise.n} – Start" loading="lazy"><span>Start</span></div>
+            <div class="frame contain-frame"><img data-src="${peakPrimary}" data-fallbacks="${encodeImageFallbacks(peakFallbacks)}" alt="${exercise.n} – Vég" loading="lazy"><span>Vég</span></div>`;
   }
 
   const gif=exerciseDbImageUrl(media.id);
-  return `<div class="frame contain-frame"><img data-src="${gif}" alt="${exercise.n} – végrehajtás" loading="lazy"><span>Végrehajtás</span></div>`;
+  const backupSlug=EXERCISEDB_REPDB_BACKUP[media.id];
+  const fallbacks=[
+    ...exerciseDbFallbackUrls(media.id),
+    backupSlug ? `${REPDB_IMAGE_BASE}${backupSlug}-peak.webp` : '',
+    backupSlug ? `${REPDB_IMAGE_GITHUB_BASE}${backupSlug}-peak.webp` : ''
+  ];
+  return `<div class="frame contain-frame"><img data-src="${gif}" data-fallbacks="${encodeImageFallbacks(fallbacks)}" alt="${exercise.n} – végrehajtás" loading="lazy"><span>Végrehajtás</span></div>`;
 }
 
 function markImageUnavailable(img){
@@ -2166,18 +2225,37 @@ function markImageUnavailable(img){
 
 function loadCardImages(container){
   container.querySelectorAll('img[data-src]').forEach(img=>{
-    const src=img.dataset.src;
-    let retries=0;
-    img.addEventListener('error',()=>{
-      if(retries<1){
-        retries+=1;
-        const separator=src.includes('?')?'&':'?';
-        img.src=`${src}${separator}retry=${Date.now()}`;
+    const primary=img.dataset.src;
+    let fallbacks=[];
+    try{
+      fallbacks=JSON.parse(decodeURIComponent(img.dataset.fallbacks||'%5B%5D'));
+    }catch(_error){
+      fallbacks=[];
+    }
+    const queue=[primary,...fallbacks].filter(Boolean);
+    let index=0;
+
+    const tryNext=()=>{
+      if(index>=queue.length){
+        console.warn('Kép betöltése sikertelen:', img.alt, queue);
+        markImageUnavailable(img);
         return;
       }
-      markImageUnavailable(img);
+      const next=queue[index++];
+      img.src=next;
+    };
+
+    img.addEventListener('error',tryNext);
+    img.addEventListener('load',()=>{
+      img.dataset.imageLoaded='1';
+      const frame=img.closest('.frame');
+      if(frame){
+        frame.classList.remove('image-missing');
+        frame.querySelector('.image-fallback')?.remove();
+      }
+      img.style.display='';
     });
-    img.src=src;
+    tryNext();
     img.removeAttribute('data-src');
   });
 }
@@ -2209,7 +2287,9 @@ function createExerciseCard(exercise,context){
   const primary=MUSCLES[exercise.primary]||{hu:exercise.primary,img:''};
   const secondary=(exercise.secondary||[]).map(key=>MUSCLES[key]?.hu||key);
   const focus=exerciseFocus(exercise);
-  const muscleImg=getRepDbMuscleImage(exercise);
+  const muscleSources=getRepDbMuscleSources(exercise);
+  const muscleImg=muscleSources[0]||'';
+  const muscleFallbacks=muscleSources.slice(1);
   const mediaMeta=getExerciseMedia(exercise);
   const sourceCredit=imageSourceCreditHtml(exercise);
   const guideParts=[];
@@ -2238,7 +2318,7 @@ function createExerciseCard(exercise,context){
       <div class="performance-log"><div class="performance-grid">${setInputs}</div></div>
       <div class="frames">
         ${exerciseMediaHtml(exercise)}
-        ${muscleImg?`<div class="frame muscle-frame"><img data-src="${muscleImg}" alt="${focus} – fő fókusz" loading="lazy"><span>Fő fókusz</span></div>`:''}
+        ${muscleImg?`<div class="frame muscle-frame"><img data-src="${muscleImg}" data-fallbacks="${encodeImageFallbacks(muscleFallbacks)}" alt="${focus} – fő fókusz" loading="lazy"><span>Fő fókusz</span></div>`:''}
       </div>
       ${mediaMeta?.approx?`<div class="approx-note">≈ Nincs teljesen azonos RepDB-változat — a legközelebbi, biomechanikailag megfelelő illusztráció látható.</div>`:''}
       ${sourceCredit?`<div class="image-credit">${sourceCredit}</div>`:''}
