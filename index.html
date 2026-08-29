@@ -1198,6 +1198,8 @@ const COLLECTION_MUSCLE_FILTERS = [
   { key:'core', label:'HAS', primaries:['core','obliques'] },
   { key:'quadriceps', label:'COMBFESZÍTŐ', primaries:['quadriceps'] },
   { key:'hamstrings', label:'COMBHAJLÍTÓ', primaries:['hamstrings'] },
+  { key:'abductors', label:'COMBTÁVOLÍTÓ', primaries:['abductors'] },
+  { key:'adductors', label:'COMBKÖZELÍTŐ', primaries:['adductors'] },
   { key:'calves', label:'VÁDLI', primaries:['calves'] },
   { key:'glutes', label:'FARIZOM', primaries:['glutes'] }
 ];
@@ -1234,6 +1236,9 @@ const EXERCISE_FOCUS_BY_NAME = {
   "Fej fölötti csigás tricepsznyújtás": "Tricepsz – hosszú fej hangsúlya",
   "Pallof-nyomás": "Ferde hasizmok és haránt hasizom",
   "Térdelő gépi törzsrotáció": "Ferde hasizmok – külső és belső ferde hasizom",
+  "Gépi csípőtávolítás": "Középső és kis farizom – gluteus medius és gluteus minimus",
+  "Gépi combközelítés": "Combközelítő izmok – teljes izomcsoport",
+  "Gépi farizomnyújtás (glute kickback)": "Nagy farizom – gluteus maximus",
   "Ülő gépi bicepszhajlítás felkartámasszal": "Bicepsz – hosszú és rövid fej"
 };
 
@@ -1782,6 +1787,78 @@ const COLLECTION_ONLY_EXERCISES = [
     "setup": "Állítsd az ülésmagasságot úgy, hogy a felkarod teljes hosszában kényelmesen feküdjön a ferde támaszon, a hónaljad pedig közel kerüljön annak felső széléhez. Ha a gép forgástengelye látható, a könyökízületed kerüljön hozzá közel. Fogd meg a markolatokat alsó fogással, tenyérrel felfelé, tartsd egyenesen a csuklódat, a válladat pedig lazán leengedve. A kezdőhelyzetben maradjon enyhe hajlítás a könyöködben, és a súly már legyen feszülésben.",
     "avoid": "Ne emeld el a felkarodat a támaszról, ne gördítsd előre a válladat, és ne dőlj hátra a fogantyú felhúzásához. Ne engedd a könyöködet erőből teljesen kinyúlni a súly alatt, és ne hajlítsd hátra a csuklódat. Ha az első ismétlést csak lendületből tudod elindítani, csökkentsd a súlyt vagy állítsd újra az ülést."
   },
+  {
+    "uid": "collection-machine-hip-abduction-01",
+    "n": "Gépi csípőtávolítás",
+    "id": "Machine_Hip_Abduction",
+    "images": [
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Hip%20abductor%20machine.jpg",
+      "https://www.gymcompany.nl/media/catalog/product/1/_/1_4_5.jpg"
+    ],
+    "imageLabels": [
+      "Csípőtávolító gép",
+      "Gépnézet"
+    ],
+    "imageContain": true,
+    "creditHtml": "Illusztrációk: <a href=\"https://commons.wikimedia.org/wiki/File:Hip_abductor_machine.jpg\" target=\"_blank\" rel=\"noopener noreferrer\">Teemeah / Wikimedia Commons</a> · <a href=\"https://www.gymcompany.nl/abductor.html\" target=\"_blank\" rel=\"noopener noreferrer\">GymCompany / Titanium Strength</a>",
+    "primary": "abductors",
+    "secondary": [
+      "glutes"
+    ],
+    "rest": "60–90 mp",
+    "guide": "A térdedet kontrolláltan vezesd kifelé a gép párnáival szemben, miközben a medencéd és a törzsed végig stabil marad. Nyisd a combokat addig, amíg erős, de fájdalommentes összehúzódást érzel a csípő külső-oldalsó részén. A véghelyzetben röviden tartsd meg, majd 2–3 másodperc alatt engedd vissza a lábadat úgy, hogy a súlylapok ne csapódjanak össze.",
+    "tip": "Ha mindhárom sorozatban elérted a 12 szabályos ismétlést teljes, kontrollált mozgástartományban, emelj a gépen a legkisebb elérhető fokozattal.",
+    "setup": "Ülj mélyen az ülésbe, a hátad és a medencéd simuljon a támlához. Állítsd a külső combpárnákat úgy, hogy közvetlenül a térd fölötti combszakaszon támaszkodjanak, ne a térdízületen. A talpad kerüljön stabilan a lábtartóra, a térded legyen kényelmesen hajlított. A kezdőhelyzetet olyan szélességre állítsd, amelyből fájdalom nélkül tudsz kifelé nyitni. Fogd meg a kapaszkodókat, és tartsd a törzsedet függőlegesen vagy a támlához simulva.",
+    "avoid": "Ne pattintsd szét a lábad lendületből, ne dőlj erősen előre vagy hátra a nagyobb súly kedvéért, és ne fordítsd el a medencédet egyik oldalra. Ne erőltesd a maximális nyitást, ha a csípőízületben becsípődést vagy éles fájdalmat érzel."
+  },
+  {
+    "uid": "collection-machine-hip-adduction-01",
+    "n": "Gépi combközelítés",
+    "id": "Machine_Hip_Adduction",
+    "images": [
+      "https://www.gymcompany.fr/media/catalog/product/p/l/pl13_i-min.jpg",
+      "https://www.gymcompany.fr/media/catalog/product/p/l/pl13_ii-min.jpg"
+    ],
+    "imageLabels": [
+      "Combközelítő gép",
+      "Gépnézet"
+    ],
+    "imageContain": true,
+    "creditHtml": "Illusztrációk: <a href=\"https://www.gymcompany.fr/elite-series-abductor-adductor-avec-charge-de-disque.html\" target=\"_blank\" rel=\"noopener noreferrer\">GymCompany / Titanium Strength</a>",
+    "primary": "adductors",
+    "secondary": [],
+    "rest": "60–90 mp",
+    "guide": "A combjaidat a belső combizmok erejével közelítsd egymáshoz. Tartsd a hátadat és a medencédet a támlán, és ne segíts a törzs előredöntésével. Zárd a lábakat addig, amíg a párnák közel kerülnek egymáshoz, röviden feszíts rá a combközelítőkre, majd 2–3 másodperc alatt engedd vissza a lábadat a beállított nyitott helyzetbe.",
+    "tip": "Ha mindhárom sorozatban elérted a 12 tiszta ismétlést azonos mozgástartománnyal és lendület nélkül, emelj a legkisebb elérhető súlylépéssel.",
+    "setup": "Állítsd a combpárnákat a belső combodhoz, közvetlenül a térd fölötti területre úgy, hogy ne a térdízületet nyomják. Ülj mélyen az ülésben, a hátad és a medencéd legyen stabilan a támlán, a talpad pedig a lábtartón. A kezdőhelyzetben csak akkora terpeszt válassz, amelyben a belső combon erős, de kényelmes nyúlást érzel. Fogd meg a kapaszkodókat, és tartsd a térdedet a gép természetes mozgáspályáján.",
+    "avoid": "Ne engedd hirtelen szétnyílni a lábadat a visszaúton, ne ütköztesd össze a párnákat, és ne használj akkora kezdőterpeszt, amely húzó vagy szúró érzést okoz az ágyékban. Ne csavard a térdedet vagy a lábfejedet erőltetett helyzetbe a mozgás közben."
+  },
+  {
+    "uid": "collection-machine-glute-kickback-01",
+    "n": "Gépi farizomnyújtás (glute kickback)",
+    "id": "Machine_Glute_Kickback",
+    "images": [
+      "https://www.mundofitness.it/media/catalog/product/b/s/bs-s35.jpg",
+      "https://www.mundofitness.it/media/catalog/product/b/s/bs-s35_i.jpg"
+    ],
+    "imageLabels": [
+      "Glute kickback gép",
+      "Oldalnézet"
+    ],
+    "imageContain": true,
+    "creditHtml": "Illusztrációk: <a href=\"https://www.mundofitness.it/glute-kickback-machine-black-series.html\" target=\"_blank\" rel=\"noopener noreferrer\">Mundo Fitness / Titanium Strength</a>",
+    "primary": "glutes",
+    "secondary": [
+      "hamstrings",
+      "adductors"
+    ],
+    "rest": "60–90 mp oldalanként",
+    "guide": "Feszítsd meg enyhén a hasadat, tartsd a medencédet szemben a géppel, majd a dolgozó lábbal nyomd hátra a kart vagy a lábtámaszt a csípő nyújtásával. A térded maradhat enyhén hajlítva, de a mozdulatot ne térdnyújtásból végezd. Nyomd hátra addig, amíg a nagy farizmod erősen megfeszül, de a derekad még nem kezd fokozottan homorítani. Rövid megtartás után 2–3 másodperc alatt térj vissza a kiinduló helyzetbe. Végezd el mindkét oldalra.",
+    "tip": "A beírt ismétlésszám oldalanként értendő. Ha mindhárom sorozatban mindkét lábbal elérted a 12 szabályos ismétlést stabil medencével, emelj a gépen a legkisebb elérhető fokozattal.",
+    "setup": "Állítsd a gépet úgy, hogy a támasz kényelmesen rögzítse a törzsedet, és a dolgozó láb a gép karját vagy platformját úgy érje el, hogy a csípőd közel semleges helyzetből tudjon hátranyúlni. A támaszkodó lábad legyen stabil, a térded enyhén hajlított. Fogd meg a kapaszkodókat vagy támaszd meg az alkarodat a gépen, a medencéd két oldala pedig végig maradjon azonos magasságban és előre nézzen.",
+    "avoid": "Ne lendítsd hátra a lábadat, ne fordítsd kifelé a medencédet, és ne homoríts rá a derekaddal a véghelyzetben. Ha főleg a derekadat érzed, csökkentsd a súlyt és a mozgástartományt. Ne engedd, hogy a támaszkodó térded befelé essen vagy a törzsed minden ismétlésnél előre-hátra mozogjon."
+  },
+
   {
     "uid": "collection-kneeling-machine-torso-rotation-01",
     "n": "Térdelő gépi törzsrotáció",
