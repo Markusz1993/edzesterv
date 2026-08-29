@@ -1255,7 +1255,7 @@ const REPDB_MUSCLE_BY_NAME = {
   "Ülő gépi lábhajlítás": "hamstrings.webp",
   "Álló gépi vádliemelés": "gastrocnemius.webp",
   "Gépi hasprés": "rectus-abdominis.webp",
-  "Ferdepados gépi mellnyomás": "pectoralis-major-clavicular-head.webp",
+  "Ferdepados gépi mellnyomás": "pectoralis-major.webp",
   "Szűk lehúzás": "latissimus-dorsi.webp",
   "Széles fogású melltámaszos gépi evezés": "rhomboids.webp",
   "Fordított gépi tárogatás": "posterior-deltoid.webp",
@@ -1268,11 +1268,11 @@ const REPDB_MUSCLE_BY_NAME = {
   "Ülő csigás evezés párhuzamos fogantyúval": "rhomboids.webp",
   "Gépi vállnyomás": "anterior-deltoid.webp",
   "Smith-keretes fekvenyomás": "pectoralis-major.webp",
-  "Ferdepados Smith-keretes fekvenyomás": "pectoralis-major-clavicular-head.webp",
+  "Ferdepados Smith-keretes fekvenyomás": "pectoralis-major.webp",
   "Hason fekvő gépi lábhajlítás": "hamstrings.webp",
   "Fej fölötti csigás tricepsznyújtás": "triceps-brachii.webp",
-  "Pallof-nyomás": "external-oblique.webp",
-  "Térdelő gépi törzsrotáció": "external-oblique.webp",
+  "Pallof-nyomás": "obliques.webp",
+  "Térdelő gépi törzsrotáció": "obliques.webp",
   "Gépi csípőtávolítás": "abductors.webp",
   "Gépi combközelítés": "adductors.webp",
   "Gépi farizomnyújtás (glute kickback)": "gluteus-maximus.webp",
@@ -2159,7 +2159,7 @@ function markImageUnavailable(img){
   if(!frame.querySelector('.image-fallback')){
     const fallback=document.createElement('div');
     fallback.className='image-fallback';
-    fallback.textContent='Illusztráció';
+    fallback.textContent='Kép betöltése sikertelen';
     frame.insertBefore(fallback,frame.firstChild);
   }
 }
