@@ -1183,7 +1183,7 @@ const MUSCLES = {
   abductors:   { hu:"Combtávolító",              img:"Gluteus_medius.gif" },
   forearms:    { hu:"Alkar",                     img:"Flexor-carpi-radialis.png" },
   core:        { hu:"Egyenes hasizom",            img:"Rectus_abdominis.png" },
-  obliques:    { hu:"Ferde hasizmok",             img:"" },
+  obliques:    { hu:"Ferde hasizmok",             img:"Grays%20Anatomy%20Muscle%20oblique%20externe.png" },
   hipflexors:  { hu:"Csípőhajlítók",              img:"" },
   lowerback:   { hu:"Alsó hát (gerincfeszítők)", img:"Gray389%20-%20Erector%20spinae.png" }
 };
@@ -1233,7 +1233,7 @@ const EXERCISE_FOCUS_BY_NAME = {
   "Hason fekvő gépi lábhajlítás": "Combhajlító izmok – teljes izomcsoport",
   "Fej fölötti csigás tricepsznyújtás": "Tricepsz – hosszú fej hangsúlya",
   "Pallof-nyomás": "Ferde hasizmok és haránt hasizom",
-  "Matrix Fitness törzsfordító gép": "Ferde hasizmok – külső és belső ferde hasizom",
+  "Térdelő gépi törzsrotáció": "Ferde hasizmok – külső és belső ferde hasizom",
   "Ülő gépi bicepszhajlítás felkartámasszal": "Bicepsz – hosszú és rövid fej"
 };
 
@@ -1783,26 +1783,30 @@ const COLLECTION_ONLY_EXERCISES = [
     "avoid": "Ne emeld el a felkarodat a támaszról, ne gördítsd előre a válladat, és ne dőlj hátra a fogantyú felhúzásához. Ne engedd a könyöködet erőből teljesen kinyúlni a súly alatt, és ne hajlítsd hátra a csuklódat. Ha az első ismétlést csak lendületből tudod elindítani, csökkentsd a súlyt vagy állítsd újra az ülést."
   },
   {
-    "uid": "collection-matrix-rotary-torso-01",
-    "n": "Matrix Fitness törzsfordító gép",
-    "id": "Matrix_Rotary_Torso",
+    "uid": "collection-kneeling-machine-torso-rotation-01",
+    "n": "Térdelő gépi törzsrotáció",
+    "id": "Matrix_G7-S55_Rotary_Torso",
     "images": [
-      "https://images.jhtassets.com/uploads/MGM0617-USAB.jpg"
+      "https://fleetcommercial.com.au/wp-content/uploads/2021/02/MX18_ULTRA-G7-S55-02-rotary-torso_Blk-Matte_hero_lores-scaled.jpg",
+      "https://img.archiexpo.com.ru/images_ae/photo-g/141371-20457085.jpg"
+    ],
+    "imageLabels": [
+      "Matrix G7-S55",
+      "Oldalnézet"
     ],
     "imageContain": true,
-    "imageLabel": "Matrix Ultra G7-S55",
-    "creditHtml": "Gépillusztráció: <a href=\"https://cpo.matrixfitness.com/products/strength/ultra/ultra-rotary-torso-iced-silver-black-pads/\" target=\"_blank\" rel=\"noopener noreferrer\">Matrix Fitness</a>",
+    "creditHtml": "Gépillusztrációk: <a href=\"https://fleetcommercial.com.au/equipment/matrix-ultra-pin-loaded-equipment/\" target=\"_blank\" rel=\"noopener noreferrer\">Fleet Commercial</a> · <a href=\"https://www.archiexpo.com.ru/prod/matrix/product-141371-1519769.html\" target=\"_blank\" rel=\"noopener noreferrer\">ArchiExpo / Matrix</a> · Géptípus: <a href=\"https://www.vitalforce.hu/termek/matrix-fitness-torzsfordito-gep-mx-g7-s55/\" target=\"_blank\" rel=\"noopener noreferrer\">Matrix Fitness G7-S55</a>",
     "primary": "obliques",
     "secondary": [
-      "core",
-      "lowerback"
+      "core"
     ],
     "rest": "60–90 mp",
-    "guide": "Feszítsd meg a hasadat, tartsd stabilan a felsőtestedet a fogantyúkkal, majd a térdpárnákat a medencéd és a törzsed kontrollált elfordításával vezesd oldalra. A véghelyzetben röviden tartsd meg a feszítést, utána 2–3 másodperc alatt térj vissza a kezdőhelyzetbe. Végezd el az előírt ismétléseket mindkét irányba.",
-    "tip": "A beírt ismétlésszám oldalanként értendő. Ha mindhárom sorozatban eléred a 12 szabályos ismétlést mindkét irányba, emelj a legkisebb fokozattal.",
-    "setup": "Válassz könnyű kezdősúlyt, térdelj a két párnázott támaszra, és fogd meg stabilan a felső fogantyúkat. A csípőd legyen középen, a térded kényelmesen feküdjön a párnákon, a mellkasod maradjon emelt, a gerinced pedig semleges. A sárga állítókarral olyan kezdőszöget válassz, amelyben már érzel enyhe oldalsó hasizomfeszülést, de a derekad és a csípőd nem csavarodik kellemetlenül.",
-    "avoid": "Ne rántsd meg a térdpárnákat, ne húzd magad körbe a karoddal, és ne engedd, hogy a vállad együtt forduljon az alsótesteddel. Ne válassz túl nagy kezdőszöget vagy súlyt; ha deréktáji fájdalmat, csípést vagy kontrollvesztést érzel, csökkentsd a mozgástartományt vagy hagyd ki a gyakorlatot."
+    "guide": "Fogd meg stabilan a nagy fogantyúkat, és tartsd a mellkasodat, vállövedet és fejedet végig közel azonos irányban. A mozgást a gép forgó térdeplőjével végezd: a medencédet és a térdeidet kontrolláltan fordítsd el a beállított véghelyzet felé, miközben a bordáid nem fordulnak együtt a medencével. A véghelyzet előtt lassíts, röviden feszíts rá a ferde hasizmokra, majd 2–3 másodperc alatt térj vissza. Végezd el ugyanannyi ismétléssel mindkét irányba.",
+    "tip": "A beírt ismétlésszám oldalanként értendő. Ha mindhárom sorozatban mindkét irányba elérted a 12 szabályos, lendületmentes ismétlést, emelj a legkisebb elérhető súlylépéssel.",
+    "setup": "Válassz olyan kezdőpozíciót a forgó térdeplőn, amelyben már érzel enyhe törzsrotációs előfeszítést, de nincs csavaró vagy szúró érzés a derekadban. Térdelj fel szimmetrikusan a párnákra, a combod és a medencéd legyen stabil, majd fogd meg a felső fogantyúkat úgy, hogy a vállad lent maradjon. A törzsed legyen magas, a bordáid a medencéd fölött, a hasad enyhén megfeszítve. Kezdetben inkább közepes mozgástartományt használj; a Matrix G7-S55 több kezdőhelyzetet enged, ezért a nagyobb rotációt csak fokozatosan állítsd be.",
+    "avoid": "Ne rántsd el a térdeplőt, ne használj lendületet, és ne próbáld a fogantyúkat a karoddal húzva-kitolva segíteni. Ne engedd, hogy a teljes vállöved együtt forduljon a medencével, mert ezzel csökken a törzsrotáció. Ne erőltesd a véghelyzetet nagy súllyal, és állj meg, ha a derékban vagy a gerinc mellett éles, csípő vagy kisugárzó fájdalmat érzel."
   },
+
   {
     "uid": "collection-pallof-press-01",
     "n": "Pallof-nyomás",
