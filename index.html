@@ -1218,7 +1218,7 @@ const MUSCLES = {
   lowerback:   { hu:"Alsó hát (gerincfeszítők)" }
 };
 
-// 27 gyakorlat: RepDB Free Public Edition (start/peak WebP)
+// 28 gyakorlat: RepDB Free Public Edition (start/peak WebP)
 // 7 speciális gyakorlat: ExerciseDB v1 (animált GIF)
 const EXERCISE_MEDIA_BY_NAME = {
   "Ülő gépi mellnyomás": { source:"repdb", slug:"chest-press-machine" },
@@ -1228,6 +1228,7 @@ const EXERCISE_MEDIA_BY_NAME = {
   "Gépi oldalemelés": { source:"repdb", slug:"plate-loaded-lateral-raise", approx:true },
   "Köteles tricepszletolás": { source:"repdb", slug:"tricep-pushdown", approx:true },
   "Álló kalapácsfogású bicepszhajlítás": { source:"repdb", slug:"hammer-curl" },
+  "Kalapácsfogású bicepszhajlítás gépen": { source:"repdb", slug:"machine-bicep-curl", approx:true },
   "Hack-guggolás gépen": { source:"repdb", slug:"hack-squat" },
   "45°-os lábtolás": { source:"repdb", slug:"leg-press" },
   "Ülő gépi lábhajlítás": { source:"repdb", slug:"seated-leg-curl" },
@@ -1278,6 +1279,7 @@ const REPDB_MUSCLE_BY_NAME = {
   "Gépi oldalemelés": "lateral-deltoid.webp",
   "Köteles tricepszletolás": "triceps-brachii.webp",
   "Álló kalapácsfogású bicepszhajlítás": "brachialis.webp",
+  "Kalapácsfogású bicepszhajlítás gépen": "brachialis.webp",
   "Hack-guggolás gépen": "quadriceps.webp",
   "45°-os lábtolás": "quadriceps.webp",
   "Ülő gépi lábhajlítás": "hamstrings.webp",
@@ -1357,6 +1359,7 @@ const EXERCISE_FOCUS_BY_NAME = {
   "Gépi oldalemelés": "Deltaizom – oldalsó fej",
   "Köteles tricepszletolás": "Tricepsz – teljes izom, oldalsó és középső fej hangsúlyával",
   "Álló kalapácsfogású bicepszhajlítás": "Karizom (brachialis) és karorsócsonti izom hangsúlya",
+  "Kalapácsfogású bicepszhajlítás gépen": "Karizom (brachialis) és karorsócsonti izom hangsúlya",
   "Hack-guggolás gépen": "Négyfejű combizom – teljes izomcsoport",
   "45°-os lábtolás": "Négyfejű combizom – teljes izomcsoport",
   "Ülő gépi lábhajlítás": "Combhajlító izmok – teljes izomcsoport",
@@ -1930,6 +1933,22 @@ const COLLECTION_ONLY_EXERCISES = [
     "tip": "A beírt ismétlésszám oldalanként értendő. Ha mindhárom sorozatban mindkét irányba elérted a 12 szabályos, lendületmentes ismétlést, emelj a legkisebb elérhető súlylépéssel.",
     "setup": "Válassz olyan kezdőpozíciót a forgó térdeplőn, amelyben már érzel enyhe törzsrotációs előfeszítést, de nincs csavaró vagy szúró érzés a derekadban. Térdelj fel szimmetrikusan a párnákra, a combod és a medencéd legyen stabil, majd fogd meg a felső fogantyúkat úgy, hogy a vállad lent maradjon. A törzsed legyen magas, a bordáid a medencéd fölött, a hasad enyhén megfeszítve. Kezdetben inkább közepes mozgástartományt használj; a Matrix G7-S55 több kezdőhelyzetet enged, ezért a nagyobb rotációt csak fokozatosan állítsd be.",
     "avoid": "Ne rántsd el a térdeplőt, ne használj lendületet, és ne próbáld a fogantyúkat a karoddal húzva-kitolva segíteni. Ne engedd, hogy a teljes vállöved együtt forduljon a medencével, mert ezzel csökken a törzsrotáció. Ne erőltesd a véghelyzetet nagy súllyal, és állj meg, ha a derékban vagy a gerinc mellett éles, csípő vagy kisugárzó fájdalmat érzel."
+  },
+
+  {
+    "uid": "collection-machine-hammer-curl-01",
+    "n": "Kalapácsfogású bicepszhajlítás gépen",
+    "id": "Machine_Hammer_Curl",
+    "primary": "biceps",
+    "secondary": [
+      "brachialis",
+      "forearms"
+    ],
+    "rest": "60–90 mp",
+    "guide": "Támaszd stabilan a felkarodat a gép párnájára, és fogd meg a függőleges vagy semleges markolatokat úgy, hogy a tenyereid egymás felé nézzenek. A felkar helyzetét megtartva hajlítsd be a könyöködet, és húzd a fogantyúkat felfelé addig, amíg erős összehúzódást érzel a bicepsz és a brachialis területén. Rövid megtartás után 2–3 másodperc alatt engedd vissza a kart majdnem teljes könyöknyújtásig, miközben a súlylapok nem csapódnak össze.",
+    "tip": "Ha mindhárom sorozatban elérted a 12 szabályos ismétlést azonos súllyal és teljes kontrollal, emelj a gépen a legkisebb elérhető fokozattal.",
+    "setup": "Állítsd az ülésmagasságot úgy, hogy a könyököd közel essen a gép forgástengelyéhez, a felkarod pedig kényelmesen feküdjön a támaszon. A hónaljad kerüljön közel a párna felső széléhez. Válaszd a kalapácsfogású, függőleges markolatot: a tenyerek nézzenek egymás felé, a csuklód maradjon egyenes. A válladat engedd le, a mellkasod és a medencéd maradjon stabil, a talpad pedig teljesen érjen le. A kezdőhelyzetben maradjon enyhe hajlítás a könyöködben, és a súly már legyen feszülésben.",
+    "avoid": "Ne emeld el a felkarodat a támaszról, ne gördítsd előre a válladat, és ne dőlj hátra a fogantyú felhúzásához. A csuklód ne forduljon át alsó fogásba, mert akkor már nem kalapácsfogású a mozgás. Ne engedd a könyököt erőből teljesen kinyúlni a súly alatt; ha csak lendületből tudod elindítani az ismétlést, csökkentsd a terhelést."
   },
 
   {
