@@ -1224,7 +1224,14 @@ const EXERCISE_MEDIA_BY_NAME = {
   "Ülő gépi mellnyomás": { source:"repdb", slug:"chest-press-machine" },
   "Gépi tárogatás": { source:"repdb", slug:"pec-deck" },
   "Széles lehúzás": { source:"repdb", slug:"lat-pulldown" },
-  "Semleges fogású melltámaszos gépi evezés": { source:"exercisedb", id:"0588", approx:true, sourceName:"Lever Narrow Grip Seated Row" },
+  "Semleges fogású melltámaszos gépi evezés": {
+    source:"custom",
+    sourceName:"Machine Seated Row",
+    creditHtml:'Végrehajtás: <a href="https://www.jefit.com/exercises/700/machine-seated-row" target="_blank" rel="noopener noreferrer">JEFIT</a> · Célizom-illusztráció: <a href="https://repdb.co/" target="_blank" rel="noopener noreferrer">RepDB</a>',
+    frames:[
+      { label:"Végrehajtás", src:"https://cdn.jefit.com/assets/img/exercises/gifs/700.gif", fallbacks:["https://www.jefit.com/images/exercises/960_590/2800.jpg","https://static.wixstatic.com/media/d2409b_67ba2997cbe248218c7f3ed5dee9b824~mv2.jpg/v1/fill/w_242,h_546,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/d2409b_67ba2997cbe248218c7f3ed5dee9b824~mv2.jpg"] }
+    ]
+  },
   "Gépi oldalemelés": { source:"repdb", slug:"plate-loaded-lateral-raise", approx:true },
   "Köteles tricepszletolás": { source:"repdb", slug:"tricep-pushdown", approx:true },
   "Álló kalapácsfogású bicepszhajlítás": { source:"repdb", slug:"hammer-curl" },
