@@ -1234,10 +1234,32 @@ const EXERCISE_MEDIA_BY_NAME = {
   "Ülő gépi lábhajlítás": { source:"repdb", slug:"seated-leg-curl" },
   "Álló gépi vádliemelés": { source:"repdb", slug:"standing-calf-raise", imageSlug:"machine-calf-raise" },
   "Gépi hasprés": { source:"repdb", slug:"machine-seated-crunch" },
-  "Ferdepados gépi mellnyomás": { source:"exercisedb", id:"1299", sourceName:"Lever Incline Chest Press" },
+  "Ferdepados gépi mellnyomás": {
+    source:"custom",
+    sourceName:"Leverage Incline Chest Press",
+    creditHtml:'Végrehajtás: <a href="https://www.jefit.com/exercises/853/leverage-incline-chest-press" target="_blank" rel="noopener noreferrer">JEFIT</a> · Célizom-illusztráció: <a href="https://repdb.co/" target="_blank" rel="noopener noreferrer">RepDB</a>',
+    frames:[
+      { label:"Végrehajtás", src:"https://cdn.jefit.com/assets/img/exercises/gifs/853.gif", fallbacks:["https://www.jefit.com/images/exercises/960_590/3412.jpg","https://cdn.jefit.com/assets/img/exercises/gifs/178.gif","https://www.jefit.com/images/exercises/960_590/712.jpg"] }
+    ]
+  },
   "Szűk lehúzás": { source:"repdb", slug:"v-bar-lat-pulldown" },
-  "Széles fogású melltámaszos gépi evezés": { source:"exercisedb", id:"1350", approx:true, sourceName:"Lever Seated Row" },
-  "Fordított gépi tárogatás": { source:"exercisedb", id:"0602", sourceName:"Lever Seated Reverse Fly" },
+  "Széles fogású melltámaszos gépi evezés": {
+    source:"custom",
+    approx:true,
+    sourceName:"Machine Seated Row",
+    creditHtml:'Végrehajtás: <a href="https://www.jefit.com/exercises/700/machine-seated-row" target="_blank" rel="noopener noreferrer">JEFIT</a> · Célizom-illusztráció: <a href="https://repdb.co/" target="_blank" rel="noopener noreferrer">RepDB</a>',
+    frames:[
+      { label:"Végrehajtás", src:"https://cdn.jefit.com/assets/img/exercises/gifs/700.gif", fallbacks:["https://www.jefit.com/images/exercises/960_590/2800.jpg","https://static.wixstatic.com/media/d2409b_67ba2997cbe248218c7f3ed5dee9b824~mv2.jpg/v1/fill/w_242,h_546,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/d2409b_67ba2997cbe248218c7f3ed5dee9b824~mv2.jpg"] }
+    ]
+  },
+  "Fordított gépi tárogatás": {
+    source:"custom",
+    sourceName:"Machine Reverse Fly",
+    creditHtml:'Végrehajtás: <a href="https://www.jefit.com/exercises/878/machine-reverse-fly" target="_blank" rel="noopener noreferrer">JEFIT</a> · Célizom-illusztráció: <a href="https://repdb.co/" target="_blank" rel="noopener noreferrer">RepDB</a>',
+    frames:[
+      { label:"Végrehajtás", src:"https://cdn.jefit.com/assets/img/exercises/gifs/878.gif", fallbacks:["https://www.jefit.com/images/exercises/960_590/3512.jpg","https://www.jefit.com/images/exercises/960_590/3513.jpg","https://www.lyfta.app/thumbnails/06021201.jpg"] }
+    ]
+  },
   "Egykezes csigás oldalemelés": { source:"repdb", slug:"cable-lateral-raise" },
   "Tricepszletolás V-rúddal": { source:"repdb", slug:"v-bar-tricep-pushdown" },
   "Csigás bicepszhajlítás": { source:"repdb", slug:"cable-curl" },
@@ -1247,14 +1269,44 @@ const EXERCISE_MEDIA_BY_NAME = {
   "Ülő csigás evezés párhuzamos fogantyúval": { source:"repdb", slug:"seated-cable-row", approx:true },
   "Gépi vállnyomás": { source:"repdb", slug:"machine-shoulder-press" },
   "Smith-keretes fekvenyomás": { source:"repdb", slug:"smith-machine-bench-press" },
-  "Ferdepados Smith-keretes fekvenyomás": { source:"repdb", slug:"smith-machine-incline-bench-press" },
+  "Ferdepados Smith-keretes fekvenyomás": {
+    source:"custom",
+    sourceName:"Smith Machine Incline Bench Press",
+    creditHtml:'Végrehajtás: <a href="https://www.jefit.com/exercises/175/smith-machine-incline-bench-press" target="_blank" rel="noopener noreferrer">JEFIT</a> · Célizom-illusztráció: <a href="https://repdb.co/" target="_blank" rel="noopener noreferrer">RepDB</a>',
+    frames:[
+      { label:"Végrehajtás", src:"https://cdn.jefit.com/assets/img/exercises/gifs/175.gif", fallbacks:["https://www.jefit.com/images/exercises/960_590/700.jpg"] }
+    ]
+  },
   "Hason fekvő gépi lábhajlítás": { source:"repdb", slug:"leg-curl" },
-  "Fej fölötti csigás tricepsznyújtás": { source:"exercisedb", id:"0194", sourceName:"Cable Rope Overhead Triceps Extension" },
+  "Fej fölötti csigás tricepsznyújtás": {
+    source:"custom",
+    sourceName:"Cable Rope Overhead Tricep Extension",
+    creditHtml:'Végrehajtás: <a href="https://www.jefit.com/exercises/155/cable-rope-overhead-tricep-extension" target="_blank" rel="noopener noreferrer">JEFIT</a> · Célizom-illusztráció: <a href="https://repdb.co/" target="_blank" rel="noopener noreferrer">RepDB</a>',
+    frames:[
+      { label:"Végrehajtás", src:"https://cdn.jefit.com/assets/img/exercises/gifs/155.gif", fallbacks:["https://www.jefit.com/images/exercises/960_590/620.jpg"] }
+    ]
+  },
   "Pallof-nyomás": { source:"repdb", slug:"cable-pallof-press" },
-  "Térdelő gépi törzsrotáció": { source:"exercisedb", id:"0583", sourceName:"Lever Kneeling Twist" },
+  "Térdelő gépi törzsrotáció": {
+    source:"custom",
+    sourceName:"Lever Kneeling Twist",
+    creditHtml:'Végrehajtás: <a href="https://liftmanual.com/lever-kneeling-twist/" target="_blank" rel="noopener noreferrer">Lift Manual</a> · Célizom-illusztráció: <a href="https://repdb.co/" target="_blank" rel="noopener noreferrer">RepDB</a>',
+    frames:[
+      { label:"Start", src:"https://liftmanual.com/wp-content/uploads/2023/04/lever-kneeling-twist-start.webp", fallbacks:["https://liftmanual.com/wp-content/uploads/2026/05/lever-kneeling-twist.jpg"] },
+      { label:"Vég", src:"https://liftmanual.com/wp-content/uploads/2023/04/lever-kneeling-twist-end.webp", fallbacks:["https://liftmanual.com/wp-content/uploads/2026/05/lever-kneeling-twist.jpg"] }
+    ]
+  },
   "Gépi csípőtávolítás": { source:"repdb", slug:"hip-abduction" },
   "Gépi combközelítés": { source:"repdb", slug:"hip-adduction" },
-  "Gépi farizomnyújtás (glute kickback)": { source:"exercisedb", id:"1037", sourceName:"Lever Standing Rear Kick" },
+  "Gépi farizomnyújtás (glute kickback)": {
+    source:"custom",
+    sourceName:"Lever Standing Rear Kick",
+    creditHtml:'Végrehajtás: <a href="https://liftmanual.com/lever-standing-rear-kick/" target="_blank" rel="noopener noreferrer">Lift Manual</a> · Célizom-illusztráció: <a href="https://repdb.co/" target="_blank" rel="noopener noreferrer">RepDB</a>',
+    frames:[
+      { label:"1. nézet", src:"https://liftmanual.com/wp-content/uploads/2026/05/lever-standing-rear-kick.jpg", fallbacks:["https://liftmanual.com/wp-content/uploads/2023/04/lever-standing-rear-kick.webp"] },
+      { label:"2. nézet", src:"https://liftmanual.com/wp-content/uploads/2023/04/lever-standing-rear-kick.webp", fallbacks:["https://liftmanual.com/wp-content/uploads/2026/05/lever-standing-rear-kick.jpg"] }
+    ]
+  },
   "Ülő gépi bicepszhajlítás felkartámasszal": { source:"repdb", slug:"machine-preacher-curl" }
 };
 
@@ -1327,6 +1379,7 @@ function imageSourceCreditHtml(exercise){
   const media=getExerciseMedia(exercise);
   if(!media) return '';
   const repdb='<a href="https://repdb.co/" target="_blank" rel="noopener noreferrer">RepDB</a>';
+  if(media.source==='custom' && media.creditHtml) return media.creditHtml;
   if(media.source==='exercisedb'){
     return `Végrehajtás: <a href="https://github.com/Johnson-Jia/exercises-dataset" target="_blank" rel="noopener noreferrer">ExerciseDB v1</a> · Célizom-illusztráció: ${repdb}`;
   }
@@ -1477,18 +1530,6 @@ const DATA = [
         ]
       },
       {
-        "uid": "mon-rope-triceps-01",
-        "n": "Köteles tricepszletolás",
-        "id": "Triceps_Pushdown_-_Rope_Attachment",
-        "primary": "triceps",
-        "secondary": [],
-        "rest": "60–90 mp",
-        "guide": "A felkarodat tartsd mozdulatlanul, és csak a könyök nyújtásával told lefelé a kötelet. Az alsó harmadban finoman húzd szét a kötélvégeket, de ne fordítsd be a válladat. A teljes nyújtás után lassan engedd vissza addig, amíg az alkar közel kerül a bicepszhez, miközben a könyök nem vándorol előre.",
-        "tip": "12/12/12 szabályos ismétlésnél emelj egy fokozatot.",
-        "setup": "Tedd a csigát a legfelső vagy ahhoz közeli állásba, és rögzíts kötelet. Állj olyan közel, hogy a kábel közel függőlegesen fusson, de a kötél felső helyzetben se érjen az arcodhoz. A lábad lehet csípőszéles vagy enyhén harántterpeszes, a térded lazán hajlított. Fogd meg a kötélvégeket semleges csuklóval, a könyököd kerüljön a bordáid mellé; a kezdőhelyzetben az alkar nagyjából vízszintes vagy kissé magasabban legyen.",
-        "avoid": "Ne dőlj rá a fogantyúra, ne lendítsd a törzsed, és ne engedd szétcsúszni a könyöködet. Ha a vállad mozog vagy a derekad homorít, túl nagy a súly."
-      },
-      {
         "uid": "mon-hammer-curl-01",
         "n": "Álló kalapácsfogású bicepszhajlítás",
         "id": "Hammer_Curls",
@@ -1501,6 +1542,18 @@ const DATA = [
         "tip": "12/12/12 ismétlésnél emelj a legkisebb súlylépéssel.",
         "setup": "Állj csípő- vagy vállszélességű terpeszben, a térded legyen enyhén laza, a törzsed pedig magas és stabil. Tarts egy-egy kézi súlyzót a tested mellett úgy, hogy a tenyerek egymás felé nézzenek. A válladat húzd enyhén hátra-le, a csuklód maradjon egyenes, a könyököd pedig a törzsed mellett.",
         "avoid": "Ne emeld előre a könyököd, ne hajlítsd be a csuklód, és ne lendítsd fel a súlyzót csípőből. Ha hintázni kezdesz vagy hátradőlsz, válassz kisebb súlyt."
+      },
+      {
+        "uid": "mon-rope-triceps-01",
+        "n": "Köteles tricepszletolás",
+        "id": "Triceps_Pushdown_-_Rope_Attachment",
+        "primary": "triceps",
+        "secondary": [],
+        "rest": "60–90 mp",
+        "guide": "A felkarodat tartsd mozdulatlanul, és csak a könyök nyújtásával told lefelé a kötelet. Az alsó harmadban finoman húzd szét a kötélvégeket, de ne fordítsd be a válladat. A teljes nyújtás után lassan engedd vissza addig, amíg az alkar közel kerül a bicepszhez, miközben a könyök nem vándorol előre.",
+        "tip": "12/12/12 szabályos ismétlésnél emelj egy fokozatot.",
+        "setup": "Tedd a csigát a legfelső vagy ahhoz közeli állásba, és rögzíts kötelet. Állj olyan közel, hogy a kábel közel függőlegesen fusson, de a kötél felső helyzetben se érjen az arcodhoz. A lábad lehet csípőszéles vagy enyhén harántterpeszes, a térded lazán hajlított. Fogd meg a kötélvégeket semleges csuklóval, a könyököd kerüljön a bordáid mellé; a kezdőhelyzetben az alkar nagyjából vízszintes vagy kissé magasabban legyen.",
+        "avoid": "Ne dőlj rá a fogantyúra, ne lendítsd a törzsed, és ne engedd szétcsúszni a könyöködet. Ha a vállad mozog vagy a derekad homorít, túl nagy a súly."
       }
     ]
   },
@@ -1658,18 +1711,6 @@ const DATA = [
         "avoid": "Ne dőlj el a csigától, ne lendítsd a csípőd, és ne fordítsd lefelé erősen a hüvelykujjad. Ha a csuklyásizmod dominál, csökkentsd a súlyt és tartsd lent a válladat."
       },
       {
-        "uid": "thu-triceps-pushdown-01",
-        "n": "Tricepszletolás V-rúddal",
-        "id": "Triceps_Pushdown_-_V-Bar_Attachment",
-        "primary": "triceps",
-        "secondary": [],
-        "rest": "60–90 mp",
-        "guide": "A felkarod maradjon mozdulatlan, miközben a könyököd kinyújtásával lefelé tolod a rudat. Alul röviden feszíts rá a tricepszre, de ne csapd ki erőből a könyököd. Lassan engedd vissza addig, amíg az alkar közel kerül a felkarhoz, a könyök pedig továbbra is a tested mellett marad.",
-        "tip": "12/12/12 ismétlésnél emelj egy fokozatot.",
-        "setup": "Állítsd a csigát a legfelső állásba, és rögzíts V-rudat. Fogd kényelmesen, nagyjából vállszélességben úgy, hogy a csuklód egyenes maradjon. Állj közel a csigához, a lábad stabilan vagy enyhe harántterpeszben legyen. A könyöködet húzd a bordáid mellé; a kezdőhelyzetben az alkar nagyjából vízszintes vagy kissé fölötte legyen.",
-        "avoid": "Ne dőlj rá a rúdra, ne mozgasd előre-hátra a könyököd, és ne törd hátra a csuklód. Ha a vállad vagy a törzsed segít, csökkentsd a súlyt."
-      },
-      {
         "uid": "thu-cable-curl-01",
         "n": "Csigás bicepszhajlítás",
         "id": "Standing_Biceps_Cable_Curl",
@@ -1682,6 +1723,18 @@ const DATA = [
         "tip": "12/12/12 ismétlésnél emelj kis lépéssel.",
         "setup": "Állítsd a csigát a legalsó helyzetbe, és használj egyenes vagy kényelmesebb EZ-rudat. Állj annyira hátra, hogy a kábel az alsó helyzetben is feszüljön, de a súly ne húzzon előre. Fogd a rudat körülbelül vállszélességben, a csuklód maradjon egyenes, a könyököd pedig a törzsed mellett. A lábad legyen stabil, a térded lazán hajlított.",
         "avoid": "Ne dőlj hátra, ne told előre a csípőd, és ne hajlítsd be a csuklód. Ha a vállad előregördül vagy a könyököd vándorol, túl nagy a súly."
+      },
+      {
+        "uid": "thu-triceps-pushdown-01",
+        "n": "Tricepszletolás V-rúddal",
+        "id": "Triceps_Pushdown_-_V-Bar_Attachment",
+        "primary": "triceps",
+        "secondary": [],
+        "rest": "60–90 mp",
+        "guide": "A felkarod maradjon mozdulatlan, miközben a könyököd kinyújtásával lefelé tolod a rudat. Alul röviden feszíts rá a tricepszre, de ne csapd ki erőből a könyököd. Lassan engedd vissza addig, amíg az alkar közel kerül a felkarhoz, a könyök pedig továbbra is a tested mellett marad.",
+        "tip": "12/12/12 ismétlésnél emelj egy fokozatot.",
+        "setup": "Állítsd a csigát a legfelső állásba, és rögzíts V-rudat. Fogd kényelmesen, nagyjából vállszélességben úgy, hogy a csuklód egyenes maradjon. Állj közel a csigához, a lábad stabilan vagy enyhe harántterpeszben legyen. A könyöködet húzd a bordáid mellé; a kezdőhelyzetben az alkar nagyjából vízszintes vagy kissé fölötte legyen.",
+        "avoid": "Ne dőlj rá a rúdra, ne mozgasd előre-hátra a könyököd, és ne törd hátra a csuklód. Ha a vállad vagy a törzsed segít, csökkentsd a súlyt."
       }
     ]
   },
@@ -2188,6 +2241,15 @@ function scrollBlockBelowHeader(block,delay=0){
 function exerciseMediaHtml(exercise){
   const media=getExerciseMedia(exercise);
   if(!media) return '';
+
+  if(media.source==='custom'){
+    const frames=Array.isArray(media.frames)?media.frames:[];
+    return frames.map((frame,index)=>{
+      const label=frame.label || `Nézet ${index+1}`;
+      const alt=frame.alt || label;
+      return `<div class="frame contain-frame"><img data-src="${frame.src}" data-fallbacks="${encodeImageFallbacks(frame.fallbacks||[])}" alt="${exercise.n} – ${alt}" loading="lazy"><span>${label}</span></div>`;
+    }).join('');
+  }
 
   if(media.source==='repdb'){
     const imageSlug=media.imageSlug||media.slug;
